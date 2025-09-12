@@ -18,7 +18,7 @@
     <meta property="og:url" content="https://infinitassoluciones.net/" />
     <meta property="og:site_name" content="Sistema de Facturación e Inventario en Línea" />
     <link rel="canonical" href="https://infinitassoluciones.net/" />
-    <link rel="shortcut icon" href="{{ asset('assets/img/lop.jpg') }}" />
+    <link rel="shortcut icon" href="{{ asset('assets/img/siat.png') }}" />
     <!--begin::Fonts(mandatory for all pages)-->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
     <!--end::Fonts-->
@@ -113,7 +113,7 @@
                         <a href="{{ url('home') }}">
                             <div class="row mt-4">
                                 <div class="col-md-4">
-                                    <img alt="Logo" src="{{ asset('assets/img/lop.jpg') }}" width="100%" />
+                                    <img alt="Logo" src="{{ asset('assets/img/siat.png') }}" width="100%" />
                                 </div>
                                 <div class="col-md-8">
                                     <h2 class="text-white mt-6">INVENTARIO</h2>
