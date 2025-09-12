@@ -50,7 +50,7 @@
                         </div>
                         <div class="menu-item">
                             <a class="menu-link {{ Route::currentRouteName() == 'proveedor.listado' ? 'active' : '' }}"
-                                href="#">
+                                href="{{ route('proveedor.listado') }}">
                                 <span class="menu-bullet">
                                     <span class="bullet bullet-dot"></span>
                                 </span>

@@ -16,6 +16,13 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    // PROVEEDOR
+    Route::prefix('/proveedor')->group(function () {
+        Route::get('/listado', [App\Http\Controllers\ProveedorController::class, 'listado'])->name('proveedor.listado');
+        Route::post('/ajaxListado', [App\Http\Controllers\ProveedorController::class, 'ajaxListado'])->name('proveedor.ajaxListado');
+        Route::post('/guardarProveedor', [App\Http\Controllers\ProveedorController::class, 'guardarProveedor'])->name('proveedor.guardarProveedor');
+        Route::post('/eliminarProveedor', [App\Http\Controllers\ProveedorController::class, 'eliminarProveedor'])->name('proveedor.eliminarProveedor');
+    });
     // USUARIO
     Route::prefix('/usuario')->group(function () {
         Route::get('/listado', [App\Http\Controllers\UserController::class, 'listado'])->name('usuario.listado');
