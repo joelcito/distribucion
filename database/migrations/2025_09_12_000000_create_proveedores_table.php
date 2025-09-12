@@ -11,15 +11,16 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('proveedores', function (Blueprint $table) {
-            $table->id('idproveedores');
+            $table->id();
+            $table->foreignId('usuario_creador_id')->constrained('users');
+            $table->foreignId('usuario_modificador_id')->constrained('users');
+            $table->foreignId('usuario_eliminador_id')->nullable()->constrained('users');
+
             $table->string('nombre', 45);
             $table->string('nit', 45);
             $table->string('razon_social', 45);
             $table->string('direccion', 45);
             $table->string('celular', 45);
-            $table->foreignId('usuario_creador_id')->constrained('users');
-            $table->foreignId('usuario_modificador_id')->constrained('users');
-            $table->foreignId('usuario_eliminador_id')->nullable()->constrained('users');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -101,25 +101,27 @@
                             </span>
                             <span class="menu-title text-white">Productos Servicios</span>
                         </a>
-                    </div> --}}
-                        {{-- <div class="menu-item">
-                            <a class="menu-link {{ Route::currentRouteName() == 'producto.listado' ? 'active' : '' }}"
-                                href="#">
-                                <span class="menu-bullet">
-                                    <span class="bullet bullet-dot"></span>
-                                </span>
-                                <span class="menu-title text-white">Productos</span>
-                            </a>
-                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <a class="menu-link {{ Route::currentRouteName() == 'producto.listado' ? 'active' : '' }}"
+                            href="#">
+                            <span class="menu-bullet">
+                                <span class="bullet bullet-dot"></span>
+                            </span>
+                            <span class="menu-title text-white">Productos</span>
+                        </a>
+                    </div>
+                    --}}
                         <div class="menu-item">
                             <a class="menu-link {{ Route::currentRouteName() == 'cliente.listado' ? 'active' : '' }}"
-                                href="#">
+                                href="{{ route('cliente.listado') }}">
                                 <span class="menu-bullet">
                                     <span class="bullet bullet-dot"></span>
                                 </span>
                                 <span class="menu-title text-white">Clientes</span>
                             </a>
                         </div>
+                        {{--
                         <div class="menu-item">
                             <a class="menu-link {{ Route::currentRouteName() == 'urlApiServicio.listado' ? 'active' : '' }}"
                                 href="#">
@@ -171,7 +173,7 @@
                 </div>
 
                 <div class="menu-item">
-                    <a class="menu-link" href="#">
+                    <a class="menu-link" href="{{ route('factura.formulario') }}">
                         <span class="menu-icon">
                             <i class="fa fa-book"></i>
                         </span>
@@ -179,7 +181,7 @@
                     </a>
                 </div>
 
-                <div data-kt-menu-trigger="click"
+                {{-- <div data-kt-menu-trigger="click"
                     class="menu-item menu-accordion {{ Request::is('factura/*', 'caja/*') ? 'show' : '' }}">
                     <!--begin:Menu link-->
                     <span class="menu-link">
@@ -201,9 +203,9 @@
                         </div>
 
                     </div>
-                </div>
+                </div> --}}
 
-                <div data-kt-menu-trigger="click"
+                {{-- <div data-kt-menu-trigger="click"
                     class="menu-item menu-accordion {{ Request::is('sincronizacion/*', 'eventoSignificativo/*') ? 'show' : '' }}">
                     <!--begin:Menu link-->
                     <span class="menu-link">
@@ -225,7 +227,7 @@
                             </a>
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
                 <!--end:Menu item-->
             </div>

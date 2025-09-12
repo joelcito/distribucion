@@ -11,15 +11,19 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('productos', function (Blueprint $table) {
-            $table->id('idproductos');
-            $table->string('codigo', 45);
-            $table->string('nombre', 45);
-            $table->foreignId('proveedores_idproveedores')->constrained('proveedores', 'idproveedores');
-            $table->decimal('precio_compra', 12, 2);
-            $table->decimal('precio_venta', 12, 2);
+            $table->id();
             $table->foreignId('usuario_creador_id')->constrained('users');
             $table->foreignId('usuario_modificador_id')->constrained('users');
             $table->foreignId('usuario_eliminador_id')->nullable()->constrained('users');
+            $table->foreign('proveedor_id')->references('id')->on('proveedores');
+            $table->unsignedBigInteger('proveedor_id')->nullable();
+
+            $table->string('codigo', 45);
+            $table->string('nombre', 45);
+            // $table->foreignId('proveedores_idproveedores')->constrained('proveedores', 'idproveedores');
+
+            $table->decimal('precio_compra', 12, 2);
+            $table->decimal('precio_venta', 12, 2);
             $table->timestamps();
             $table->softDeletes();
         });

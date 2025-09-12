@@ -11,7 +11,7 @@ class Producto extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'productos';
-    protected $primaryKey = 'idproductos';
+    // protected $primaryKey = 'idproductos';
 
     protected $fillable = [
         'codigo',
@@ -25,8 +25,8 @@ class Producto extends Model
         'deleted_at'
     ];
 
-    public function proveedor()
-    {
-        return $this->belongsTo(Proveedor::class, 'proveedores_idproveedores', 'idproveedores');
-    }
+    // public function proveedor()
+    // {
+    //     return $this->belongsTo(Proveedor::class, 'proveedores_idproveedores', 'idproveedores');
+    // }
 }

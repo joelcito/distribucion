@@ -32,12 +32,12 @@ class ProveedorController extends Controller
     {
         if ($request->ajax()) {
             $proveedor_id = $request->input('id');
-            $nombre = $request->input('nombre');
-            $nit = $request->input('nit');
+            $nombre       = $request->input('nombre');
+            $nit          = $request->input('nit');
             $razon_social = $request->input('razon_social');
-            $direccion = $request->input('direccion');
-            $celular = $request->input('celular');
-            $usuario = Auth::user();
+            $direccion    = $request->input('direccion');
+            $celular      = $request->input('celular');
+            $usuario      = Auth::user();
 
             if ($proveedor_id == "0") {
                 $proveedor = new Proveedor();
