@@ -19,7 +19,7 @@
                 </div>
                 <!--end:Menu item-->
                 <div data-kt-menu-trigger="click"
-                    class="menu-item menu-accordion {{ Request::is('usuario/*', 'rol/*', 'proveedor/*', 'unidadMedida/*', 'puntoVenta/*', 'productoServicio/*', 'producto/*', 'cliente/*', 'urlApiServicio/*', 'pago/*', 'cotizacion/*') ? 'show' : '' }}">
+                    class="menu-item menu-accordion {{ Request::is('usuario/*', 'rol/*', 'proveedor/*', 'unidadMedida/*', 'puntoVenta/*', 'productoServicio/*', 'producto/*', 'cliente/*', 'urlApiServicio/*', 'pago/*', 'cotizacion/*', 'sucursal/*') ? 'show' : '' }}">
                     <!--begin:Menu link-->
                     <span class="menu-link">
                         <span class="menu-icon">
@@ -67,7 +67,8 @@
                         </a>
                     </div> --}}
                         <div class="menu-item">
-                            <a class="menu-link" href="{{ url('sucursal/listado') }}">
+                            <a class="menu-link {{ Route::currentRouteName() == 'sucursal.listado' ? 'active' : '' }}"
+                                href="{{ route('sucursal.listado') }}">
                                 <span class="menu-bullet">
                                     <span class="bullet bullet-dot"></span>
                                 </span>

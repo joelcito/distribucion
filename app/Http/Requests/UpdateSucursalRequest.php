@@ -11,7 +11,7 @@ class UpdateSucursalRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,9 @@ class UpdateSucursalRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'codigo_sucursal' => 'required|string|max:20|unique:sucursal,codigo_sucursal,' . $this->route('sucursal'),
+            'nombre' => 'required|string|max:100',
+            'direccion' => 'required|string|max:255',
         ];
     }
 }
