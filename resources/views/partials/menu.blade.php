@@ -57,6 +57,15 @@
                                 <span class="menu-title text-white">Proveedores</span>
                             </a>
                         </div>
+                        <div class="menu-item">
+                            <a class="menu-link {{ Route::currentRouteName() == 'producto.listado' ? 'active' : '' }}"
+                                href="{{ route('producto.listado') }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title text-white">Productos</span>
+                            </a>
+                        </div>
                         {{-- <div class="menu-item">
                         <a class="menu-link {{ Route::currentRouteName() == 'unidadMedida.listado' ? 'active' : '' }}"
                             href="{{ route('unidadMedida.listado') }}">
@@ -211,7 +220,8 @@
                                 <span class="menu-bullet">
                                     <span class="bullet bullet-dot"></span>
                                 </span>
-                                <span class="menu-title text-white">Sincronizacion de Catalogos</span>
+                                <span class="menu-title text-white">Sincronizacion de
+                                    Catalogos</span>
                             </a>
                         </div>
                     </div>

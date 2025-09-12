@@ -16,6 +16,13 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    // PRODUCTO
+    Route::prefix('/producto')->group(function () {
+        Route::get('/listado', [App\Http\Controllers\ProductoController::class, 'listado'])->name('producto.listado');
+        Route::post('/ajaxListado', [App\Http\Controllers\ProductoController::class, 'ajaxListado'])->name('producto.ajaxListado');
+        Route::post('/guardarProducto', [App\Http\Controllers\ProductoController::class, 'guardarProducto'])->name('producto.guardarProducto');
+        Route::post('/eliminarProducto', [App\Http\Controllers\ProductoController::class, 'eliminarProducto'])->name('producto.eliminarProducto');
+    });
     // PROVEEDOR
     Route::prefix('/proveedor')->group(function () {
         Route::get('/listado', [App\Http\Controllers\ProveedorController::class, 'listado'])->name('proveedor.listado');
