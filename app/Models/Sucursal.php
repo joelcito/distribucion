@@ -24,5 +24,8 @@ class Sucursal extends Model
         'deleted_at'
     ];
 
-    protected $primaryKey = 'idsucursales';
+    // protected $primaryKey = 'idsucursales';
+    public function movimientos(){
+        return $this->hasMany(Movimiento::class);
+    }
 }

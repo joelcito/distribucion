@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Producto;
 use App\Models\Proveedor;
+use App\Models\Sucursal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Utils\Respuesta;
@@ -77,6 +78,28 @@ class ProductoController extends Controller
             }
         } else {
             $data = Respuesta::error(null, "Error al eliminar el producto");
+        }
+        return $data;
+    }
+
+    public function ajaxStockSucursal(Request $request){
+        if($request->ajax()){
+            $producto_id = $request->input('producto_id');
+
+            $sucursales = Sucursal::withSum(['movimientos' => function ($query) use($producto_id) {
+                                                $query->where('producto_id', $producto_id);
+                                            }], 'ingreso')
+                                    ->withSum(['movimientos' => function ($query) use($producto_id) {
+                                                $query->where('producto_id', $producto_id);
+                                            }], 'salida')
+                                    ->get();
+            $producto = Producto::find($producto_id);
+            $valores = [
+                'listado' => view('producto.ajaxStockSucursal')->with(compact('sucursales', 'producto'))->render()
+            ];
+            $data = Respuesta::success($valores, "Datos obtenidos correctamente");
+        }else{
+            $data = Respuesta::error(null, "Error al obtener los datos");
         }
         return $data;
     }

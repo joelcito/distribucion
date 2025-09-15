@@ -24,6 +24,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/ajaxListado', [App\Http\Controllers\ProductoController::class, 'ajaxListado'])->name('producto.ajaxListado');
         Route::post('/guardarProducto', [App\Http\Controllers\ProductoController::class, 'guardarProducto'])->name('producto.guardarProducto');
         Route::post('/eliminarProducto', [App\Http\Controllers\ProductoController::class, 'eliminarProducto'])->name('producto.eliminarProducto');
+        Route::post('/ajaxStockSucursal', [App\Http\Controllers\ProductoController::class, 'ajaxStockSucursal'])->name('producto.ajaxStockSucursal');
     });
     // PROVEEDOR
     Route::prefix('/proveedor')->group(function () {

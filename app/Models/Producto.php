@@ -16,7 +16,7 @@ class Producto extends Model
     protected $fillable = [
         'codigo',
         'nombre',
-        'proveedores_idproveedores',
+        'proveedor_id',
         'precio_compra',
         'precio_venta',
         'usuario_creador_id',
@@ -25,8 +25,8 @@ class Producto extends Model
         'deleted_at'
     ];
 
-    // public function proveedor()
-    // {
-    //     return $this->belongsTo(Proveedor::class, 'proveedores_idproveedores', 'idproveedores');
-    // }
+    public function proveedor()
+    {
+        return $this->belongsTo('App\Models\Proveedor', 'proveedor_id');
+    }
 }

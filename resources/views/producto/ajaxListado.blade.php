@@ -19,11 +19,35 @@
                     <td>{{ $producto->precio_compra }}</td>
                     <td>{{ $producto->precio_venta }}</td>
                     <td>
-                        <button class="btn btn-icon btn-sm btn-warning btn-circle" title="Editar producto"
+                        {{-- <button class="btn btn-icon btn-sm btn-warning btn-circle" title="Editar producto"
                             onclick="editarProducto({{ json_encode($producto) }})"><i class="fa fa-edit"></i></button>
                         <button class="btn btn-icon btn-sm btn-danger btn-circle" title="Eliminar producto"
                             onclick="eliminarProducto('{{ $producto->idproductos }}')"><i
-                                class="fa fa-trash"></i></button>
+                                class="fa fa-trash"></i></button> --}}
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-bs-toggle="dropdown"
+                                data-bs-display="static" aria-expanded="false">
+                                Opciones
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start">
+                                {{-- @if ($producto->tipo_producto == 'PRODUCTO') --}}
+                                <li><button class="dropdown-item" type="button"
+                                        onclick="adicionarStockSucursal({{ json_encode($producto) }})"><i
+                                            class="fa fa-calendar-plus"></i> Stock-Sucursal</button></li>
+                                <li><button class="dropdown-item" type="button"
+                                        onclick="transferenciaSucursal({{ json_encode($producto) }})"><i
+                                            class="fa fa-arrow-right"></i> Transferencia</button></li>
+                                {{-- @endif --}}
+                                <li><button class="dropdown-item" type="button"
+                                        onclick="editarProducto({{ json_encode($producto) }})"><i
+                                            class="fa fa-edit"></i>
+                                        Editar</button></li>
+                                <li><button class="dropdown-item" type="button"
+                                        onclick="eliminarProducto('{{ $producto->idproductos }}')"><i
+                                            class="fa fa-trash"></i>
+                                        Eliminar</button></li>
+                            </ul>
+                        </div>
                     </td>
                 </tr>
             @empty
