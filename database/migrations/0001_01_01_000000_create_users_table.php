@@ -13,32 +13,11 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            
-            $table->unsignedBigInteger('usuario_creador_id')->nullable();
-           // $table->foreign('usuario_creador_id')->references('id')->on('users');
-            $table->unsignedBigInteger('usuario_modificador_id')->nullable();
-            //$table->foreign('usuario_modificador_id')->references('id')->on('users');
-            $table->unsignedBigInteger('usuario_eliminador_id')->nullable();
-           // $table->foreign('usuario_eliminador_id')->references('id')->on('users');
-           
-            //$table->foreignId('sucursal_id')->constrained('sucursales')->onDelete('cascade');
-
-            $table->foreign('sucursales_id')->references('id')->on('sucursales');
-            $table->unsignedBigInteger('sucursales_id')->nullable();
-            $table->foreign('roles_id')->references('id')->on('roles');
-            $table->unsignedBigInteger('roles_id')->nullable();
-            
-            $table->string('name')->nullable();;
-            $table->string('ap_paterno')->nullable();
-            $table->string('ap_materno')->nullable();
-            $table->string('cedula')->nullable();;
-            $table->string('celular')->nullable();
+            $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
-            $table->string('estado')->nullable();
-            $table->datetime('deleted_at')->nullable();
             $table->timestamps();
 
         });

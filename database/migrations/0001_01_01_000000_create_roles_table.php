@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('usuario_creador_id')->nullable();
-          //  $table->foreign('usuario_creador_id')->references('id')->on('users');
+           $table->foreign('usuario_creador_id')->references('id')->on('users');
             $table->unsignedBigInteger('usuario_modificador_id')->nullable();
-          //  $table->foreign('usuario_modificador_id')->references('id')->on('users');
+           $table->foreign('usuario_modificador_id')->references('id')->on('users');
             $table->unsignedBigInteger('usuario_eliminador_id')->nullable();
-          //  $table->foreign('usuario_eliminador_id')->references('id')->on('users');
+           $table->foreign('usuario_eliminador_id')->references('id')->on('users');
             $table->string('nombre')->nullable();
 
             $table->string('estado')->nullable();
