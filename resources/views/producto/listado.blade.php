@@ -150,26 +150,31 @@
     </div>
 
     <div class="d-flex flex-column flex-column-fluid">
-        <div id="kt_app_content" class="app-content flex-column-fluid">
-            <div id="kt_app_content_container" class="app-container container-xxlg">
-                <div class="card">
-                    <div class="card-header flex-wrap bg-light-info py-4">
-                        <div class="d-flex flex-stack">
-                            <h3 class="fw-bold">Listado de Productos</h3>
-                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalProducto"
-                                onclick="limpiarFormularioProducto()">Agregar Producto</button>
-                        </div>
+    <div id="kt_app_content" class="app-content flex-column-fluid">
+        <div id="kt_app_content_container" class="app-container container-xxlg">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light-info py-4 d-flex align-items-center justify-content-between">
+                    <h3 class="card-title fw-bold">Listado de Productos</h3>
+                    <div class="card-toolbar">
+                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalProducto" onclick="limpiarFormularioProducto()">
+                            <i class="fa fa-plus"></i> Agregar Producto
+                        </button>
                     </div>
-                    <div class="card-body" id="listadoProductos">
-                        <!-- El listado se carga por AJAX -->
-                    </div>
+                </div>
+
+                <div class="card-body py-4" id="listadoProductos">
+                    <!-- El listado se carga por AJAX -->
                 </div>
             </div>
         </div>
     </div>
+</div>
+
 @endsection
 @section('js')
-    <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+<script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
     <script>
         $(document).ready(function() {
             cargarListadoProductos();
@@ -251,29 +256,62 @@
             $('#modalProducto').modal('show');
         }
 
+       
+
         function eliminarProducto(id) {
-            if (!confirm('¿Está seguro de eliminar el producto?')) return;
-            $.ajax({
-                url: '{{ route('producto.eliminarProducto') }}',
-                type: 'POST',
-                data: {
-                    id: id
-                },
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(response) {
-                    if (response.estado) {
-                        cargarListadoProductos();
-                    } else {
-                        alert(response.message || 'Error al eliminar');
-                    }
-                },
-                error: function() {
-                    alert('Error de conexión');
+         Swal.fire({
+        title: "¿Quieres eliminar este producto?",
+        text: "¡Ya no podrás recuperarlo!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Sí, borrar!",
+        cancelButtonText: "No, cancelar!",
+        reverseButtons: true
+            }).then(function(result) {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '{{ route('producto.eliminarProducto') }}',
+                        type: 'POST',
+                        data: { id: id },
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(response) {
+                            if (response.estado) {
+                                cargarListadoProductos();
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Eliminado',
+                                    text: 'El producto fue eliminado correctamente',
+                                    timer: 1500,
+                                    showConfirmButton: false
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: response.message || 'Error al eliminar el producto'
+                                });
+                            }
+                        },
+                        error: function() {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Ocurrió un error de conexión'
+                            });
+                        }
+                    });
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    Swal.fire(
+                        "Cancelado",
+                        "La operación fue cancelada",
+                        "error"
+                    );
                 }
             });
         }
+
 
         //ADICIONAR STOCK
         function adicionarStockSucursal(producto) {

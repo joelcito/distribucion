@@ -14,14 +14,15 @@ class Proveedor extends Model
     // protected $primaryKey = 'idproveedores';
 
     protected $fillable = [
+        'usuario_creador_id',
+        'usuario_modificador_id',
+        'usuario_eliminador_id',
         'nombre',
         'nit',
         'razon_social',
         'direccion',
         'celular',
-        'usuario_creador_id',
-        'usuario_modificador_id',
-        'usuario_eliminador_id',
+        'estado',
         'deleted_at'
     ];
 }

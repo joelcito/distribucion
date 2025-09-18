@@ -4,6 +4,7 @@
             <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                 <th>Nombre</th>
                 <th>Correo</th>
+                <th>Celular</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -12,6 +13,7 @@
                 <tr>
                     <td>{{ $usuario->name }}</td>
                     <td>{{ $usuario->email }}</td>
+                    <td>{{ $usuario->celular }}</td>
                     <td>
                         <button class="btn btn-icon btn-sm btn-warning btn-circle" title="Editar usuario"
                             onclick="editarUsuario({{ json_encode($usuario) }})"><i class="fa fa-edit"></i></button>

@@ -12,20 +12,25 @@ return new class extends Migration {
     {
         Schema::create('productos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('usuario_creador_id')->constrained('users');
-            $table->foreignId('usuario_modificador_id')->constrained('users');
-            $table->foreignId('usuario_eliminador_id')->nullable()->constrained('users');
-            $table->foreign('proveedor_id')->references('id')->on('proveedores');
-            $table->unsignedBigInteger('proveedor_id')->nullable();
-
-            $table->string('codigo', 45);
+            $table->unsignedBigInteger('usuario_creador_id')->nullable();
+            $table->foreign('usuario_creador_id')->references('id')->on('users');
+            $table->unsignedBigInteger('usuario_modificador_id')->nullable();
+            $table->foreign('usuario_modificador_id')->references('id')->on('users');
+            $table->unsignedBigInteger('usuario_eliminador_id')->nullable();
+            $table->foreign('usuario_eliminador_id')->references('id')->on('users');
+           
             $table->string('nombre', 45);
-            // $table->foreignId('proveedores_idproveedores')->constrained('proveedores', 'idproveedores');
-
+            $table->unsignedBigInteger('proveedores_idproveedores')->nullable();
+            $table->foreign('proveedores_idproveedores')->references('id')->on('proveedores');
+            
             $table->decimal('precio_compra', 12, 2);
             $table->decimal('precio_venta', 12, 2);
+            $table->string('codigo', 45);
+            
+            $table->string('estado')->nullable();
+            $table->datetime('deleted_at')->nullable();
             $table->timestamps();
-            $table->softDeletes();
+            
         });
     }
 

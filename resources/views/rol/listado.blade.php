@@ -48,52 +48,35 @@
     </div>
     <!--end::Modal - Add task-->
 
-    <!--begin::Content wrapper-->
+
     <div class="d-flex flex-column flex-column-fluid">
-        <div id="kt_app_content" class="app-content flex-column-fluid">
-            <!--begin::Content container-->
-            <div id="kt_app_content_container" class="app-container container-xxlg">
-                <!--begin::Card-->
-                <div class="card">
-                    <div class="card-header flex-wrap bg-light-info py-4">
-                        <div id="kt_app_toolbar_container" class="app-container container-xxlg d-flex flex-stack">
-                            <!--begin::Page title-->
-                            <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
-                                <!--begin::Title-->
-                                <h1
-                                    class="page-heading d-flex text-gray-900 fw-bold fs-3 flex-column justify-content-center my-0">
-                                    LISTADO DE ROLES</h1>
-                                <!--end::Title-->
-                            </div>
-                            <!--end::Page title-->
-
-                            <!--begin::Actions-->
-                            <div class="d-flex gap-2 gap-lg-3">
-                            <a class="btn btn-sm fw-bold btn-primary" onclick="modalNuevoRol()"><i class="fa fa-plus"></i>Nuevo Rol</a>
-                        </div>
-
-                            <!--end::Actions-->
-                        </div>
-                    </div>
-
-                    <div class="card-body py-4">
-                        <div id="table_listado">
-
-                        </div>
+    <div id="kt_app_content" class="app-content flex-column-fluid">
+        <div id="kt_app_content_container" class="app-container container-xxlg">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light-info py-4 d-flex align-items-center justify-content-between">
+                    <h3 class="card-title fw-bold">Listado de Roles</h3>
+                    <div class="card-toolbar">
+                        <button type="button" class="btn btn-primary btn-sm" onclick="modalNuevoRol()">
+                            <i class="fa fa-plus"></i> Nuevo Rol
+                        </button>
                     </div>
                 </div>
-                <!--end::Card-->
+
+                <div class="card-body py-4" id="table_listado">
+                    <!-- El listado se carga por AJAX -->
+                </div>
             </div>
-            <!--end::Content container-->
         </div>
-        <!--end::Content-->
     </div>
-    <!--end::Content wrapper-->
+</div>
+
 
 @stop()
 
 @section('js')
-    <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+<script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
     <script>
         $.ajaxSetup({
             // definimos cabecera donde estarra el token y poder hacer nuestras operaciones de put,post...
@@ -180,44 +163,59 @@
             $('#modalRol').modal('show')
         }
 
-        function eliminarRol(rol){
-            Swal.fire({
-                title: "Quieres eliminar " + rol.nombre,
-                text: "Ya no podras recuperarlo!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonText: "Si, borrar!",
-                cancelButtonText: "No, cancelar!",
-                reverseButtons: true
-            }).then(function(result) {
-                if (result.value) {
-                    $.ajax({
-                        url: "{{ route('rol.eliminarRol') }}",
-                        method: "POST",
-                        data: {rol:rol},
-                        success: function(resultado) {
-                            if (resultado.estado) {
-                                ajaxListado();
-                            }
-                        },
-                        error: function(xhr) {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: 'Ocurrió un error inesperado.',
-
-                            });
-                        }
+        function eliminarRol(rol) {
+    Swal.fire({
+        title: "¿Quieres eliminar " + rol.nombre + "?",
+        text: "¡No podrás recuperarlo!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: "Sí, borrar",
+        cancelButtonText: "No, cancelar",
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: "{{ route('rol.eliminarRol') }}",
+                method: "POST",
+                data: { rol: rol },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(resultado) {
+                    if (resultado.estado) {
+                        ajaxListado(); // recarga el listado
+                        Swal.fire(
+                            'Eliminado!',
+                            'El rol ha sido eliminado correctamente.',
+                            'success'
+                        );
+                    } else {
+                        Swal.fire(
+                            'Error',
+                            resultado.message || 'No se pudo eliminar el rol.',
+                            'error'
+                        );
+                    }
+                },
+                error: function(xhr) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Ocurrió un error inesperado.'
                     });
-                } else if (result.dismiss === "cancel") {
-                    Swal.fire(
-                        "Cancelado",
-                        "La operacion fue cancelada",
-                        "error"
-                    )
                 }
             });
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            Swal.fire(
+                'Cancelado',
+                'La operación fue cancelada',
+                'info'
+            );
         }
+    });
+}
 
     </script>
 @endsection

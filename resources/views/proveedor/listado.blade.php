@@ -61,27 +61,32 @@
             </div>
         </div>
     </div>
-    <div class="d-flex flex-column flex-column-fluid">
-        <div id="kt_app_content" class="app-content flex-column-fluid">
-            <div id="kt_app_content_container" class="app-container container-xxlg">
-                <div class="card">
-                    <div class="card-header flex-wrap bg-light-info py-4">
-                        <div class="d-flex flex-stack">
-                            <h3 class="fw-bold">Listado de Proveedores</h3>
-                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalProveedor"
-                                onclick="limpiarFormularioProveedor()">Agregar Proveedor</button>
-                        </div>
+   <div class="d-flex flex-column flex-column-fluid">
+    <div id="kt_app_content" class="app-content flex-column-fluid">
+        <div id="kt_app_content_container" class="app-container container-xxlg">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light-info py-4 d-flex align-items-center justify-content-between">
+                    <h3 class="card-title fw-bold">Listado de Proveedores</h3>
+                    <div class="card-toolbar">
+                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalProveedor" onclick="limpiarFormularioProveedor()">
+                            <i class="fa fa-plus"></i> Agregar Proveedor
+                        </button>
                     </div>
-                    <div class="card-body" id="listadoProveedores">
-                        <!-- El listado se carga por AJAX -->
-                    </div>
+                </div>
+
+                <div class="card-body py-4" id="listadoProveedores">
+                    <!-- El listado se carga por AJAX -->
                 </div>
             </div>
         </div>
     </div>
+</div>
+
 @endsection
 @section('js')
-    <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+<script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
     <script>
         $(document).ready(function() {
             cargarListadoProveedores();
@@ -108,6 +113,8 @@
                 }
             });
         }
+
+        
 
         function limpiarFormularioProveedor() {
             $('#id').val(0);
@@ -164,27 +171,57 @@
         }
 
         function eliminarProveedor(id) {
-            if (!confirm('¿Está seguro de eliminar el proveedor?')) return;
+    Swal.fire({
+        title: "¿Quieres eliminar este proveedor?",
+        text: "¡No podrás recuperarlo!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: "Sí, borrar",
+        cancelButtonText: "No, cancelar",
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
             $.ajax({
                 url: '{{ route('proveedor.eliminarProveedor') }}',
                 type: 'POST',
-                data: {
-                    id: id
-                },
+                data: { id: id },
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(response) {
                     if (response.estado) {
-                        cargarListadoProveedores();
+                        cargarListadoProveedores(); // recarga el listado
+                        Swal.fire(
+                            'Eliminado!',
+                            'El proveedor ha sido eliminado correctamente.',
+                            'success'
+                        );
                     } else {
-                        alert(response.message || 'Error al eliminar');
+                        Swal.fire(
+                            'Error',
+                            response.message || 'No se pudo eliminar el proveedor.',
+                            'error'
+                        );
                     }
                 },
                 error: function() {
-                    alert('Error de conexión');
+                    Swal.fire(
+                        'Error',
+                        'Ocurrió un error de conexión.',
+                        'error'
+                    );
                 }
             });
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            Swal.fire(
+                'Cancelado',
+                'La operación fue cancelada',
+                'info'
+            );
         }
+    });
+}
     </script>
 @endsection

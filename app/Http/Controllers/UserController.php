@@ -36,6 +36,7 @@ class UserController extends Controller
             $name = $request->input('name');
             $email = $request->input('email');
             $password = $request->input('password');
+            $celular = $request->input('celular');
 
             if ($usuario_id == "0") {
                 $user = new User();

@@ -110,52 +110,33 @@
 
     <!--begin::Content wrapper-->
     <div class="d-flex flex-column flex-column-fluid">
-        <!--begin::Content-->
-        <div id="kt_app_content" class="app-content flex-column-fluid">
-            <!--begin::Content container-->
-            <div id="kt_app_content_container" class="app-container container-xxlg">
-                <!--begin::Card-->
-                <div class="card">
-                    <div class="card-header flex-wrap bg-light-info py-4">
-                        <div id="kt_app_toolbar_container" class="app-container container-xxlg d-flex flex-stack">
-                            <!--begin::Page title-->
-                            <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
-                                <!--begin::Title-->
-                                <h1
-                                    class="page-heading d-flex text-gray-900 fw-bold fs-3 flex-column justify-content-center my-0">
-                                    LISTADO DE CLIENTES</h1>
-                                <!--end::Title-->
-                            </div>
-                            <!--end::Page title-->
-
-                            <!--begin::Actions-->
-                            <div class="d-flex gap-2 gap-lg-3">
-                                <a class="btn btn-sm fw-bold btn-primary" onclick="modalNuevoCliente()"><i
-                                        class="fa fa-plus"></i>Nuevo Registro</a>
-                            </div>
-
-                            <!--end::Actions-->
-                        </div>
-                    </div>
-
-                    <div class="card-body py-4">
-                        <div id="table_listado">
-
-                        </div>
+    <div id="kt_app_content" class="app-content flex-column-fluid">
+        <div id="kt_app_content_container" class="app-container container-xxlg">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light-info py-4 d-flex align-items-center justify-content-between">
+                    <h3 class="card-title fw-bold">Listado de Clientes</h3>
+                    <div class="card-toolbar">
+                        <button type="button" class="btn btn-primary btn-sm" onclick="modalNuevoCliente()">
+                            <i class="fa fa-plus"></i> Nuevo Registro
+                        </button>
                     </div>
                 </div>
-                <!--end::Card-->
+
+                <div class="card-body py-4" id="table_listado">
+                    <!-- El listado se carga por AJAX -->
+                </div>
             </div>
-            <!--end::Content container-->
         </div>
-        <!--end::Content-->
     </div>
-    <!--end::Content wrapper-->
+</div>
+
 
 @stop()
 
 @section('js')
-    <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+<script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
     <script>
         $.ajaxSetup({
             // definimos cabecera donde estarra el token y poder hacer nuestras operaciones de put,post...
@@ -272,43 +253,57 @@
         }
 
         function eliminarCliente(cliente) {
-            Swal.fire({
-                title: "Quieres eliminar " + cliente.nombres,
-                text: "Ya no podras recuperarlo!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonText: "Si, borrar!",
-                cancelButtonText: "No, cancelar!",
-                reverseButtons: true
-            }).then(function(result) {
-                if (result.value) {
-                    $.ajax({
-                        url: "{{ route('cliente.eliminarCliente') }}",
-                        method: "POST",
-                        data: cliente,
-                        success: function(resultado) {
-                            if (resultado.estado) {
-                                ajaxListado();
-                            }
-                        },
-                        error: function(xhr) {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: 'Ocurrió un error inesperado.',
-
-                            });
-                        }
-                    });
-                } else if (result.dismiss === "cancel") {
+    Swal.fire({
+        title: "¿Quieres eliminar " + cliente.nombres + "?",
+        text: "¡No podrás recuperarlo!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: "Sí, borrar",
+        cancelButtonText: "No, cancelar",
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: "{{ route('cliente.eliminarCliente') }}",
+                method: "POST",
+                data: cliente,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(resultado) {
+                    if (resultado.estado) {
+                        ajaxListado(); // recarga el listado de clientes
+                        Swal.fire(
+                            'Eliminado!',
+                            'El cliente ha sido eliminado correctamente.',
+                            'success'
+                        );
+                    } else {
+                        Swal.fire(
+                            'Error',
+                            resultado.message || 'No se pudo eliminar el cliente.',
+                            'error'
+                        );
+                    }
+                },
+                error: function() {
                     Swal.fire(
-                        "Cancelado",
-                        "La operacion fue cancelada",
-                        "error"
-                    )
+                        'Error',
+                        'Ocurrió un error de conexión.',
+                        'error'
+                    );
                 }
             });
-
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            Swal.fire(
+                'Cancelado',
+                'La operación fue cancelada',
+                'info'
+            );
         }
+    });
+}
     </script>
 @endsection

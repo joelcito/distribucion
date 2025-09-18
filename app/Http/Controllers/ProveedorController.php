@@ -14,18 +14,40 @@ class ProveedorController extends Controller
         return view('proveedor.listado');
     }
 
+    // public function ajaxListado(Request $request)
+    // {
+    //     if ($request->ajax()) {
+    //         $proveedores = Proveedor::all();
+    //         $valores = [
+    //             'listado' => view('proveedor.ajaxListado')->with(compact('proveedores'))->render()
+    //         ];
+    //         $data = Respuesta::success($valores, "Datos obtenidos correctamente");
+    //     } else {
+    //         $data = Respuesta::error(null, "Error al obtener los datos");
+    //     }
+    //     return $data;
+    // }
+
     public function ajaxListado(Request $request)
     {
         if ($request->ajax()) {
-            $proveedores = Proveedor::all();
+            $proveedores = Proveedor::all(); // Devuelve colección, excluye eliminados
             $valores = [
-                'listado' => view('proveedor.ajaxListado')->with(compact('proveedores'))->render()
+                'listado' => view('proveedor.ajaxListado', compact('proveedores'))->render()
             ];
-            $data = Respuesta::success($valores, "Datos obtenidos correctamente");
-        } else {
-            $data = Respuesta::error(null, "Error al obtener los datos");
+
+            return response()->json([
+                'estado' => true,
+                'data' => $valores,
+                'message' => "Datos obtenidos correctamente"
+            ]);
         }
-        return $data;
+
+        return response()->json([
+            'estado' => false,
+            'data' => null,
+            'message' => "Error al obtener los datos"
+        ]);
     }
 
     public function guardarProveedor(Request $request)

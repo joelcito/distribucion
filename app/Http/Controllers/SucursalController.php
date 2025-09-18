@@ -13,19 +13,55 @@ class SucursalController extends Controller
         return view('sucursal.listado');
     }
 
-    public function ajaxListado(Request $request)
+    // public function ajaxListado(Request $request)
+    // {
+    //     if ($request->ajax()) {
+    //         $sucursales = Sucursal::all();
+    //         $valores = [
+    //             'listado' => view('sucursal.ajaxListado')->with(compact('sucursales'))->render()
+    //         ];
+    //         $data = \App\Utils\Respuesta::success($valores, "Datos obtenidos correctamente");
+    //     } else {
+    //         $data = \App\Utils\Respuesta::error(null, "Error al obtener los datos");
+    //     }
+    //     return $data;
+    // }
+
+
+ public function ajaxListado(Request $request)
     {
-        if ($request->ajax()) {
-            $sucursales = Sucursal::all();
-            $valores = [
-                'listado' => view('sucursal.ajaxListado')->with(compact('sucursales'))->render()
-            ];
-            $data = \App\Utils\Respuesta::success($valores, "Datos obtenidos correctamente");
-        } else {
-            $data = \App\Utils\Respuesta::error(null, "Error al obtener los datos");
+        if (!$request->ajax()) {
+            return response()->json([
+                'estado' => false,
+                'data' => null,
+                'message' => 'No es petición Ajax'
+            ]);
         }
-        return $data;
+
+        try {
+            $sucursales = Sucursal::all()->map(function($sucursal){
+                return [
+                    'id' => $sucursal->id,
+                    'codigo_sucursal' => $sucursal->codigo_sucursal,
+                    'nombre' => $sucursal->nombre,
+                    'direccion' => $sucursal->direccion,
+                ];
+            });
+
+            return response()->json([
+                'estado' => true,
+                'data' => $sucursales,
+                'message' => 'Datos obtenidos correctamente'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'estado' => false,
+                'data' => null,
+                'message' => $e->getMessage()
+            ]);
+        }
     }
+
 
     public function guardarSucursal(Request $request)
     {

@@ -38,6 +38,13 @@
                                         name="password">
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="fw-semibold fs-6 mb-2">Celular</label>
+                                    <input type="number" class="form-control form-control-sm" id="celular"
+                                        name="celular">
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -47,26 +54,35 @@
             </div>
         </div>
     </div>
+   
+
     <div class="d-flex flex-column flex-column-fluid">
-        <div id="kt_app_content" class="app-content flex-column-fluid">
-            <div id="kt_app_content_container" class="app-container container-xxlg">
-                <div class="card">
-                    <div class="card-header flex-wrap bg-light-info py-4">
-                        <div class="d-flex flex-stack">
-                            <h3 class="fw-bold">Listado de Usuarios</h3>
-                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalUsuario"
-                                onclick="limpiarFormularioUsuario()">Agregar Usuario</button>
-                        </div>
+    <div id="kt_app_content" class="app-content flex-column-fluid">
+        <div id="kt_app_content_container" class="app-container container-xxlg">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light-info py-4 d-flex align-items-center justify-content-between">
+                    <h3 class="card-title fw-bold">Listado de Usuarios</h3>
+                    <div class="card-toolbar">
+                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalUsuario" onclick="limpiarFormularioUsuario()">
+                            <i class="fa fa-plus"></i> Agregar Usuario
+                        </button>
                     </div>
-                    <div class="card-body" id="listadoUsuarios">
-                        <!-- El listado se carga por AJAX -->
-                    </div>
+                </div>
+                <div class="card-body" id="listadoUsuarios">
+                    
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+
+    
+
+
 @endsection
 @section('js')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
     <script>
         $(document).ready(function() {
@@ -95,10 +111,13 @@
             });
         }
 
+   
+
         function limpiarFormularioUsuario() {
             $('#id').val(0);
             $('#name').val('');
             $('#email').val('');
+            $('#celular').val('');
             $('#rol_id').val('');
             $('#password').val('');
         }
@@ -107,6 +126,7 @@
             var id = $('#id').val();
             var name = $('#name').val();
             var email = $('#email').val();
+            var celular = $('#celular').val();
             var rol_id = $('#rol_id').val();
             var password = $('#password').val();
             $.ajax({
@@ -116,6 +136,7 @@
                     id: id,
                     name: name,
                     email: email,
+                    celular: celular,
                     rol_id: rol_id,
                     password: password
                 },
@@ -140,33 +161,57 @@
             $('#id').val(usuario.id);
             $('#name').val(usuario.name);
             $('#email').val(usuario.email);
+            $('#celular').val(usuario.celular);
             $('#rol_id').val(usuario.rol_id);
             $('#password').val('');
             $('#modalUsuario').modal('show');
         }
 
         function eliminarUsuario(id) {
-            if (!confirm('¿Está seguro de eliminar el usuario?')) return;
+    Swal.fire({
+        title: '¿Está seguro?',
+        text: "¡No podrá revertir esta acción!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
             $.ajax({
                 url: '{{ route('usuario.eliminarUsuario') }}',
                 type: 'POST',
-                data: {
-                    id: id
-                },
+                data: { id: id },
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(response) {
                     if (response.estado) {
-                        cargarListadoUsuarios();
+                        cargarListadoUsuarios(); // recarga la tabla
+                        Swal.fire(
+                            'Eliminado!',
+                            response.message,
+                            'success'
+                        );
                     } else {
-                        alert(response.message || 'Error al eliminar');
+                        Swal.fire(
+                            'Error',
+                            response.message || 'No se pudo eliminar',
+                            'error'
+                        );
                     }
                 },
                 error: function() {
-                    alert('Error de conexión');
+                    Swal.fire(
+                        'Error',
+                        'Error de conexión',
+                        'error'
+                    );
                 }
             });
         }
+    });
+}
     </script>
 @endsection

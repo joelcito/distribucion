@@ -18,18 +18,24 @@
                         <button class="btn btn-icon btn-sm btn-warning btn-circle" title="Editar sucursal"
                             onclick="editarSucursal({{ json_encode($sucursal) }})"><i class="fa fa-edit"></i></button>
                         <button class="btn btn-icon btn-sm btn-danger btn-circle" title="Eliminar sucursal"
-                            onclick="eliminarSucursal('{{ $sucursal->idsucursales }}')"><i
+                            onclick="eliminarSucursal('{{ $sucursal->id }}')"><i
                                 class="fa fa-trash"></i></button>
+
+                                
+
                     </td>
                 </tr>
             @empty
-                <h4 class="text-danger">No hay datos</h4>
+            <tr>
+                <td colspan="4" class="text-center text-danger">No hay datos</td>
+            </tr>
+                
             @endforelse
         </tbody>
     </table>
 </div>
 <script>
-    $(document).ready(function() {
+   $(document).ready(function() {
         $('#kt_table_sucursales').DataTable({
             lengthMenu: [10, 25, 50, 100],
             dom: '<"dt-head row"<"col-md-6"l><"col-md-6"f>><"clear">t<"dt-footer row"<"col-md-5"i><"col-md-7"p>>',
@@ -48,5 +54,31 @@
             order: [],
             responsive: true
         });
-    });
+   });
+
+
+
+// Inicializa DataTable solo después de inyectar el HTML
+    // if ($.fn.DataTable.isDataTable('#kt_table_sucursales')) {
+    //     $('#kt_table_sucursales').DataTable().destroy();
+    // }
+
+    // $('#kt_table_sucursales').DataTable({
+    //     lengthMenu: [10, 25, 50, 100],
+    //     dom: '<"dt-head row"<"col-md-6"l><"col-md-6"f>><"clear">t<"dt-footer row"<"col-md-5"i><"col-md-7"p>>',
+    //     language: {
+    //         paginate: {
+    //             first: 'Primero',
+    //             last: 'Último',
+    //             next: 'Siguiente',
+    //             previous: 'Anterior'
+    //         },
+    //         search: 'Buscar:',
+    //         lengthMenu: 'Mostrar _MENU_ registros por página',
+    //         info: 'Mostrando _START_ a _END_ de _TOTAL_ registros',
+    //         emptyTable: 'No hay datos disponibles'
+    //     },
+    //     order: [],
+    //     responsive: true
+    // });
 </script>
