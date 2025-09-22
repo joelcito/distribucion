@@ -53,12 +53,16 @@ class ProveedorController extends Controller
     public function guardarProveedor(Request $request)
     {
         if ($request->ajax()) {
+
+            // dd($request->all());
             $proveedor_id = $request->input('id');
             $nombre       = $request->input('nombre');
             $nit          = $request->input('nit');
             $razon_social = $request->input('razon_social');
             $direccion    = $request->input('direccion');
             $celular      = $request->input('celular');
+            $banco        = $request->input('banco');
+            $nro_cuenta   = $request->input('nro_cuenta');
             $usuario      = Auth::user();
 
             if ($proveedor_id == "0") {
@@ -69,11 +73,13 @@ class ProveedorController extends Controller
                 $proveedor = Proveedor::find($proveedor_id);
                 $proveedor->usuario_modificador_id = $usuario->id;
             }
-            $proveedor->nombre = $nombre;
-            $proveedor->nit = $nit;
-            $proveedor->razon_social = $razon_social;
-            $proveedor->direccion = $direccion;
-            $proveedor->celular = $celular;
+            $proveedor->nombre        = $nombre;
+            $proveedor->nit           = $nit;
+            $proveedor->razon_social  = $razon_social;
+            $proveedor->direccion     = $direccion;
+            $proveedor->celular       = $celular;
+            $proveedor->banco         = $banco;
+            $proveedor->numero_cuenta = $nro_cuenta;
             $proveedor->save();
             $data = Respuesta::success(null, "Proveedor guardado correctamente");
         } else {

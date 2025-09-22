@@ -92,6 +92,50 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row mt-3">
+                            <div class="col-md-3">
+                                <div class="fv-row mb-7">
+                                    <label class="fw-semibold fs-6 mb-2">Codigo Cliente</label>
+                                    <input type="text" class="form-control form-control-sm" id="codigo_cliente" name="codigo_cliente">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="fv-row mb-7">
+                                    <label class="fw-semibold fs-6 mb-2">Nombre de farmacia</label>
+                                    <input type="text" class="form-control form-control-sm" id="nombre_farmacia" name="nombre_farmacia">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="fv-row mb-7">
+                                    <label class="fw-semibold fs-6 mb-2">Departamento</label>
+                                    <select name="departamento_id" id="departamento_id" class="form-control form-control-sm">
+                                        <option value="">SELECCIONE</option>
+                                        @foreach ($departamentos as $d)
+                                            <option value="{{ $d->id }}">{{ $d->nombre }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="fv-row mb-7">
+                                    <label class="fw-semibold fs-6 mb-2">Provincia</label>
+                                    <select name="provincia_id" id="provincia_id" class="form-control form-control-sm">
+                                        <option value="">SELECCIONE</option>
+                                        @foreach ($previncias as $p)
+                                            <option value="{{ $p->id }}">{{ $p->nombre }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <div class="fv-row mb-7">
+                                    <label class="fw-semibold fs-6 mb-2">Direccion</label>
+                                    <input type="text" class="form-control form-control-sm" id="direccion" name="direccion">
+                                </div>
+                            </div>
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -135,7 +179,7 @@
 
 @section('js')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
+
 <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
     <script>
         $.ajaxSetup({

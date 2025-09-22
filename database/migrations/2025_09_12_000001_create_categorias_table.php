@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('clientes', function (Blueprint $table) {
+        Schema::create('categorias', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('usuario_creador_id')->nullable();
             $table->foreign('usuario_creador_id')->references('id')->on('users');
@@ -20,21 +20,7 @@ return new class extends Migration
             $table->unsignedBigInteger('usuario_eliminador_id')->nullable();
             $table->foreign('usuario_eliminador_id')->references('id')->on('users');
 
-            $table->unsignedBigInteger('provincia_id')->nullable();
-            $table->foreign('provincia_id')->references('id')->on('provincias');
-
-            $table->string('nombres')->nullable();
-            $table->string('ap_paterno')->nullable();
-            $table->string('ap_materno')->nullable();
-            $table->string('cedula')->nullable();
-            $table->string('complemento')->nullable();
-            $table->string('nit')->nullable();
-            $table->string('razon_social')->nullable();
-            $table->string('correo')->nullable();
-            $table->string('numero_celular')->nullable();
-            $table->string('nombre_farmcia')->nullable();
-            $table->text('ubicacion')->nullable();
-            $table->string('codigo_cliente')->nullable();
+            $table->string('nombre')->nullable();
 
             $table->string('estado')->nullable();
             $table->datetime('deleted_at')->nullable();
@@ -47,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('clientes');
+        Schema::dropIfExists('categorias');
     }
 };

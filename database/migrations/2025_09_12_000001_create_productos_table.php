@@ -19,12 +19,14 @@ return new class extends Migration {
             $table->unsignedBigInteger('usuario_eliminador_id')->nullable();
             $table->foreign('usuario_eliminador_id')->references('id')->on('users');
 
-            $table->string('nombre', 45);
             $table->unsignedBigInteger('proveedor_id')->nullable();
             $table->foreign('proveedor_id')->references('id')->on('proveedores');
+            $table->unsignedBigInteger('categoria_id')->nullable();
+            $table->foreign('categoria_id')->references('id')->on('categorias');
 
-            $table->decimal('precio_compra', 12, 2);
-            $table->decimal('precio_venta', 12, 2);
+            $table->string('nombre', 45);
+            // $table->decimal('precio_compra', 12, 2);
+            // $table->decimal('precio_venta', 12, 2);
             $table->string('codigo', 45);
 
             $table->string('estado')->nullable();

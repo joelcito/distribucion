@@ -1,16 +1,19 @@
 <?php
 
+use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\DepartamentoController;
 use App\Http\Controllers\FacturaController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProvinciaController;
 use App\Http\Controllers\RolController;
 use App\Http\Controllers\SucursalController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return redirect('home');
-    
+
     // return view('welcome');
 });
 
@@ -75,6 +78,26 @@ Route::middleware('auth')->group(function () {
         Route::post('/ajaxListado', [ClienteController::class, 'ajaxListado'])->name('cliente.ajaxListado');
         Route::post('/guardarCliente', [ClienteController::class, 'guardarCliente'])->name('cliente.guardarCliente');
         Route::post('/eliminarCliente', [ClienteController::class, 'eliminarCliente'])->name('cliente.eliminarCliente');
+    });
+
+    // DEPARTAMENTO
+    Route::prefix('/departamento')->group(function () {
+        Route::get('/listado', [DepartamentoController::class, 'listado'])->name('departamento.listado');
+        Route::post('/ajaxListado', [DepartamentoController::class, 'ajaxListado'])->name('departamento.ajaxListado');
+        Route::post('/guardarDepartamento', [DepartamentoController::class, 'guardarDepartamento'])->name('departamento.guardarDepartamento');
+    });
+
+    // PROVINCIAS
+    Route::prefix('provincia')->group(function () {
+        Route::post('/ajaxListado', [ProvinciaController::class, 'ajaxListado'])->name('provincia.ajaxListado');
+        Route::post('/guardarProvincia', [ProvinciaController::class, 'guardarProvincia'])->name('provincia.guardarProvincia');
+    });
+
+    // CATEGORIAS
+    Route::prefix('categoria')->group(function () {
+        Route::get('/listado', [CategoriaController::class, 'listado'])->name('categoria.listado');
+        Route::post('/ajaxListado', [CategoriaController::class, 'ajaxListado'])->name('categoria.ajaxListado');
+        Route::post('/guardarCategoria', [CategoriaController::class, 'guardarCategoria'])->name('categoria.guardarCategoria');
     });
 });
 

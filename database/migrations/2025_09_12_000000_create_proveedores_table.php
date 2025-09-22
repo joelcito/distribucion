@@ -18,19 +18,20 @@ return new class extends Migration {
             $table->foreign('usuario_modificador_id')->references('id')->on('users');
             $table->unsignedBigInteger('usuario_eliminador_id')->nullable();
             $table->foreign('usuario_eliminador_id')->references('id')->on('users');
-            
 
             $table->string('nombre', 45);
             $table->string('nit', 45);
             $table->string('razon_social', 45);
             $table->string('direccion', 45);
             $table->string('celular', 45);
-            
-            
+
+            $table->string('banco');
+            $table->string('numero_cuenta');
+
             $table->string('estado')->nullable();
             $table->datetime('deleted_at')->nullable();
             $table->timestamps();
-            
+
         });
     }
 

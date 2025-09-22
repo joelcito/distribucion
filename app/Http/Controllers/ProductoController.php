@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Categoria;
 use App\Models\Producto;
 use App\Models\Proveedor;
 use App\Models\Sucursal;
@@ -13,7 +14,8 @@ class ProductoController extends Controller
 {
     public function listado()
     {
-        return view('producto.listado');
+        $categotias = Categoria::all();
+        return view('producto.listado')->with(compact('categotias'));
     }
 
     public function ajaxListado(Request $request)
@@ -49,11 +51,11 @@ class ProductoController extends Controller
                 $producto = Producto::find($producto_id);
                 $producto->usuario_modificador_id = $usuario->id;
             }
-            $producto->codigo = $codigo;
-            $producto->nombre = $nombre;
-            $producto->proveedores_idproveedores = $proveedores_idproveedores;
-            $producto->precio_compra = $precio_compra;
-            $producto->precio_venta = $precio_venta;
+            $producto->codigo        = 123;
+            $producto->nombre        = $nombre;
+            $producto->proveedor_id  = $proveedores_idproveedores;
+            // $producto->precio_compra = $precio_compra;
+            // $producto->precio_venta  = $precio_venta;
             $producto->save();
             $data = Respuesta::success(null, "Producto guardado correctamente");
         } else {

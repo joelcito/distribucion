@@ -45,11 +45,25 @@
                                         name="direccion">
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
                                 <div class="mb-3">
                                     <label class="required fw-semibold fs-6 mb-2">Celular</label>
                                     <input type="text" class="form-control form-control-sm" id="celular"
                                         name="celular">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label class="required fw-semibold fs-6 mb-2">Banco</label>
+                                    <input type="text" class="form-control form-control-sm" id="banco" name="banco">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label class="required fw-semibold fs-6 mb-2">Nro Cuenta</label>
+                                    <input type="text" class="form-control form-control-sm" id="nro_cuenta" name="nro_cuenta">
                                 </div>
                             </div>
                         </div>
@@ -85,7 +99,7 @@
 @endsection
 @section('js')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
+
 <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
     <script>
         $(document).ready(function() {
@@ -114,7 +128,7 @@
             });
         }
 
-        
+
 
         function limpiarFormularioProveedor() {
             $('#id').val(0);
@@ -126,12 +140,14 @@
         }
 
         function guardarProveedor() {
-            var id = $('#id').val();
-            var nombre = $('#nombre').val();
-            var nit = $('#nit').val();
+            var id           = $('#id').val();
+            var nombre       = $('#nombre').val();
+            var nit          = $('#nit').val();
             var razon_social = $('#razon_social').val();
-            var direccion = $('#direccion').val();
-            var celular = $('#celular').val();
+            var direccion    = $('#direccion').val();
+            var celular      = $('#celular').val();
+            var banco        = $('#banco').val();
+            var nro_cuenta   = $('#nro_cuenta').val();
             $.ajax({
                 url: '{{ route('proveedor.guardarProveedor') }}',
                 type: 'POST',
@@ -141,7 +157,9 @@
                     nit: nit,
                     razon_social: razon_social,
                     direccion: direccion,
-                    celular: celular
+                    celular: celular,
+                    banco: banco,
+                    nro_cuenta: nro_cuenta
                 },
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

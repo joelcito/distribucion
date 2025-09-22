@@ -17,21 +17,14 @@
                     <form id="formularioProducto">
                         <input type="hidden" name="id" id="id" value="0">
                         <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="required fw-semibold fs-6 mb-2">Código</label>
-                                    <input type="text" class="form-control form-control-sm" id="codigo"
-                                        name="codigo">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="mb-3">
                                     <label class="required fw-semibold fs-6 mb-2">Nombre</label>
                                     <input type="text" class="form-control form-control-sm" id="nombre"
                                         name="nombre">
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="mb-3">
                                     <label class="required fw-semibold fs-6 mb-2">Proveedor</label>
                                     <select class="form-control form-control-sm" id="proveedores_idproveedores"
@@ -42,24 +35,22 @@
                                             $proveedores = \App\Models\Proveedor::all();
                                         @endphp
                                         @foreach ($proveedores as $proveedor)
-                                            <option value="{{ $proveedor->idproveedores }}">{{ $proveedor->nombre }}
+                                            <option value="{{ $proveedor->id }}">{{ $proveedor->nombre }}
                                             </option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="mb-3">
-                                    <label class="required fw-semibold fs-6 mb-2">Precio Compra</label>
-                                    <input type="number" step="0.01" class="form-control form-control-sm"
-                                        id="precio_compra" name="precio_compra">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="required fw-semibold fs-6 mb-2">Precio Venta</label>
-                                    <input type="number" step="0.01" class="form-control form-control-sm"
-                                        id="precio_venta" name="precio_venta">
+                                    <label class="required fw-semibold fs-6 mb-2">Categorias</label>
+                                    <select class="form-control form-control-sm" id="categoria_id" name="categoria_id">
+                                        <option value="">Seleccione un proveedor</option>
+                                        @foreach ($categotias as $categoria)
+                                            <option value="{{ $categoria->id }}">{{ $categoria->nombre }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -173,7 +164,7 @@
 @endsection
 @section('js')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
+
 <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
     <script>
         $(document).ready(function() {
@@ -256,7 +247,7 @@
             $('#modalProducto').modal('show');
         }
 
-       
+
 
         function eliminarProducto(id) {
          Swal.fire({

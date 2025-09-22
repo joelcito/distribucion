@@ -121,6 +121,24 @@
                                 <span class="menu-title text-white">Clientes</span>
                             </a>
                         </div>
+                        <div class="menu-item">
+                            <a class="menu-link {{ Route::currentRouteName() == 'departamento.listado' ? 'active' : '' }}"
+                                href="{{ route('departamento.listado') }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title text-white">Departamentos</span>
+                            </a>
+                        </div>
+                        <div class="menu-item">
+                            <a class="menu-link {{ Route::currentRouteName() == 'categoria.listado' ? 'active' : '' }}"
+                                href="{{ route('categoria.listado') }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title text-white">Categorias</span>
+                            </a>
+                        </div>
                         {{--
                         <div class="menu-item">
                             <a class="menu-link {{ Route::currentRouteName() == 'urlApiServicio.listado' ? 'active' : '' }}"
