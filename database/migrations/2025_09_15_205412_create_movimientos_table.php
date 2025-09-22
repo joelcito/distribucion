@@ -19,17 +19,16 @@ return new class extends Migration
             $table->foreign('usuario_modificador_id')->references('id')->on('users');
             $table->unsignedBigInteger('usuario_eliminador_id')->nullable();
             $table->foreign('usuario_eliminador_id')->references('id')->on('users');
-            
+
             // ADICIONAR CON LAS DEMAS MIGRACIONES
-            $table->unsignedBigInteger('productos_idproductos')->nullable();
-            $table->foreign('productos_idproductos')->references('id')->on('productos');
-           
-            $table->unsignedBigInteger('detalles_iddetalles')->nullable();
-            $table->foreign('detalles_iddetalles')->references('id')->on('detalles');
-            
-            $table->unsignedBigInteger('sucursales_idsucursales')->nullable();
-            $table->foreign('sucursales_idsucursales')->references('id')->on('sucursales');
-            
+            $table->unsignedBigInteger('producto_id')->nullable();
+            $table->foreign('producto_id')->references('id')->on('productos');
+
+            $table->unsignedBigInteger('detalle_id')->nullable();
+            $table->foreign('detalle_id')->references('id')->on('detalles');
+
+            $table->unsignedBigInteger('sucursal_id')->nullable();
+            $table->foreign('sucursal_id')->references('id')->on('sucursales');
 
             $table->decimal('ingreso', 12, 2)->nullable();
             $table->decimal('salida', 12, 2)->nullable();
@@ -37,7 +36,7 @@ return new class extends Migration
             $table->text('descripcion')->nullable();
             $table->decimal('precio_compra', 12, 2)->nullable();
             $table->decimal('precio_venta', 12, 2)->nullable();
-           
+
 
             $table->string('estado')->nullable();
             $table->datetime('deleted_at')->nullable();

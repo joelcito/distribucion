@@ -19,11 +19,12 @@ return new class extends Migration
             $table->foreign('usuario_modificador_id')->references('id')->on('users');
             $table->unsignedBigInteger('usuario_eliminador_id')->nullable();
             $table->foreign('usuario_eliminador_id')->references('id')->on('users');
-            $table->unsignedBigInteger('facturas_idfacturas')->nullable();
-            $table->foreign('facturas_idfacturas')->references('id')->on('facturas');
-            $table->unsignedBigInteger('sucursales_idsucursales')->nullable();
-            $table->foreign('sucursales_idsucursales')->references('id')->on('sucursales');
-           
+
+            $table->unsignedBigInteger('factura_id')->nullable();
+            $table->foreign('factura_id')->references('id')->on('facturas');
+            $table->unsignedBigInteger('sucursal_id')->nullable();
+            $table->foreign('sucursal_id')->references('id')->on('sucursales');
+
             $table->decimal('monto', 12, 2)->default(0);
             $table->decimal('cambio', 12, 2)->default(0);
             $table->date('fecha')->nullable();

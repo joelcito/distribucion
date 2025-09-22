@@ -19,16 +19,16 @@ return new class extends Migration
             $table->foreign('usuario_modificador_id')->references('id')->on('users');
             $table->unsignedBigInteger('usuario_eliminador_id')->nullable();
             $table->foreign('usuario_eliminador_id')->references('id')->on('users');
-            $table->unsignedBigInteger('facturas_idfacturas')->nullable();
-            $table->foreign('facturas_idfacturas')->references('id')->on('facturas');
-            $table->unsignedBigInteger('clientes_id')->nullable();
-            $table->foreign('clientes_id')->references('id')->on('clientes');
-            $table->unsignedBigInteger('productos_idproductos')->nullable();
-            $table->foreign('productos_idproductos')->references('id')->on('productos');
-            $table->unsignedBigInteger('sucursales_idsucursales')->nullable();
-            $table->foreign('sucursales_idsucursales')->references('id')->on('sucursales');
-            
-            
+            $table->unsignedBigInteger('factura_id')->nullable();
+            $table->foreign('factura_id')->references('id')->on('facturas');
+            $table->unsignedBigInteger('cliente_id')->nullable();
+            $table->foreign('cliente_id')->references('id')->on('clientes');
+            $table->unsignedBigInteger('producto_id')->nullable();
+            $table->foreign('producto_id')->references('id')->on('productos');
+            $table->unsignedBigInteger('sucursal_id')->nullable();
+            $table->foreign('sucursal_id')->references('id')->on('sucursales');
+
+
             $table->decimal('precio', 12, 2)->default(0);
             $table->decimal('cantidad', 12, 2)->default(0);
             $table->decimal('descuento', 12, 2)->default(0);

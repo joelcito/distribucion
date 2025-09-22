@@ -19,13 +19,13 @@ return new class extends Migration
             $table->foreign('usuario_modificador_id')->references('id')->on('users');
             $table->unsignedBigInteger('usuario_eliminador_id')->nullable();
             $table->foreign('usuario_eliminador_id')->references('id')->on('users');
-            $table->unsignedBigInteger('clientes_id')->nullable();
-            $table->foreign('clientes_id')->references('id')->on('clientes');
+
+            $table->unsignedBigInteger('cliente_id')->nullable();
+            $table->foreign('cliente_id')->references('id')->on('clientes');
             $table->unsignedBigInteger('usuario_id')->nullable();
             $table->foreign('usuario_id')->references('id')->on('users');
-            $table->unsignedBigInteger('provincias_id')->nullable();
-            $table->foreign('provincias_id')->references('id')->on('provincias');
-           
+            $table->unsignedBigInteger('provincia_id')->nullable();
+            $table->foreign('provincia_id')->references('id')->on('provincias');
             $table->json('pedidos_productos')->nullable();
             $table->date('fecha')->nullable();
             $table->string('tipo', 45);

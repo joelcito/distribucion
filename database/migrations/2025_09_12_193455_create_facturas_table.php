@@ -19,14 +19,14 @@ return new class extends Migration
             $table->foreign('usuario_modificador_id')->references('id')->on('users');
             $table->unsignedBigInteger('usuario_eliminador_id')->nullable();
             $table->foreign('usuario_eliminador_id')->references('id')->on('users');
-            $table->unsignedBigInteger('clientes_id')->nullable();
-            $table->foreign('clientes_id')->references('id')->on('clientes');
-            $table->unsignedBigInteger('sucursales_idsucursales')->nullable();
-            $table->foreign('sucursales_idsucursales')->references('id')->on('sucursales');
+            $table->unsignedBigInteger('cliente_id')->nullable();
+            $table->foreign('cliente_id')->references('id')->on('clientes');
+            $table->unsignedBigInteger('sucursal_id')->nullable();
+            $table->foreign('sucursal_id')->references('id')->on('sucursales');
            // $table->unsignedBigInteger('provincias_idprovincias')->nullable();
             //$table->foreign('provincias_idprovincias')->references('id')->on('provincias');
-            
-           
+
+
             $table->date('fecha')->nullable();
             $table->string('nit', 45);
             $table->string('razon_social', 45);
