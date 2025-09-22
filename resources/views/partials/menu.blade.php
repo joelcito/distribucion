@@ -172,6 +172,7 @@
                     </div>
                 </div>
 
+                {{--
                 <div class="menu-item">
                     <a class="menu-link" href="{{ route('factura.formulario') }}">
                         <span class="menu-icon">
@@ -180,30 +181,31 @@
                         <span class="menu-title text-white">VENTAS</span>
                     </a>
                 </div>
+                --}}
 
-                {{-- <div data-kt-menu-trigger="click"
+                <div data-kt-menu-trigger="click"
                     class="menu-item menu-accordion {{ Request::is('factura/*', 'caja/*') ? 'show' : '' }}">
                     <!--begin:Menu link-->
                     <span class="menu-link">
                         <span class="menu-icon">
                             <i class="fa fa-university"></i>
                         </span>
-                        <span class="menu-title text-white">FACTURACION</span>
+                        <span class="menu-title text-white">VENTAS</span>
                         <span class="menu-arrow"></span>
                     </span>
                     <!--end:Menu link-->
                     <div class="menu-sub menu-sub-accordion">
                         <div class="menu-item">
-                            <a class="menu-link" href="#">
+                            <a class="menu-link" href="{{ route('factura.formulario') }}">
                                 <span class="menu-bullet">
                                     <span class="bullet bullet-dot"></span>
                                 </span>
-                                <span class="menu-title text-white">Listado Facturas</span>
+                                <span class="menu-title text-white">Pedidos</span>
                             </a>
                         </div>
 
                     </div>
-                </div> --}}
+                </div>
 
                 {{-- <div data-kt-menu-trigger="click"
                     class="menu-item menu-accordion {{ Request::is('sincronizacion/*', 'eventoSignificativo/*') ? 'show' : '' }}">
