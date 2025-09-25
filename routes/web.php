@@ -29,6 +29,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/guardarProducto', [App\Http\Controllers\ProductoController::class, 'guardarProducto'])->name('producto.guardarProducto');
         Route::post('/eliminarProducto', [App\Http\Controllers\ProductoController::class, 'eliminarProducto'])->name('producto.eliminarProducto');
         Route::post('/ajaxStockSucursal', [App\Http\Controllers\ProductoController::class, 'ajaxStockSucursal'])->name('producto.ajaxStockSucursal');
+
     });
     // PROVEEDOR
     Route::prefix('/proveedor')->group(function () {
@@ -73,7 +74,7 @@ Route::middleware('auth')->group(function () {
     });
 
     // CLIENTE
-    Route::prefix('/cliente')->group(function(){
+    Route::prefix('/cliente')->group(function () {
         Route::get('/listado', [ClienteController::class, 'listado'])->name('cliente.listado');
         Route::post('/ajaxListado', [ClienteController::class, 'ajaxListado'])->name('cliente.ajaxListado');
         Route::post('/guardarCliente', [ClienteController::class, 'guardarCliente'])->name('cliente.guardarCliente');
@@ -99,6 +100,12 @@ Route::middleware('auth')->group(function () {
         Route::post('/ajaxListado', [CategoriaController::class, 'ajaxListado'])->name('categoria.ajaxListado');
         Route::post('/guardarCategoria', [CategoriaController::class, 'guardarCategoria'])->name('categoria.guardarCategoria');
     });
+
+    //MOVIMIENTOS
+    Route::prefix('movimiento')->group(function () {
+        Route::post('/guardarIngreso', [App\Http\Controllers\MovimientoController::class, 'guardarIngreso'])->name('movimientos.guardarIngreso');
+    });
+
 });
 
 require __DIR__ . '/auth.php';

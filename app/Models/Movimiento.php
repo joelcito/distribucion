@@ -23,7 +23,10 @@ class Movimiento extends Model
         'fecha',
         'descripcion',
         'estado',
-        'deleted_at'
+        'deleted_at',
+        'lotes',
+        'fecha_vencimiento'
+
     ];
 
     // public function detalle(){

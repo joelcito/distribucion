@@ -51,9 +51,9 @@ class ProductoController extends Controller
                 $producto = Producto::find($producto_id);
                 $producto->usuario_modificador_id = $usuario->id;
             }
-            $producto->codigo        = 123;
-            $producto->nombre        = $nombre;
-            $producto->proveedor_id  = $proveedores_idproveedores;
+            $producto->codigo = 123;
+            $producto->nombre = $nombre;
+            $producto->proveedor_id = $proveedores_idproveedores;
             // $producto->precio_compra = $precio_compra;
             // $producto->precio_venta  = $precio_venta;
             $producto->save();
@@ -84,25 +84,32 @@ class ProductoController extends Controller
         return $data;
     }
 
-    public function ajaxStockSucursal(Request $request){
-        if($request->ajax()){
+    public function ajaxStockSucursal(Request $request)
+    {
+        if ($request->ajax()) {
             $producto_id = $request->input('producto_id');
 
-            $sucursales = Sucursal::withSum(['movimientos' => function ($query) use($producto_id) {
-                                                $query->where('producto_id', $producto_id);
-                                            }], 'ingreso')
-                                    ->withSum(['movimientos' => function ($query) use($producto_id) {
-                                                $query->where('producto_id', $producto_id);
-                                            }], 'salida')
-                                    ->get();
+            $sucursales = Sucursal::withSum([
+                'movimientos' => function ($query) use ($producto_id) {
+                    $query->where('producto_id', $producto_id);
+                }
+            ], 'ingreso')
+                ->withSum([
+                    'movimientos' => function ($query) use ($producto_id) {
+                        $query->where('producto_id', $producto_id);
+                    }
+                ], 'salida')
+                ->get();
             $producto = Producto::find($producto_id);
             $valores = [
                 'listado' => view('producto.ajaxStockSucursal')->with(compact('sucursales', 'producto'))->render()
             ];
             $data = Respuesta::success($valores, "Datos obtenidos correctamente");
-        }else{
+        } else {
             $data = Respuesta::error(null, "Error al obtener los datos");
         }
         return $data;
     }
+
+
 }

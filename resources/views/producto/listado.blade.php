@@ -20,8 +20,7 @@
                             <div class="col-md-4">
                                 <div class="mb-3">
                                     <label class="required fw-semibold fs-6 mb-2">Nombre</label>
-                                    <input type="text" class="form-control form-control-sm" id="nombre"
-                                        name="nombre">
+                                    <input type="text" class="form-control form-control-sm" id="nombre" name="nombre">
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -107,30 +106,40 @@
                             <div class="col-md-4">
                                 <div class="fv-row mb-7">
                                     <label class="required fw-semibold fs-6 mb-2">Ingreso la cantidad</label>
-                                    <input type="number" min="1" step="any"
-                                        class="form-control form-control-sm" id="cantidad_ingreso"
-                                        name="cantidad_ingreso">
+                                    <input type="number" min="1" step="any" class="form-control form-control-sm"
+                                        id="cantidad_ingreso" name="cantidad_ingreso">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="fv-row mb-7">
                                     <label class="required fw-semibold fs-6 mb-2">Fecha de Registro</label>
-                                    <input type="date" class="form-control form-control-sm" id="fecha"
-                                        name="fecha" value="{{ date('Y-m-d') }}" @readonly(true)>
+                                    <input type="date" class="form-control form-control-sm" id="fecha" name="fecha"
+                                        value="{{ date('Y-m-d') }}" @readonly(true)>
                                     <div class="text-danger error-message" id="error-fecha"></div>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <label class="fw-semibold fs-6 mb-2">Descripcion</label>
-                                <textarea class="form-control form-control-sm" name="descripcion" id="descripcion" cols="30" rows="3"></textarea>
+                                <textarea class="form-control form-control-sm" name="descripcion" id="descripcion" cols="30"
+                                    rows="3"></textarea>
                             </div>
+                            <div class="mb-3">
+                                <label for="lote" class="form-label">Lote</label>
+                                <input type="text" class="form-control" id="lotes" name="lotes">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="fecha_vencimiento" class="form-label">Fecha de Vencimiento</label>
+                                <input type="date" class="form-control" id="fecha_vencimiento" name="fecha_vencimiento">
+                            </div>
+
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <div class="row">
                         <div class="col-md-12">
-                            <button class="btn btn-sm w-100 btn-success" onclick="guardarStockSucursal()">Guardar</button>
+                            <button class="btn btn-sm w-100 btn-success" onclick="guardarIngreso()">Guardar</button>
                         </div>
                     </div>
                 </div>
@@ -141,33 +150,34 @@
     </div>
 
     <div class="d-flex flex-column flex-column-fluid">
-    <div id="kt_app_content" class="app-content flex-column-fluid">
-        <div id="kt_app_content_container" class="app-container container-xxlg">
-            <div class="card shadow-sm">
-                <div class="card-header bg-light-info py-4 d-flex align-items-center justify-content-between">
-                    <h3 class="card-title fw-bold">Listado de Productos</h3>
-                    <div class="card-toolbar">
-                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalProducto" onclick="limpiarFormularioProducto()">
-                            <i class="fa fa-plus"></i> Agregar Producto
-                        </button>
+        <div id="kt_app_content" class="app-content flex-column-fluid">
+            <div id="kt_app_content_container" class="app-container container-xxlg">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-light-info py-4 d-flex align-items-center justify-content-between">
+                        <h3 class="card-title fw-bold">Listado de Productos</h3>
+                        <div class="card-toolbar">
+                            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#modalProducto" onclick="limpiarFormularioProducto()">
+                                <i class="fa fa-plus"></i> Agregar Producto
+                            </button>
+                        </div>
                     </div>
-                </div>
 
-                <div class="card-body py-4" id="listadoProductos">
-                    <!-- El listado se carga por AJAX -->
+                    <div class="card-body py-4" id="listadoProductos">
+                        <!-- El listado se carga por AJAX -->
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
 @endsection
 @section('js')
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
+    <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             cargarListadoProductos();
         });
 
@@ -179,7 +189,7 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                success: function(response) {
+                success: function (response) {
                     if (response.estado && response.data.listado) {
                         $('#listadoProductos').html(response.data.listado);
                     } else {
@@ -187,7 +197,7 @@
                             '<div class="alert alert-danger">No se pudo cargar el listado</div>');
                     }
                 },
-                error: function() {
+                error: function () {
                     $('#listadoProductos').html('<div class="alert alert-danger">Error de conexión</div>');
                 }
             });
@@ -223,7 +233,7 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                success: function(response) {
+                success: function (response) {
                     if (response.estado) {
                         $('#modalProducto').modal('hide');
                         cargarListadoProductos();
@@ -231,7 +241,7 @@
                         alert(response.message || 'Error al guardar');
                     }
                 },
-                error: function() {
+                error: function () {
                     alert('Error de conexión');
                 }
             });
@@ -250,15 +260,15 @@
 
 
         function eliminarProducto(id) {
-         Swal.fire({
-        title: "¿Quieres eliminar este producto?",
-        text: "¡Ya no podrás recuperarlo!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Sí, borrar!",
-        cancelButtonText: "No, cancelar!",
-        reverseButtons: true
-            }).then(function(result) {
+            Swal.fire({
+                title: "¿Quieres eliminar este producto?",
+                text: "¡Ya no podrás recuperarlo!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Sí, borrar!",
+                cancelButtonText: "No, cancelar!",
+                reverseButtons: true
+            }).then(function (result) {
                 if (result.isConfirmed) {
                     $.ajax({
                         url: '{{ route('producto.eliminarProducto') }}',
@@ -267,7 +277,7 @@
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
-                        success: function(response) {
+                        success: function (response) {
                             if (response.estado) {
                                 cargarListadoProductos();
                                 Swal.fire({
@@ -285,7 +295,7 @@
                                 });
                             }
                         },
-                        error: function() {
+                        error: function () {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error',
@@ -320,7 +330,7 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                success: function(resultado) {
+                success: function (resultado) {
 
                     if (resultado.estado) {
                         $('#nombre_producto').html(producto.nombre);
@@ -337,7 +347,7 @@
                         });
                     }
                 },
-                error: function(xhr) {
+                error: function (xhr) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
@@ -357,6 +367,8 @@
             $('#sucursal_id').val(sucursal.id)
             $('#cantidad_ingreso').val('')
             $('#descripcion').val('')
+            $('#lote').val('')
+            $('#fecha_vencimiento').val('')
             $('#modalStockSucursalProducto').modal('show')
 
         }
@@ -365,5 +377,58 @@
             $('.error-message').html('');
             $('.is-invalid').removeClass('is-invalid');
         }
+
+
+        function guardarIngreso() {
+            // Tomar los valores del modal
+            var producto_id = $('#producto_id').val();
+            var sucursal_id = $('#sucursal_id').val();
+            var ingreso = $('#cantidad_ingreso').val();
+            var descripcion = $('#descripcion').val();
+            var lote = $('#lotes').val();
+            var fecha_vencimiento = $('#fecha_vencimiento').val();
+            var fecha = $('#fecha').val(); // fecha de registro
+
+            // Validaciones básicas (opcional, puedes agregar más)
+            if (!producto_id || !sucursal_id || !ingreso) {
+                Swal.fire('Error', 'Debe completar los campos obligatorios', 'error');
+                return;
+            }
+
+            // Enviar Ajax al controlador
+            $.ajax({
+                url: '{{ route("movimientos.guardarIngreso") }}', // Ajusta tu ruta
+                type: 'POST',
+                data: {
+                    producto_id: producto_id,
+                    sucursal_id: sucursal_id,
+                    ingreso: ingreso,
+                    descripcion: descripcion,
+                    lote: lote,
+                    fecha_vencimiento: fecha_vencimiento,
+                    fecha: fecha
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function (response) {
+                    if (response.estado) {
+                        $('#modalStockSucursalProducto').modal('hide');
+                        Swal.fire('Éxito', 'Ingreso registrado correctamente', 'success');
+                        // Opcional: recargar tabla de stock aquí
+                    } else {
+                        Swal.fire('Error', response.message || 'No se pudo guardar el ingreso', 'error');
+                    }
+                },
+                error: function () {
+                    Swal.fire('Error', 'Ocurrió un error de conexión', 'error');
+                }
+            });
+        }
+
+
+
+
+
     </script>
 @endsection
