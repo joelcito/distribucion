@@ -104,6 +104,10 @@ Route::middleware('auth')->group(function () {
     //MOVIMIENTOS
     Route::prefix('movimiento')->group(function () {
         Route::post('/guardarIngreso', [App\Http\Controllers\MovimientoController::class, 'guardarIngreso'])->name('movimientos.guardarIngreso');
+        Route::post('/guardarSalida', [App\Http\Controllers\MovimientoController::class, 'guardarSalida'])->name('movimientos.guardarSalida');
+        Route::post('/movimientos/transferencia', [App\Http\Controllers\MovimientoController::class, 'guardarTransferencia'])->name('movimientos.transferencia');
+
+
     });
 
 });
