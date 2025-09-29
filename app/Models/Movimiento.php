@@ -18,6 +18,7 @@ class Movimiento extends Model
         'producto_id',
         'detalle_id',
         'sucursal_id',
+        'pedido_id',
         'ingreso',
         'salida',
         'fecha',
@@ -33,35 +34,37 @@ class Movimiento extends Model
     //     return $this->belongsTo(Detalle::class, 'detalle_id');
     // }
 
-    public function cantidaDisponileACiertaFecha($sucursal_id, $servicio_id, $fecha_ini, $fecha_fin){
+    public function cantidaDisponileACiertaFecha($sucursal_id, $servicio_id, $fecha_ini, $fecha_fin)
+    {
 
         $ingresos = Movimiento::where('sucursal_id', $sucursal_id)
-                                    ->where('producto_id', $servicio_id)
-                                    ->where('ingreso', '>',0)
-                                    ->where('fecha' , '<=', $fecha_ini)
-                                    ->sum('ingreso');
+            ->where('producto_id', $servicio_id)
+            ->where('ingreso', '>', 0)
+            ->where('fecha', '<=', $fecha_ini)
+            ->sum('ingreso');
 
         $salidas = Movimiento::where('sucursal_id', $sucursal_id)
-                                ->where('producto_id', $servicio_id)
-                                ->where('salida', '>',0)
-                                ->where('fecha' , '<=', $fecha_fin)
-                                ->sum('salida');
+            ->where('producto_id', $servicio_id)
+            ->where('salida', '>', 0)
+            ->where('fecha', '<=', $fecha_fin)
+            ->sum('salida');
 
         return $ingresos - $salidas;
 
     }
 
-    public function cantidaDisponile($sucursal_id, $servicio_id){
+    public function cantidaDisponile($sucursal_id, $servicio_id)
+    {
 
         $ingresos = Movimiento::where('sucursal_id', $sucursal_id)
-                                    ->where('producto_id', $servicio_id)
-                                    ->where('ingreso', '>',0)
-                                    ->sum('ingreso');
+            ->where('producto_id', $servicio_id)
+            ->where('ingreso', '>', 0)
+            ->sum('ingreso');
 
         $salidas = Movimiento::where('sucursal_id', $sucursal_id)
-                                ->where('producto_id', $servicio_id)
-                                ->where('salida', '>',0)
-                                ->sum('salida');
+            ->where('producto_id', $servicio_id)
+            ->where('salida', '>', 0)
+            ->sum('salida');
 
         return $ingresos - $salidas;
 

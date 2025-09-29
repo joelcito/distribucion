@@ -9,6 +9,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProvinciaController;
 use App\Http\Controllers\RolController;
 use App\Http\Controllers\SucursalController;
+use App\Http\Controllers\PedidosController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -106,9 +107,15 @@ Route::middleware('auth')->group(function () {
         Route::post('/guardarIngreso', [App\Http\Controllers\MovimientoController::class, 'guardarIngreso'])->name('movimientos.guardarIngreso');
         Route::post('/guardarSalida', [App\Http\Controllers\MovimientoController::class, 'guardarSalida'])->name('movimientos.guardarSalida');
         Route::post('/movimientos/transferencia', [App\Http\Controllers\MovimientoController::class, 'guardarTransferencia'])->name('movimientos.transferencia');
-
-
     });
+
+    //PEDIDOS
+    Route::prefix('pedidos')->group(function () {
+        Route::post('/store', [App\Http\Controllers\PedidosController::class, 'store'])->name('pedidos.store');
+        Route::post('/{id}/confirmar', [App\Http\Controllers\PedidosController::class, 'confirmar'])->name('pedidos.confirmar');
+        Route::post('/{id}/cancelar', [App\Http\Controllers\PedidosController::class, 'cancelar'])->name('pedidos.cancelar');
+    });
+
 
 });
 
