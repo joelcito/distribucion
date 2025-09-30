@@ -13,87 +13,129 @@ use Illuminate\Http\Request;
 class PedidosController extends Controller
 {
 
-    public function create()
+
+
+    // Mostrar formulario de pedido
+    public function create(Request $request)
     {
-        $clientes = Cliente::all(); // Trae todos los clientes
-        return view('ventas.formulario', compact('clientes'));
+        // Aquí puedes recibir un cliente_id desde la lista anterior
+        $clienteSeleccionado = null;
+        if ($request->has('cliente_id')) {
+            $clienteSeleccionado = Cliente::find($request->cliente_id);
+        }
+
+        return view('factura.formulario', compact('clienteSeleccionado'));
     }
 
+
+
+    // public function store(Request $request)
+    // {
+    //     try {
+    //         $request->validate([
+    //             'cliente_id' => 'required|exists:clientes,id',
+    //             'usuario_id' => 'required|exists:users,id',
+    //             'tipo' => 'required|string',
+    //             'fecha' => 'required|date',
+    //             'productos' => 'required' 
+    //         ]);
+
+    //         DB::beginTransaction();
+    //         $productos = json_decode($request->productos, true);
+
+    //         if (!$productos || !is_array($productos)) {
+    //             throw new \Exception("Formato inválido de productos (JSON esperado).");
+    //         }
+
+    //         $pedido = new Pedido();
+    //         $pedido->cliente_id = $request->cliente_id;
+    //         $pedido->usuario_id = $request->usuario_id;
+    //         $pedido->tipo = $request->tipo;
+    //         $pedido->fecha = $request->fecha;
+    //         $pedido->pedidos_productos = json_encode($productos);
+    //         $pedido->estado = 'pendiente';
+    //         $pedido->save();
+    //         foreach ($productos as $producto) {
+    //             $idProducto = $producto['producto_id'] ?? $producto['servicio_id'] ?? null;
+
+    //             if (!$idProducto) {
+    //                 throw new \Exception("No hay ID de producto en uno de los items");
+    //             }
+
+    //             Movimiento::create([
+    //                 'producto_id' => $idProducto,
+    //                 'sucursal_id' => $producto['sucursal_id'] ?? null,
+    //                 'salida' => $producto['cantidad'],
+    //                 'fecha' => now(),
+    //                 'descripcion' => 'Reserva por pedido #' . $pedido->id,
+    //                 'pedido_id' => $pedido->id,
+    //             ]);
+    //         }
+
+    //         DB::commit();
+    //         return response()->json(['estado' => true, 'pedido_id' => $pedido->id]);
+
+    //     } catch (\Exception $e) {
+    //         DB::rollBack();
+    //         return response()->json(['estado' => false, 'message' => $e->getMessage()]);
+    //     }
+    // }
 
     public function store(Request $request)
     {
         try {
+            $usuario = Auth::user();
+            $request->validate([
+                'cliente_id' => 'required|exists:clientes,id',
+
+                'tipo' => 'required|string',
+                'fecha' => 'required|date',
+                'productos' => 'required' // JSON de productos
+            ]);
+
             DB::beginTransaction();
 
-            // Parsear productos
-            $productos = is_array($request->productos) ? $request->productos : json_decode($request->productos, true);
-
-            if (!$productos || count($productos) == 0) {
-                return response()->json(['estado' => false, 'message' => 'Debe agregar al menos un producto.']);
+            // Convertir productos JSON en array asociativo
+            $productos = json_decode($request->productos, true);
+            if (!$productos || !is_array($productos)) {
+                throw new \Exception("Formato inválido de productos (JSON esperado).");
             }
 
-            // Guardar pedido
+            // 1. Guardar pedido
             $pedido = new Pedido();
             $pedido->cliente_id = $request->cliente_id;
-            $pedido->usuario_id = Auth::id(); // Usuario autenticado
-            $pedido->provincia_id = $request->provincia_id ?? null;
+            $pedido->usuario_id = $usuario->id;  // usuario que crea el pedido
             $pedido->tipo = $request->tipo;
-            $pedido->fecha = $request->fecha ?? now();
+            $pedido->fecha = $request->fecha;
             $pedido->pedidos_productos = json_encode($productos);
             $pedido->estado = 'pendiente';
             $pedido->save();
 
-            // Crear movimientos
+            // 2. Guardar movimientos de salida automáticamente
             foreach ($productos as $producto) {
                 Movimiento::create([
+                    'usuario_creador_id' => $request->usuario_id,
                     'producto_id' => $producto['producto_id'],
-                    'sucursal_id' => $request->sucursal_id ?? null,
+                    'sucursal_id' => $producto['sucursal_id'] ?? null,
                     'salida' => $producto['cantidad'],
                     'fecha' => now(),
-                    'descripcion' => 'Reserva por pedido #' . $pedido->id,
-                    'pedido_id' => $pedido->id,
+                    'descripcion' => 'Salida por pedido #' . $pedido->id,
+                    'precio_venta' => $producto['precio'] ?? null,
+                    'lotes' => $producto['lote'] ?? null,
+                    'fecha_vencimiento' => $producto['fecha_vencimiento'] ?? null,
+                    'estado' => 'pendiente'
                 ]);
             }
 
             DB::commit();
+
             return response()->json(['estado' => true, 'pedido_id' => $pedido->id]);
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            // Registrar error en logs
-            \Log::error('Error guardando pedido: ' . $e->getMessage());
-            return response()->json(['estado' => false, 'message' => 'Error interno al guardar el pedido.']);
-        }
-    }
-
-
-    // Confirmar pedido = venta
-    public function confirmar($id)
-    {
-        $pedido = Pedido::findOrFail($id);
-        $pedido->estado = 'confirmado';
-        $pedido->save();
-
-        return response()->json(['estado' => true, 'message' => 'Pedido confirmado']);
-    }
-
-    // Cancelar pedido = eliminar movimientos y cambiar estado
-    public function cancelar($id)
-    {
-        DB::beginTransaction();
-        try {
-            $pedido = Pedido::findOrFail($id);
-            Movimiento::where('pedido_id', $pedido->id)->delete();
-
-            $pedido->estado = 'cancelado';
-            $pedido->save();
-
-            DB::commit();
-            return response()->json(['estado' => true, 'message' => 'Pedido cancelado']);
 
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['estado' => false, 'message' => $e->getMessage()]);
         }
     }
+
+
 }

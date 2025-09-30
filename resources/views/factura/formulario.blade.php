@@ -7,127 +7,9 @@
 @endsection
 @section('content')
 
-<!--end::Modal - New Card-->
-{{-- <div class="modal fade" id="modal_new_servicio" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered mw-1000px">
-        <div class="modal-content">
-            @include('empresa.components.modalAgregaServicioProducto')
-        </div>
-        <!--end::Modal content-->
-    </div>
-    <!--end::Modal dialog-->
-</div> --}}
-<!--end::Modal - New Card-->
-
-<!--end::Modal - New Card-->
-{{-- <div class="modal fade" id="modal_new_cliente" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered mw-900px">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="fw-bold">Formulario de Cliente</h2>
-                <div class="btn btn-icon btn-sm btn-active-icon-primary" data-bs-dismiss="modal">
-                    <i class="ki-duotone ki-cross fs-1">
-                        <span class="path1"></span>
-                        <span class="path2"></span>
-                    </i>
-                </div>
-            </div>
-            <div class="modal-body scroll-y">
-                <form id="formulario_new_cliente_empresa">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label class="fs-6 fw-semibold form-label mb-2 required">Nombres</label>
-                            <input type="text" class="form-control fw-bold form-control-solid"
-                                name="nombres_cliente_new_usuaio_empresa" id="nombres_cliente_new_usuaio_empresa"
-                                required>
-                        </div>
-                        <div class="col-md-3">
-                            <label class="fs-6 fw-semibold form-label mb-2 required">Ap Paterno</label>
-                            <input type="text" class="form-control fw-bold form-control-solid"
-                                name="ap_paterno_cliente_new_usuaio_empresa" id="ap_paterno_cliente_new_usuaio_empresa"
-                                required>
-                        </div>
-                        <div class="col-md-3">
-                            <label class="fs-6 fw-semibold form-label mb-2">Ap Materno</label>
-                            <input type="text" class="form-control fw-bold form-control-solid"
-                                name="ap_materno_cliente_new_usuaio_empresa" id="ap_materno_cliente_new_usuaio_empresa">
-                        </div>
-                        <div class="col-md-3">
-                            <label class="fs-6 fw-semibold form-label mb-2">Numero de Celular</label>
-                            <input type="number" class="form-control fw-bold form-control-solid"
-                                name="num_ceular_cliente_new_usuaio_empresa" id="num_ceular_cliente_new_usuaio_empresa">
-                        </div>
-                    </div>
-                    <div class="row mt-5">
-                        <div class="col-md-2">
-                            <label class="fs-6 fw-semibold form-label mb-2 required">Cedula</label>
-                            <input type="number" class="form-control fw-bold form-control-solid"
-                                name="cedula_cliente_new_usuaio_empresa" id="cedula_cliente_new_usuaio_empresa"
-                                required>
-                        </div>
-                        <div class="col-md-2">
-                            <label class="fs-6 fw-semibold form-label mb-2">Complemento</label>
-                            <input type="number" class="form-control fw-bold form-control-solid"
-                                name="complemento_cliente_new_usuaio_empresa"
-                                id="complemento_cliente_new_usuaio_empresa">
-                        </div>
-                        <div class="col-md-2">
-                            <label class="fs-6 fw-semibold form-label mb-2">Nit</label>
-                            <input type="number" class="form-control fw-bold form-control-solid"
-                                name="nit_cliente_new_usuaio_empresa" id="nit_cliente_new_usuaio_empresa">
-                        </div>
-                        <div class="col-md-3">
-                            <label class="fs-6 fw-semibold form-label mb-2">Razon Social</label>
-                            <input type="text" class="form-control fw-bold form-control-solid"
-                                name="razon_social_cliente_new_usuaio_empresa"
-                                id="razon_social_cliente_new_usuaio_empresa">
-                        </div>
-                        <div class="col-md-3">
-                            <label class="fs-6 fw-semibold form-label mb-2">Correo</label>
-                            <input type="text" class="form-control fw-bold form-control-solid"
-                                name="correo_cliente_new_usuaio_empresa" id="correo_cliente_new_usuaio_empresa">
-                        </div>
-                    </div>
-                    <div class="row mt-5">
-                        <div class="col-md-12">
-                            <button type="button" class="btn btn-success w-100 btn-sm"
-                                onclick="guardarClienteEmpresa()">Agregar Usuario</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <!--end::Modal content-->
-    </div>
-    <!--end::Modal dialog-->
-</div> --}}
-<!--end::Modal - New Card-->
-
-<!--begin::Modal - Add task-->
-{{-- <div class="modal fade" id="modalAperturaCaja" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        @include('caja.components.formularioAperturaCaja')
-    </div>
-    <!--end::Modal dialog-->
-</div> --}}
-<!--end::Modal - Add task-->
-
-
-<!--begin::Modal - Add task-->
-{{-- <div class="modal fade" id="modalCerrarCaja" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        @include('caja.components.formularioCerrarCaja', ['cajaAbierta' => $cajaAbierta])
-    </div>
-    <!--end::Modal dialog-->
-</div> --}}
-<!--end::Modal - Add task-->
-
 <div class="d-flex flex-column flex-column-fluid">
-    <!--begin::Content-->
     <div id="kt_app_content" class="app-content flex-column-fluid">
-        <!--begin::Content container-->
         <div id="kt_app_content_container" class="app-container container-xxlg">
-            <!--begin::Card-->
             <div class="card">
                 <div class="card-body py-4">
                     <div class="row">
@@ -136,44 +18,8 @@
                                 class="page-heading d-flex text-gray-900 fw-bold fs-3 flex-column justify-content-center my-0">
                                 Formulario de Compra y Venta</h1>
                         </div>
-                        {{-- <div class="col-md-2">
-                            <a class="btn btn-sm fw-bold btn-danger w-100" onclick="modalCerrarCaja()"><i
-                                    class="fa fa-plus"></i>Cerrer Caja</a>
-                        </div> --}}
                     </div>
                     <hr>
-                    {{-- <div class="row">
-                        <div class="col-md-12 text-center">
-                            @if ($verificacionSiat->estado === 'success')
-                            <div class="row">
-                                <div class="col-md-6 text-center">
-                                    <span class="badge bg-success text-white w-100">{{
-                                        $verificacionSiat->resultado->RespuestaComunicacion->mensajesList->descripcion
-                                        }}</span>
-                                </div>
-                                <div class="col-md-3">
-                                    @if ($cuis)
-                                    CUIS: {{ $cuis->codigo }}
-                                    @else
-                                    <span class="badge badge-danger">NO existe un Cuis Vigente para este
-                                        Usuario</span>
-                                    @endif
-                                </div>
-                                <div class="col-md-3">
-                                    @if ($cufd)
-                                    CUFD: {{ $cufd->codigo_control . ' ' . $cufd->fecha_vigencia }}
-                                    @else
-                                    <span class="badge badge-danger">NO existe un Cufd Vigente para este
-                                        Usuario</span>
-                                    @endif
-                                </div>
-                            </div>
-                            @else
-                            <span class="badge bg-danger text-white w-100">NO HAY CONECCION CON SIAT |
-                                {{ json_encode($verificacionSiat->msg) }}</span>
-                            @endif
-                        </div>
-                    </div> --}}
                     <div id="tabla_clientes">
                     </div>
                     <hr>
@@ -203,41 +49,6 @@
                                             <input type="text" class="form-control form-control-sm" id="precio_venta"
                                                 name="precio_venta" onchange="calcularPrecioTotal()" required>
                                         </div>
-                                        {{-- <div class="col-md">
-                                            <label class="required fw-semibold fs-6 mb-2">Cant. en m<sup>2</sup>
-                                            </label>
-                                            <input type="number" step="any"
-                                                class="form-control form-control-sm is-valid" id="cantidad_venta"
-                                                name="cantidad_venta" value="0" required onkeyup="calcularPrecioTotal()"
-                                                onclick="this.select()">
-                                            <input type="hidden" id="equivalente_unidad" name="equivalente_unidad">
-                                            <input type="hidden" id="cantidad_por_caja" name="cantidad_por_caja">
-                                        </div>
-                                        <div class="col-md visualizacion_m2">
-                                            <label class="required fw-semibold fs-6 mb-2">N. Cajas</label>
-                                            <input type="number" class="form-control form-control-sm" id="nro_cajas"
-                                                name="nro_cajas" value="0" required step="any"
-                                                onkeyup="calcularCajasPiezas()" onclick="this.select()">
-                                        </div>
-                                        <div class="col-md visualizacion_m2">
-                                            <label class="required fw-semibold fs-6 mb-2">N Piezas</label>
-                                            <input type="number" class="form-control form-control-sm" id="nro_piezas"
-                                                name="nro_piezas" value="0" required step="any"
-                                                onkeyup="calcularCajasPiezas()" onclick="this.select()">
-                                        </div>
-                                        <div class="col-md">
-                                            <label class="required fw-semibold fs-6 mb-2">Precio</label>
-                                            <input type="number" class="form-control form-control-sm" id="precio_venta"
-                                                name="precio_venta" value="0" min="1" required
-                                                onchange="calcularPrecioTotal()" step="any">
-                                        </div>
-                                        <div class="col-md">
-                                            <label class="required fw-semibold fs-6 mb-2">Stock</label>
-                                            <input type="number" class="form-control form-control-sm"
-                                                id="stock_producto" name="stock_producto" value="0" min="1" required
-                                                readonly>
-                                            <div class="text-danger error-message" id="stock-bajo"></div>
-                                        </div> --}}
                                         <div class="col-md-3">
                                             <label class="required fw-semibold fs-6 mb-2">Total</label>
                                             <input type="number" class="form-control form-control-sm" id="total_venta"
@@ -247,10 +58,6 @@
                                 </div>
                                 <div class="col-md-1 d-flex align-items-end">
                                     <div class="d-flex justify-content-center gap-2 w-100">
-                                        {{-- <button class="btn btn-info btn-circle btn-sm btn-icon" type="button"
-                                            onclick="modalAgregarProducto()" title="Agregar Producto">
-                                            <i class="fa fa-cubes"></i> +
-                                        </button> --}}
                                         <button class="btn btn-primary btn-circle btn-sm btn-icon" type="button"
                                             onclick="mostraBloqueMasDatosProdcuto()" title="Mostrar más opción">
                                             <i class="fa fa-note-sticky"></i> +
@@ -299,7 +106,6 @@
                                         </tr>
                                     </thead>
                                     <tbody class="text-gray-600 fw-semibold">
-                                        <!-- Aquí se agregarán las filas del carrito -->
                                     </tbody>
                                     <tfoot>
                                         <tr>
@@ -364,362 +170,113 @@
                         </div>
                     </div>
                     <hr>
-                    <div class="row" id="bloque-botones-emisiones" style="display: none">
+                    <!-- <div class="row" id="bloque-botones-emisiones" style="display: none">
                         <div class="col-md-12">
                             <button class="btn btn-dark w-100 btn-sm" onclick="escogerVentaTipo('RECIBO')">TICKED
                                 RECEPCION</button>
                         </div>
-                        {{-- <div class="col-md-6">
-                            <button class="btn btn-success w-100 btn-sm"
-                                onclick="escogerVentaTipo('FACTURA')">FACTURA</button>
-                        </div> --}}
-                    </div>
-                    <hr>
-                    {{-- <div class="row" id="bloque_facturacion" style="display: none;">
+                    </div> -->
+
+                    <div class="row" id="bloque-botones-emisiones" style="display: none">
                         <div class="col-md-12">
-                            <form id="formularioGeneraFactura">
-                                <div class="row">
-                                    <div class="col-md-8 bg-light-info">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <h2 class="text-center text-info">DATOS DE LA FACTURA</h2>
-                                            </div>
-                                        </div>
-                                        <div id="bloqueDatosFactura" style="display: none">
-                                            <div class="row">
-                                                <div class="col-md-4">
-                                                    <label for="">M. Pago</label>
-                                                    <select name="facturacion_datos_tipo_metodo_pago"
-                                                        id="facturacion_datos_tipo_metodo_pago"
-                                                        class="form-control form-control-sm" required
-                                                        onchange="verificaTipoPago(this)">
-                                                        @foreach ($tipoMetodoPago as $key => $value)
-                                                        <option value="{{ $value->tipo_clasificador }}" {{ $value->
-                                                            tipo_clasificador == '1' ? 'selected' : '' }}>
-                                                            {{ $value->descripcion }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <label for="">Tipo Moneda</label>
-                                                    <select name="facturacion_datos_tipo_moneda"
-                                                        id="facturacion_datos_tipo_moneda"
-                                                        class="form-control form-control-sm" required>
-                                                        @foreach ($tipoMonedas as $key => $value)
-                                                        <option value="{{ $value->tipo_clasificador }}" {{ $value->
-                                                            tipo_clasificador == '1' ? 'selected' : '' }}>
-                                                            {{ $value->descripcion }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <label for="">Tipo Documento</label>
-                                                    <select name="tipo_documento" id="tipo_documento"
-                                                        class="form-control form-control-sm" onchange="verificaNit()"
-                                                        required>
-                                                        <option value="">SELECCIONE</option>
-                                                        @foreach ($tipoDocumento as $te)
-                                                        <option value="{{ $te->codigo_clasificador }}">
-                                                            {{ $te->descripcion }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
+                            <button type="button" class="btn btn-dark w-100 btn-sm"
+                                onclick="mostrarFormularioPedido('RECIBO')">
+                                TICKED RECEPCIÓN
+                            </button>
+                        </div>
+                    </div>
 
-                                            <div class="row mt-3" id="bloque-tipo-pago" style="display: none">
-                                                <div class="col-md-12">
-                                                    <label for="">Numero de Tarjeta:</label>
-                                                    <input type="number" class="form-control form-control-sm"
-                                                        id="numero_tarjeta" name="numero_tarjeta"
-                                                        oninput="verificarNumeroTarjeta()"
-                                                        placeholder="Ingrese el número de la tarjeta" />
-                                                </div>
-                                            </div>
+                    <hr>
 
-                                            <div class="row mt-3" id="bloque-gifr-card" style="display: none">
-                                                <div class="col-md-12">
-                                                    <label for="">Monto del Gift Card:</label>
-                                                    <input type="number" class="form-control form-control-sm"
-                                                        id="monto_gift_card" name="monto_gift_card"
-                                                        placeholder="Ingrese el monto del gift card" step="0.01" />
-                                                </div>
-                                            </div>
 
-                                            <div class="row mt-3">
-                                                <div class="col-md-2">
-                                                    <label for="">Nit/Cedula</label>
-                                                    <input type="text" class="form-control form-control-sm"
-                                                        id="nit_factura" name="nit_factura" onchange="verificaNit()"
-                                                        autocomplete="off" required>
-                                                    <small style="display: none;" class="text-danger"
-                                                        id="nitnoexiste">** NIT INVALIDO **</small>
-                                                    <small style="display: none;" class="text-success"
-                                                        id="nitsiexiste">** NIT VALIDO **</small>
-                                                    <small style="display: none;" class="text-danger"
-                                                        id="errorValidar">ERROR LA VALIDAR</small>
-                                                </div>
-                                                <div class="col-md-1" style="display: none" id="bloque_complemento">
-                                                    <label for="">Compl.</label>
-                                                    <input type="text" class="form-control form-control-sm"
-                                                        name="complemento" id="complemento">
-                                                </div>
+                    <!-- Bloque formulario de pedido -->
+                    <div id="bloque_formulario_pedido" style="display: none; margin-top: 20px;">
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label>Cliente</label>
+                                <input type="hidden" name="usuario_id" id="usuario_id" value="{{ auth()->user()->id }}">
 
-                                                <div class="col-md-3">
-                                                    <label for="">Razon Social</label>
-                                                    <input type="text" class="form-control form-control-sm"
-                                                        id="razon_factura" name="razon_factura" autocomplete="off"
-                                                        required>
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <label for="">Tipo Factura</label>
-                                                    <select name="tipo_facturacion" id="tipo_facturacion"
-                                                        class="form-control form-control-sm" onchange="bloqueCAFC()">
-                                                        <option value="online">En Linea</option>
-                                                        <option value="offline">Fuera de Linea</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-2" style="display: none;" id="bloque_cafc">
-                                                    <label for="">Uso del CAFC?</label>
-                                                    <div class="row mt-5">
-                                                        <div class="col-md-6">
-                                                            <label for="radioNo">No</label>
-                                                            <input type="radio" name="uso_cafc" id="radioNo" value="No"
-                                                                checked>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <label for="radioSi">Si</label>
-                                                            <input type="radio" name="uso_cafc" id="radioSi" value="Si">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-2" id="numero_fac_cafc" style="display: none;">
-                                                    <label for="">Numero de CAFC:</label>
-                                                    <input type="number" class="form-control form-control-sm"
-                                                        id="numero_factura_cafc" name="numero_factura_cafc">
-                                                </div>
-                                            </div>
-                                            <div class="row" id="bloque_exepcion" style="display: none">
-                                                <div class="col-md-12">
-                                                    <div class="form-group">
-                                                        <label class="control-label">Enviar con execpcion?</label>
-                                                        <input type="checkbox" name="execpcion" id="execpcion" readonly>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row mt-3" id="bloque_cufd_offline" style="display: none">
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label class="control-label">Fecha de Emision Fuera de
-                                                            Linea</label>
-                                                        <input type="date" class="form-control"
-                                                            id="fecha_emision_offLine" name="fecha_emision_offLine">
-                                                    </div>
-
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label class="control-label">Hora de Emision Fuera de
-                                                            Linea</label>
-                                                        <input type="time" class="form-control form-control-sm"
-                                                            name="hora_emision_offLine" id="hora_emision_offLine">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label class="control-label">Seleccionar los CUFD
-                                                            Vigentes</label>
-                                                        <div id="select_cufd_vigentes">
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 bg-light-success">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <h2 class="text-center text-success">DATOS DE PAGO</h2>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label class="required">Tipo Pago</label>
-                                                <select name="tipo_pago_pagado" id="tipo_pago_pagado"
-                                                    class="form-control form-control-sm" onchange="validarCampos()">
-                                                    <option value="">Seleccione</option>
-                                                    <option value="EFECTIVO">EFECTIVO</option>
-                                                    <option value="TRANSFERENCIA">TRANSFERENCIA</option>
-                                                    <option value="QR">QR</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label class="required">Realizara algun Pago?</label>
-                                                <div class="d-flex align-items-center mt-3">
-                                                    <label class="form-check form-check-custom form-check-solid me-3">
-                                                        <input class="form-check-input h-20px w-20px" type="checkbox"
-                                                            name="realizo_pago" value="pago" id="realizo_pago" />
-                                                        <span class="form-check-label fw-semibold">Realizo un
-                                                            pago</span>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row mt-3">
-                                            <div class="col-md-4">
-                                                <label class="required">Monto Venta</label>
-                                                <input type="number" class="form-control form-control-sm" readonly
-                                                    id="monto_total_pagado" name="monto_total_pagado">
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="required">Monto Pagado</label>
-                                                <input type="number" class="form-control form-control-sm"
-                                                    id="monto_pagado" name="monto_pagado" value="0"
-                                                    onkeyup="caluclarCambio(this)">
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="required">Cambio</label>
-                                                <input type="number" class="form-control form-control-sm" readonly
-                                                    id="cambio_pagado" name="cambio_pagado" value="0">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-
-                            <div class="row mt-3">
-                                <div class="col-md-12">
-                                    <button class="btn btn-sm w-100 btn-success" onclick="emitirFactura()"
-                                        id="boton_enviar_factura"> <i class="fa fa-spinner fa-spin"
-                                            style="display:none;"></i>Enviar</button>
-                                </div>
+                                <input type="text" id="cliente_nombre_pedido" class="form-control" readonly>
+                                <input type="hidden" name="cliente_id" id="cliente_id_pedido">
                             </div>
                         </div>
-                    </div> --}}
 
-                    <!--pagos-->
-                    <!-- <div class="row" id="bloque_recibo" style="display: none">
-                            <div class="col-md-12 bg-light-success">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <h2 class="text-center text-success">DATOS DE PAGO</h2>
-                                    </div>
-                                </div>
-                                <form id="formularioGeneraRecibo">
-                                    <div class="row">
-                                        <div class="col-md-2">
-                                            <label class="required">Tipo Pago</label>
-                                            <select name="tipo_pago_pagado_recibo" id="tipo_pago_pagado_recibo"
-                                                class="form-control form-control-sm" onchange="validarCamposRecibo()">
-                                                <option value="">Seleccione</option>
-                                                <option value="EFECTIVO">EFECTIVO</option>
-                                                <option value="TRANSFERENCIA">TRANSFERENCIA</option>
-                                                <option value="QR">QR</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label class="required">Realizara algun Pago?</label>
-                                            <div class="d-flex align-items-center mt-3">
-                                                <label class="form-check form-check-custom form-check-solid me-3">
-                                                    <input class="form-check-input h-20px w-20px" type="checkbox"
-                                                        name="realizo_pago_recibo" value="pago"
-                                                        id="realizo_pago_recibo" />
-                                                    <span class="form-check-label fw-semibold">Realizo un
-                                                        pago</span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <label class="required">Monto Venta</label>
-                                            <input type="number" class="form-control form-control-sm" readonly
-                                                id="monto_total_pagado_recibo" name="monto_total_pagado_recibo"
-                                                value="0">
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label class="required">Monto Pagado</label>
-                                            <input type="number" class="form-control form-control-sm"
-                                                id="monto_pagado_recibo" name="monto_pagado_recibo" value="0"
-                                                onkeyup="caluclarCambioRecibo(this)">
-                                        </div>
-                                        <div class="col-md-2">
-                                            <label class="required">Cambio</label>
-                                            <input type="number" class="form-control form-control-sm" readonly
-                                                id="cambio_pagado_recibo" name="cambio_pagado_recibo" value="0">
-                                        </div>
-                                    </div>
-                                </form>
-                                <div class="row mt-3">
-                                    <div class="col-md-12">
-                                        <button class="btn btn-sm w-100 btn-success" onclick="emitirRecibo()"
-                                            id="boton_enviar_recibo"> <i class="fa fa-spinner fa-spin"
-                                                style="display:none;"></i>Enviar</button>
-                                    </div>
-                                </div>
-                            </div>        
-                       </div> -->
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label>Tipo de Pedido</label>
+                                <select name="tipo" id="tipo" class="form-control" required>
+                                    <option value="">Seleccione</option>
+                                    <option value="RECIBO">RECIBO</option>
+                                    <option value="FACTURA">FACTURA</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Fecha</label>
+                                <input type="date" id="fecha" name="fecha" class="form-control"
+                                    value="{{ date('Y-m-d') }}" required>
+                            </div>
+                        </div>
 
+                        <!-- Campo oculto de productos -->
+                        <input type="hidden" name="productos" id="productos">
 
-                    <div class="row" id="bloque_pedido" style="display: none">
-                        <div class="col-md-12 bg-light-primary">
-                            <h2 class="text-center text-primary">DATOS DEL PEDIDO</h2>
-
-                            <form id="formularioGeneraPedido">
-                                <div class="row">
-                                    <!-- Cliente seleccionado -->
-                                    <div class="col-md-4">
-                                        <label class="required">Cliente</label>
-                                        <input type="text" id="cliente_nombre_pedido"
-                                            class="form-control form-control-sm" disabled>
-                                        <input type="hidden" name="cliente_id" id="cliente_id_pedido">
-                                    </div>
-
-                                    <!-- Tipo de Pedido -->
-                                    <div class="col-md-4">
-                                        <label class="required">Tipo de Pedido</label>
-                                        <select name="tipo" id="tipo_pedido" class="form-control form-control-sm">
-                                            <option value="">Seleccione</option>
-                                            <option value="ONLINE">ONLINE</option>
-                                            <option value="PRESENCIAL">PRESENCIAL</option>
-                                        </select>
-                                    </div>
-
-                                    <!-- Fecha -->
-                                    <div class="col-md-4">
-                                        <label class="required">Fecha</label>
-                                        <input type="date" class="form-control form-control-sm" id="fecha_pedido"
-                                            name="fecha" value="{{ date('Y-m-d') }}">
-                                    </div>
-                                </div>
-
-                                <!-- Botón Guardar Pedido -->
-                                <div class="row mt-3">
-                                    <div class="col-md-12">
-                                        <button class="btn btn-primary btn-sm w-100" type="button"
-                                            onclick="guardarPedido()">
-                                            <i class="fa fa-spinner fa-spin" style="display:none;"></i> Guardar Pedido
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-primary w-100" onclick="guardarPedido()">Guardar
+                                    Pedido</button>
+                            </div>
                         </div>
                     </div>
-
-
-
-
-
-
-
-
-
-
-
-
 
                 </div>
             </div>
+
+
+
+            <!-- <div class="container" id="bloque_formulario_pedido" style="display: none;">
+                      
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label>Cliente</label>
+                                <input type="text" id="cliente_nombre_pedido" class="form-control" readonly>
+                                <input type="hidden" name="cliente_id" id="cliente_id_pedido">
+                            </div>
+                        </div>
+
+                   
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label>Tipo de Pedido</label>
+                                <select name="tipo" id="tipo" class="form-control" required>
+                                    <option value="">Seleccione</option>
+                                    <option value="RECIBO">RECIBO</option>
+                                    <option value="FACTURA">FACTURA</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Fecha</label>
+                                <input type="date" id="fecha" name="fecha" class="form-control"
+                                    value="{{ date('Y-m-d') }}" required>
+                            </div>
+                        </div>
+
+                    
+                        <input type="hidden" name="productos" id="productos">
+
+                     
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-primary w-100" onclick="guardarPedido()">Guardar
+                                    Pedido</button>
+                            </div>
+                        </div>
+                    </div> -->
+
+
+
         </div>
     </div>
+</div>
 </div>
 
 
@@ -744,10 +301,8 @@
             $("#serivicio_id_venta, #documento_sector_siat_id_new_servicio, #actividad_economica_siat_id_new_servicio, #producto_servicio_siat_id_new_servicio, #unidad_medida_siat_id_new_servicio, #facturacion_datos_tipo_metodo_pago, #facturacion_datos_tipo_moneda, #tipo_documento")
                 .select2();
 
-            // Inicializa el DataTable
             table = $('#carrito').DataTable({
                 lengthMenu: [10, 25, 50, 100], // Opciones de longitud de página
-                // dom: '<"dt-head row"<"col-md-6"l><"col-md-6"f>><"clear">t<"dt-footer row"<"col-md-5"i><"col-md-7"p>>', // Use dom for basic layout
                 dom: '<"dt-head row"><"clear">t', // Use dom for basic layout
                 language: {
                     paginate: {
@@ -764,18 +319,13 @@
                 order: [],
                 responsive: true
             });
-
-
             let debounceTimer;
             $('.buscar-persona').on('keyup', function () {
-
-                //ajaxListadoClientes();
                 clearTimeout(debounceTimer);
                 debounceTimer = setTimeout(function () {
                     ajaxListadoClientes();
                 }, 300); // Espera 300 ms antes de ejecutar la función
             });
-
 
             $('input[name="uso_cafc"]').on('change', function () {
                 verificarRadioSeleccionado();
@@ -1198,7 +748,7 @@
         }
 
 
-        function escogerVentaTipo(tipo) {
+        function escogerVentaTipo2(tipo) {
             if (tipo === 'RECIBO') {
                 // Muestra el bloque de pedido
                 $('#bloque_pedido').show();
@@ -1221,75 +771,8 @@
 
         }
 
-        // function verificaNit() {
-        //     if ($('#tipo_documento').val() === "5") {
-        //         let nit = $('#nit_factura').val();
-        //         $.ajax({
-        //             url: "{{ url('factura/verificarNit') }}",
-        //             data: {
-        //                 nit: nit
-        //             },
-        //             type: 'POST',
-        //             dataType: 'json',
-        //             success: function(data) {
-        //                 if (data.estado) {
-        //                     if (data.data.estadoSiat) {
-        //                         $('#execpcion').prop('checked', false);
-        //                         $('#nitsiexiste').show('toggle')
-        //                         $('#nitnoexiste').hide('toggle')
-        //                     } else {
-        //                         $('#nitnoexiste').show('toggle')
-        //                         $('#nitsiexiste').hide('toggle')
-        //                         $('#execpcion').prop('checked', true);
-        //                     }
-        //                 } else {
-        //                     $('#errorValidar').show('toggle')
-        //                 }
-        //             }
-        //         });
-
-        //         $('#complemento').val(null)
-        //         $('#bloque_complemento').hide('toggle')
-
-        //     } else if ($('#tipo_documento').val() === "1") {
-
-        //         $('#bloque_complemento').show('toggle')
-        //         $('#nitnoexiste').hide('toggle')
-        //         $('#nitsiexiste').hide('toggle')
-        //         $('#errorValidar').hide('toggle')
-        //         $('#execpcion').prop('checked', false);
-
-        //     } else {
-        //         $('#nitnoexiste').hide('toggle')
-        //         $('#nitsiexiste').hide('toggle')
-        //         $('#errorValidar').hide('toggle')
-        //         $('#execpcion').prop('checked', false);
-
-        //         $('#bloque_complemento').hide('toggle')
-
-        //     }
-        // }
 
         function verificaTipoPago(select) {
-
-            // let valor = select.value;
-            // if(valor == 2 || valor == 10  || valor == 83 || valor == 162 || valor == 86){
-            //     $('#bloque-tipo-pago').show('toggle')
-            //
-            //     $('#monto_gift_card').val(null)
-            //     $('#bloque-gifr-card').hide('toggle')
-            // }else if(valor == 27 || valor == 35){
-            //     $('#bloque-gifr-card').show('toggle')
-            //
-            //     $('#numero_tarjeta').val(null)
-            //     $('#bloque-tipo-pago').hide('toggle')
-            // }else{
-            //     $('#monto_gift_card').val(null)
-            //     $('#numero_tarjeta').val(null)
-            //
-            //     $('#bloque-gifr-card').hide('toggle')
-            //     $('#bloque-tipo-pago').hide('toggle')
-            // }
 
             let arrayTarjeta = [2, 10, 16, 17, 18, 19, 20, 39, 40, 41, 42, 43, 82, 83, 84, 85, 87, 88, 89, 134, 135, 136,
                 137, 139, 140, 141, 142, 143, 144, 145, 147, 148, 149, 150, 151, 152, 154, 155, 156, 157, 158, 160, 161,
@@ -1326,15 +809,8 @@
         function verificarNumeroTarjeta() {
             const input = document.getElementById("numero_tarjeta");
             let valor = input.value;
-
-            // Asegurarse de que solo se ingresen números
-            valor = valor.replace(/\D/g, ""); // Elimina cualquier carácter no numérico
-
-            // Enmascarar el número de la tarjeta
+            valor = valor.replace(/\D/g, "");
             if (valor.length > 8) {
-                // const primeros4 = valor.substring(0, 4);
-                // const ultimos4 = valor.slice(-4);
-                // const masked = `${primeros4}${"x".repeat(valor.length - 8)}${ultimos4}`;
                 input.value = masked;
             } else {
                 input.value = valor; // Muestra el valor completo si es menor o igual a 8 dígitos
@@ -1347,13 +823,6 @@
             if ($("#formularioGeneraFactura")[0].checkValidity()) {
 
                 if (arrayProductoCar.length > 0) {
-
-                    // // Obtén el botón y el icono de carga
-                    // var boton = $("#boton_enviar_factura");
-                    // var iconoCarga = boton.find("i");
-                    // // Deshabilita el botón y muestra el icono de carga
-                    // boton.attr("disabled", true);
-                    // iconoCarga.show();
 
                     $.ajax({
                         url: "{{ url('factura/emitirFacturaCv') }}",
@@ -1541,40 +1010,8 @@
         function eliminarItem(id) {
 
             var fila = table.row("#producto-" + id);
-            // var cantidadCell = $(fila.node()).find('.cantidad');
-            // var cantidadActual = parseInt(cantidadCell.text());
-
-            // Reducir la cantidad en 1
-            // var nuevaCantidad = cantidadActual - 1;
-            // cantidadCell.text(nuevaCantidad);
-
-            // if (nuevaCantidad <= 0) {
-            //     // Si la cantidad es 0 o menos, elimina la fila de la tabla
             table.row(fila).remove().draw(false);
-
-            // Elimina el producto del array
             arrayProductoCar = arrayProductoCar.filter(s => s.servicio_id !== id);
-            // } else {
-            //     // Si la cantidad sigue siendo mayor que 0, actualiza el total y el subTotal
-            //     var precio = parseFloat($(fila.node()).find('.total').text()) / cantidadActual;
-            //     var nuevoTotal = nuevaCantidad * precio;
-            //     $(fila.node()).find('.total').text(nuevoTotal.toFixed(2));
-
-            //     var subTotalCell = $(fila.node()).find('.subTotal');
-            //     var descuento = parseFloat($('#descuento_' + id).val());
-            //     var nuevoSubTotal = nuevoTotal - descuento;
-            //     subTotalCell.text(nuevoSubTotal.toFixed(2));
-
-            //     // Actualiza los valores en el array
-            //     let servicio = arrayProductoCar.find(s => s.servicio_id === id);
-            //     if (servicio) {
-            //         servicio.cantidad = nuevaCantidad;
-            //         servicio.total = nuevoTotal;
-            //         servicio.subTotal = nuevoSubTotal;
-            //     }
-            // }
-
-            // Actualizar el monto total
             let sumaTotal = arrayProductoCar.reduce((sum, current) => sum + current.subTotal, 0);
             let descuentoAdicional = $('#descuento_adicional').val();
             $('#monto_total, #monto_total_pagado').val(parseFloat(sumaTotal) - parseFloat(descuentoAdicional));
@@ -2044,81 +1481,106 @@
             let total = parseFloat(precio) * parseFloat(cantidad);
             $('#total_venta').val(total.toFixed(2))
 
-
-
-
         }
 
 
 
 
+        function fijarCliente(select) {
+            let clienteTexto = select.options[select.selectedIndex].text;
+            let clienteId = select.value;
+
+            if (clienteId === "") return;
+
+            // Guardar en input hidden
+            document.getElementById('cliente_id').value = clienteId;
+
+            // Ocultar select y mostrar solo texto
+            select.style.display = "none";
+            document.getElementById('cliente_fijo').style.display = "block";
+            document.getElementById('cliente_fijo').innerHTML = "Cliente seleccionado: <b>" + clienteTexto + "</b>";
+        }
+
         function guardarPedido() {
-            // Obtener los valores
-            let clienteId = $('#cliente_id_escogido').val();
+            prepararJSONProductos(); // Convertimos el carrito al formato correcto
+
+            let cliente_id = $('#cliente_id_pedido').val();
+            let usuario_id = $('#usuario_id').val();
             let tipo = $('#tipo').val();
             let fecha = $('#fecha').val();
-            let productos = arrayProductoCar; // tu array de productos
+            let productos_json = $('#productos').val();
 
-            // Validar campos
-            if (!clienteId || !tipo || !fecha || productos.length === 0) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Campos incompletos',
-                    text: 'Por favor complete todos los campos antes de guardar el pedido.'
-                });
+            if (!cliente_id || !tipo || !fecha) {
+                Swal.fire('Error', 'Complete todos los campos', 'warning');
                 return;
             }
 
-            // Mostrar loading en el botón
-            $('#boton_enviar_pedido i').show();
-
-            // Preparar datos para enviar
-            let data = {
-                cliente_id: clienteId,
-                tipo: tipo,
-                fecha: fecha,
-                productos: JSON.stringify(productos) // convertir a JSON
-            };
-
             $.ajax({
-                url: "{{ url('pedidos/store') }}", // tu ruta de backend
-                method: "POST",
-                data: data,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                url: "{{ route('pedidos.store') }}",
+                type: "POST",
+                data: {
+                    cliente_id: cliente_id,
+                    tipo: tipo,
+                    fecha: fecha,
+                    productos: productos_json,
+                    _token: "{{ csrf_token() }}"
                 },
-                success: function (response) {
-                    $('#boton_enviar_pedido i').hide();
-
-                    if (response.estado) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Pedido guardado',
-                            text: 'El pedido se ha registrado correctamente.'
-                        }).then(() => {
-                            // Limpiar formulario si quieres
-                            $('#formularioGeneraPedido')[0].reset();
-                            arrayProductoCar = [];
-                            $('#bloque_pedido').hide();
-                        });
+                success: function (res) {
+                    if (res.estado) {
+                        Swal.fire('Éxito', 'Pedido guardado correctamente', 'success');
+                        $('#bloque_formulario_pedido').hide();
                     } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: response.message || 'Ocurrió un error al guardar el pedido.'
-                        });
+                        Swal.fire('Error', res.message, 'error');
                     }
                 },
-                error: function (err) {
-                    $('#boton_enviar_pedido i').hide();
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Ocurrió un error en la conexión con el servidor.'
-                    });
+                error: function (xhr) {
+                    Swal.fire('Error', 'Error interno al guardar el pedido', 'error');
                 }
             });
         }
+
+
+
+
+
+
+
+
+        function mostrarFormularioPedido(tipo) {
+            // Verifica que se haya escogido un cliente
+            let clienteId = $('#cliente_id_escogido').val();
+            let nombreCliente = $('#nombre_cliente').text();
+
+            if (!clienteId) {
+                alert("Debe seleccionar un cliente primero.");
+                return;
+            }
+
+            // Poner datos en el bloque de pedido
+            $('#tipo').val(tipo);
+            $('#cliente_nombre_pedido').val(nombreCliente);
+            $('#cliente_id_pedido').val(clienteId);
+
+            // Mostrar bloque de formulario
+            $('#bloque_formulario_pedido').show();
+        }
+
+        function prepararJSONProductos() {
+            // Array donde guardaremos los productos en el formato correcto
+            let productos = arrayProductoCar.map(item => {
+                return {
+                    producto_id: item.servicio_id,  // o item.producto_id si existe
+                    nombre: item.descripcion,       // nombre del producto
+                    cantidad: item.cantidad         // cantidad comprada
+                };
+            });
+
+            // Convertimos a JSON string y lo ponemos en el campo oculto
+            $('#productos').val(JSON.stringify(productos));
+        }
+
+
+
 
     </script>
 @endsection

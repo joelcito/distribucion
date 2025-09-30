@@ -242,12 +242,12 @@
                             </div>
                         </div>
                         <!-- <div class="row mb-3">
-                                    <div class="col-md-12">
-                                        <label class="fw-semibold">Descripción</label>
-                                        <textarea class="form-control form-control-sm" id="descripcion_transferencia"
-                                            rows="3"></textarea>
-                                    </div>
-                                </div> -->
+                                        <div class="col-md-12">
+                                            <label class="fw-semibold">Descripción</label>
+                                            <textarea class="form-control form-control-sm" id="descripcion_transferencia"
+                                                rows="3"></textarea>
+                                        </div>
+                                    </div> -->
                         <div class="row">
                             <div class="col-md-12">
                                 <button type="button" class="btn btn-success w-100" onclick="guardarTransferencia()">Guardar
@@ -756,65 +756,6 @@
                 }
             });
         }
-
-
-        //pedidos
-
-
-        function guardarPedido() {
-            let cliente_id = $('#cliente_id').val();
-            let usuario_id = $('#usuario_id').val();
-            let provincia_id = $('#provincia_id').val();
-            let tipo = $('#tipo_pedido').val(); // ejemplo: normal / especial
-            let fecha = $('#fecha_pedido').val();
-            let sucursal_id = $('#sucursal_id').val();
-
-            // array de productos seleccionados (carrito)
-            let productos = [
-                { producto_id: 1234, nombre: "PARACETAMOL", cantidad: 50 },
-                { producto_id: 789, nombre: "OMEPRASOL", cantidad: 50 }
-            ];
-
-            if (productos.length === 0) {
-                Swal.fire('Error', 'Debe seleccionar al menos un producto', 'error');
-                return;
-            }
-
-            $.ajax({
-                url: '{{ route("pedidos.store") }}',
-                type: 'POST',
-                data: {
-                    cliente_id,
-                    usuario_id,
-                    provincia_id,
-                    tipo,
-                    fecha,
-                    sucursal_id,
-                    productos
-                },
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function (response) {
-                    if (response.estado) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Pedido registrado',
-                            text: 'Productos reservados en inventario',
-                            timer: 2000,
-                            showConfirmButton: false
-                        });
-                    } else {
-                        Swal.fire('Error', response.message || 'No se pudo guardar el pedido', 'error');
-                    }
-                },
-                error: function () {
-                    Swal.fire('Error', 'Ocurrió un error de conexión', 'error');
-                }
-            });
-        }
-
-
 
     </script>
 @endsection
