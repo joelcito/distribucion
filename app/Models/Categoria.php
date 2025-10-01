@@ -10,7 +10,7 @@ class Categoria extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'roles';
+    protected $table = 'categorias';
 
     protected $fillable =[
         'usuario_creador_id',
