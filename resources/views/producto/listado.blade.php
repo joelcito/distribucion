@@ -124,7 +124,7 @@
                                     rows="3"></textarea>
                             </div>
                             <div class="col-md-6">
-                                <label for="lote" class="form-label">Lote</label>
+                                <label for="lotes" class="form-label">Lote</label>
                                 <input type="text" class="form-control" id="lotes" name="lotes">
                             </div>
 
@@ -242,12 +242,12 @@
                             </div>
                         </div>
                         <!-- <div class="row mb-3">
-                                        <div class="col-md-12">
-                                            <label class="fw-semibold">Descripción</label>
-                                            <textarea class="form-control form-control-sm" id="descripcion_transferencia"
-                                                rows="3"></textarea>
-                                        </div>
-                                    </div> -->
+                                                <div class="col-md-12">
+                                                    <label class="fw-semibold">Descripción</label>
+                                                    <textarea class="form-control form-control-sm" id="descripcion_transferencia"
+                                                        rows="3"></textarea>
+                                                </div>
+                                            </div> -->
                         <div class="row">
                             <div class="col-md-12">
                                 <button type="button" class="btn btn-success w-100" onclick="guardarTransferencia()">Guardar
@@ -479,7 +479,7 @@
             $('#sucursal_id').val(sucursal.id)
             $('#cantidad_ingreso').val('')
             $('#descripcion').val('')
-            $('#lote').val('')
+            $('#lotes').val('')
             $('#fecha_vencimiento').val('')
             $('#modalStockSucursalProducto').modal('show')
 
@@ -497,7 +497,7 @@
             var sucursal_id = $('#sucursal_id').val();
             var ingreso = $('#cantidad_ingreso').val();
             var descripcion = $('#descripcion').val();
-            var lote = $('#lotes').val();
+            var lotes = $('#lotes').val();
             var fecha_vencimiento = $('#fecha_vencimiento').val();
             var fecha = $('#fecha').val(); // fecha de registro
 
@@ -516,7 +516,7 @@
                     sucursal_id: sucursal_id,
                     ingreso: ingreso,
                     descripcion: descripcion,
-                    lote: lote,
+                    lotes: lotes,
                     fecha_vencimiento: fecha_vencimiento,
                     fecha: fecha
                 },
@@ -615,9 +615,9 @@
             var sucursal_id = $('#sucursal_id').val();
             var salida = $('#cantidad_salida').val();
             var descripcion = $('#descripcion').val();
-            var lote = $('#lotes').val();
+            var lotes = $('#lotes').val();
             var fecha_vencimiento = $('#fecha_vencimiento').val();
-            var fecha = $('#fecha_salida').val(); // fecha de registro
+            var fecha = $('#fecha_salida').val();
 
 
             if (!producto_id || !sucursal_id || !salida) {
@@ -627,14 +627,14 @@
 
 
             $.ajax({
-                url: '{{ route("movimientos.guardarSalida") }}', // Ajusta tu ruta
+                url: '{{ route("movimientos.guardarSalida") }}',
                 type: 'POST',
                 data: {
                     producto_id: producto_id,
                     sucursal_id: sucursal_id,
                     salida: salida,
                     descripcion: descripcion,
-                    lote: lote,
+                    lotes: lotes,
                     fecha_vencimiento: fecha_vencimiento,
                     fecha: fecha
                 },

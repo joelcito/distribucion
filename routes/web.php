@@ -112,10 +112,14 @@ Route::middleware('auth')->group(function () {
     //PEDIDOS
 
     Route::prefix('pedidos')->group(function () {
+
+
+        Route::get('/listado', [PedidosController::class, 'listado'])->name('pedidos.listado');
         Route::get('/create', [App\Http\Controllers\PedidosController::class, 'create'])->name('pedidos.create');
         Route::post('/store', [App\Http\Controllers\PedidosController::class, 'store'])->name('pedidos.store');
         Route::post('/{id}/confirmar', [App\Http\Controllers\PedidosController::class, 'confirmar'])->name('pedidos.confirmar');
         Route::post('/{id}/cancelar', [App\Http\Controllers\PedidosController::class, 'cancelar'])->name('pedidos.cancelar');
+
     });
 
 

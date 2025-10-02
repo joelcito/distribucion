@@ -181,15 +181,13 @@
                         <div class="col-md-12">
                             <button type="button" class="btn btn-dark w-100 btn-sm"
                                 onclick="mostrarFormularioPedido('RECIBO')">
-                                TICKED RECEPCIÓN
+                                REALIZAR PEDIDO
                             </button>
                         </div>
                     </div>
 
                     <hr>
 
-
-                    <!-- Bloque formulario de pedido -->
                     <div id="bloque_formulario_pedido" style="display: none; margin-top: 20px;">
                         <div class="row mb-3">
                             <div class="col-md-12">
@@ -216,8 +214,6 @@
                                     value="{{ date('Y-m-d') }}" required>
                             </div>
                         </div>
-
-                        <!-- Campo oculto de productos -->
                         <input type="hidden" name="productos" id="productos">
 
                         <div class="row">
@@ -231,55 +227,56 @@
                 </div>
             </div>
 
-
-
-            <!-- <div class="container" id="bloque_formulario_pedido" style="display: none;">
-                      
-                        <div class="row mb-3">
-                            <div class="col-md-12">
-                                <label>Cliente</label>
-                                <input type="text" id="cliente_nombre_pedido" class="form-control" readonly>
-                                <input type="hidden" name="cliente_id" id="cliente_id_pedido">
-                            </div>
-                        </div>
-
-                   
-                        <div class="row mb-3">
-                            <div class="col-md-4">
-                                <label>Tipo de Pedido</label>
-                                <select name="tipo" id="tipo" class="form-control" required>
-                                    <option value="">Seleccione</option>
-                                    <option value="RECIBO">RECIBO</option>
-                                    <option value="FACTURA">FACTURA</option>
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <label>Fecha</label>
-                                <input type="date" id="fecha" name="fecha" class="form-control"
-                                    value="{{ date('Y-m-d') }}" required>
-                            </div>
-                        </div>
-
-                    
-                        <input type="hidden" name="productos" id="productos">
-
-                     
-                        <div class="row">
-                            <div class="col-md-12">
-                                <button type="button" class="btn btn-primary w-100" onclick="guardarPedido()">Guardar
-                                    Pedido</button>
-                            </div>
-                        </div>
-                    </div> -->
-
-
-
         </div>
+    </div>
+
+
+
+
+    <hr>
+    <hr>
+    <h2 class="text-center">Listado de Pedidos</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover table-sm" id="kt_table_pedidos">
+            <thead>
+                <tr class="text-center text-muted fw-bold fs-7 text-uppercase gs-0">
+                    <th>ID</th>
+                    <th>Cliente</th>
+                    <th>Fecha</th>
+                    <th>Tipo</th>
+
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @php
+                    use App\Models\Pedido;
+                    $pedidos = Pedido::with('cliente')->orderBy('id', 'desc')->get();
+                @endphp
+                @forelse ($pedidos as $pedido)
+                    <tr class="text-center">
+                        <td>{{ $pedido->id }}</td>
+                        <td>{{ $pedido->cliente->nombres ?? 'N/A' }}</td>
+                        <td>{{ $pedido->fecha->format('Y-m-d') ?? 'N/A' }}</td>
+                        <td>{{ $pedido->tipo }}</td>
+
+                        <td>
+                            <!-- <button class="btn btn-icon btn-sm btn-warning btn-circle"
+                                        onclick="editarPedido({{ $pedido->id }})"><i class="fa fa-edit"></i></button>
+                                    <button class="btn btn-icon btn-sm btn-danger btn-circle"
+                                        onclick="eliminarPedido({{ $pedido->id }})"><i class="fa fa-trash"></i></button> -->
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="6" class="text-center text-danger">No hay datos</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
     </div>
 </div>
 </div>
-
-
 @stop()
 
 @section('js')
@@ -424,6 +421,33 @@
         }
 
         function agregarProducto() {
+            // Validar antes de agregar
+            let servicioSeleccionado = $('#serivicio_id_venta').val();
+            let cantidad = parseFloat($('#cantidad_venta').val());
+            let precio = parseFloat($('#precio_venta').val());
+
+            if (!servicioSeleccionado) {
+                Swal.fire('Error', 'Seleccione un producto', 'warning');
+                return;
+            }
+
+            if (!cantidad || cantidad <= 0) {
+                Swal.fire('Error', 'Ingrese una cantidad válida', 'warning');
+                return;
+            }
+
+            if (!precio || precio <= 0) {
+                Swal.fire('Error', 'Ingrese un precio válido', 'warning');
+                return;
+            }
+
+            // Aquí continúa tu lógica original de agregar al carrito
+            prepararJSONProducto(); // o tu lógica para armar el objeto del carrito
+            // ...
+        }
+
+
+        function agregarProducto() {
 
             if ($("#formulario_venta")[0].checkValidity()) {
 
@@ -439,6 +463,7 @@
                 var subTotal = (precio * cantidad) - 0;
                 var descripcion_adicional = $('#descripcion_adicional').val();
                 var monto_total = $('#monto_total').val();
+
 
                 let servicio = {
                     servicio_id: servicioDatos.id,
@@ -1540,47 +1565,26 @@
         }
 
 
-
-
-
-
-
-
-        function mostrarFormularioPedido(tipo) {
-            // Verifica que se haya escogido un cliente
-            let clienteId = $('#cliente_id_escogido').val();
-            let nombreCliente = $('#nombre_cliente').text();
-
-            if (!clienteId) {
-                alert("Debe seleccionar un cliente primero.");
-                return;
-            }
-
-            // Poner datos en el bloque de pedido
-            $('#tipo').val(tipo);
-            $('#cliente_nombre_pedido').val(nombreCliente);
-            $('#cliente_id_pedido').val(clienteId);
-
-            // Mostrar bloque de formulario
-            $('#bloque_formulario_pedido').show();
-        }
-
-        function prepararJSONProductos() {
-            // Array donde guardaremos los productos en el formato correcto
-            let productos = arrayProductoCar.map(item => {
-                return {
-                    producto_id: item.servicio_id,  // o item.producto_id si existe
-                    nombre: item.descripcion,       // nombre del producto
-                    cantidad: item.cantidad         // cantidad comprada
-                };
+        $(document).ready(function () {
+            $('#kt_table_pedidos').DataTable({
+                lengthMenu: [10, 25, 50, 100],
+                scrollX: true,
+                responsive: true,
+                language: {
+                    paginate: {
+                        first: 'Primero',
+                        last: 'Último',
+                        next: 'Siguiente',
+                        previous: 'Anterior'
+                    },
+                    search: 'Buscar:',
+                    lengthMenu: 'Mostrar _MENU_ registros por página',
+                    info: 'Mostrando _START_ a _END_ de _TOTAL_ registros',
+                    emptyTable: 'No hay datos disponibles'
+                },
+                order: [[0, 'desc']],
             });
-
-            // Convertimos a JSON string y lo ponemos en el campo oculto
-            $('#productos').val(JSON.stringify(productos));
-        }
-
-
-
+        });
 
     </script>
 @endsection

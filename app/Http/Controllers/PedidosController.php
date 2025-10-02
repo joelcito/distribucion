@@ -27,59 +27,11 @@ class PedidosController extends Controller
         return view('factura.formulario', compact('clienteSeleccionado'));
     }
 
-
-
-    // public function store(Request $request)
-    // {
-    //     try {
-    //         $request->validate([
-    //             'cliente_id' => 'required|exists:clientes,id',
-    //             'usuario_id' => 'required|exists:users,id',
-    //             'tipo' => 'required|string',
-    //             'fecha' => 'required|date',
-    //             'productos' => 'required' 
-    //         ]);
-
-    //         DB::beginTransaction();
-    //         $productos = json_decode($request->productos, true);
-
-    //         if (!$productos || !is_array($productos)) {
-    //             throw new \Exception("Formato inválido de productos (JSON esperado).");
-    //         }
-
-    //         $pedido = new Pedido();
-    //         $pedido->cliente_id = $request->cliente_id;
-    //         $pedido->usuario_id = $request->usuario_id;
-    //         $pedido->tipo = $request->tipo;
-    //         $pedido->fecha = $request->fecha;
-    //         $pedido->pedidos_productos = json_encode($productos);
-    //         $pedido->estado = 'pendiente';
-    //         $pedido->save();
-    //         foreach ($productos as $producto) {
-    //             $idProducto = $producto['producto_id'] ?? $producto['servicio_id'] ?? null;
-
-    //             if (!$idProducto) {
-    //                 throw new \Exception("No hay ID de producto en uno de los items");
-    //             }
-
-    //             Movimiento::create([
-    //                 'producto_id' => $idProducto,
-    //                 'sucursal_id' => $producto['sucursal_id'] ?? null,
-    //                 'salida' => $producto['cantidad'],
-    //                 'fecha' => now(),
-    //                 'descripcion' => 'Reserva por pedido #' . $pedido->id,
-    //                 'pedido_id' => $pedido->id,
-    //             ]);
-    //         }
-
-    //         DB::commit();
-    //         return response()->json(['estado' => true, 'pedido_id' => $pedido->id]);
-
-    //     } catch (\Exception $e) {
-    //         DB::rollBack();
-    //         return response()->json(['estado' => false, 'message' => $e->getMessage()]);
-    //     }
-    // }
+    public function listado()
+    {
+        $pedidos = Pedido::with('cliente')->orderBy('id', 'desc')->get();
+        return view('factura.formulario', compact('pedidos'));
+    }
 
     public function store(Request $request)
     {
@@ -121,7 +73,7 @@ class PedidosController extends Controller
                     'fecha' => now(),
                     'descripcion' => 'Salida por pedido #' . $pedido->id,
                     'precio_venta' => $producto['precio'] ?? null,
-                    'lotes' => $producto['lote'] ?? null,
+                    'lotes' => $producto['lotes'] ?? null,
                     'fecha_vencimiento' => $producto['fecha_vencimiento'] ?? null,
                     'estado' => 'pendiente'
                 ]);
@@ -136,6 +88,12 @@ class PedidosController extends Controller
             return response()->json(['estado' => false, 'message' => $e->getMessage()]);
         }
     }
+
+
+
+
+
+
 
 
 }
