@@ -50,33 +50,33 @@
 
 
     <div class="d-flex flex-column flex-column-fluid">
-    <div id="kt_app_content" class="app-content flex-column-fluid">
-        <div id="kt_app_content_container" class="app-container container-xxlg">
-            <div class="card shadow-sm">
-                <div class="card-header bg-light-info py-4 d-flex align-items-center justify-content-between">
-                    <h3 class="card-title fw-bold">Listado de Categorias</h3>
-                    <div class="card-toolbar">
-                        <button type="button" class="btn btn-primary btn-sm" onclick="modalNuevoRol()">
-                            <i class="fa fa-plus"></i> Nuevo Categoria
-                        </button>
+        <div id="kt_app_content" class="app-content flex-column-fluid">
+            <div id="kt_app_content_container" class="app-container container-xxlg">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-light-info py-4 d-flex align-items-center justify-content-between">
+                        <h3 class="card-title fw-bold">Listado de Categorias</h3>
+                        <div class="card-toolbar">
+                            <button type="button" class="btn btn-primary btn-sm" onclick="modalNuevoRol()">
+                                <i class="fa fa-plus"></i> Nuevo Categoria
+                            </button>
+                        </div>
                     </div>
-                </div>
 
-                <div class="card-body py-4" id="table_listado">
-                    <!-- El listado se carga por AJAX -->
+                    <div class="card-body py-4" id="table_listado">
+                        <!-- El listado se carga por AJAX -->
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
 
 @stop()
 
 @section('js')
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
+    <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
     <script>
         $.ajaxSetup({
             // definimos cabecera donde estarra el token y poder hacer nuestras operaciones de put,post...
@@ -89,10 +89,10 @@
             ajaxListado();
         });
 
-        function ajaxListado(){
+        function ajaxListado() {
             let datos = {};
             $.ajax({
-                url: "{{ route('rol.ajaxListado') }}",
+                url: "{{ route('categoria.ajaxListado') }}",
                 method: "POST",
                 data: datos,
                 success: function(resultado) {
@@ -108,14 +108,14 @@
             })
         }
 
-        function modalNuevoRol(){
+        function modalNuevoRol() {
             $('#modalRol').modal('show')
         }
 
-        function guardarRol(){
+        function guardarRol() {
             let datos = $('#formularioRol').serializeArray();
 
-             $.ajax({
+            $.ajax({
                 url: "{{ route('categoria.guardarCategoria') }}",
                 method: "POST",
                 data: datos,
@@ -157,65 +157,66 @@
             });
         }
 
-        function editarRol(rol){
+        function editarRol(rol) {
             $('#id').val(rol.id)
             $('#nombre').val(rol.nombre)
             $('#modalRol').modal('show')
         }
 
         function eliminarRol(rol) {
-    Swal.fire({
-        title: "¿Quieres eliminar " + rol.nombre + "?",
-        text: "¡No podrás recuperarlo!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: "Sí, borrar",
-        cancelButtonText: "No, cancelar",
-        reverseButtons: true
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $.ajax({
-                url: "{{ route('rol.eliminarRol') }}",
-                method: "POST",
-                data: { rol: rol },
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(resultado) {
-                    if (resultado.estado) {
-                        ajaxListado(); // recarga el listado
-                        Swal.fire(
-                            'Eliminado!',
-                            'El rol ha sido eliminado correctamente.',
-                            'success'
-                        );
-                    } else {
-                        Swal.fire(
-                            'Error',
-                            resultado.message || 'No se pudo eliminar el rol.',
-                            'error'
-                        );
-                    }
-                },
-                error: function(xhr) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Ocurrió un error inesperado.'
+            Swal.fire({
+                title: "¿Quieres eliminar " + rol.nombre + "?",
+                text: "¡No podrás recuperarlo!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: "Sí, borrar",
+                cancelButtonText: "No, cancelar",
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ route('rol.eliminarRol') }}",
+                        method: "POST",
+                        data: {
+                            rol: rol
+                        },
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(resultado) {
+                            if (resultado.estado) {
+                                ajaxListado(); // recarga el listado
+                                Swal.fire(
+                                    'Eliminado!',
+                                    'El rol ha sido eliminado correctamente.',
+                                    'success'
+                                );
+                            } else {
+                                Swal.fire(
+                                    'Error',
+                                    resultado.message || 'No se pudo eliminar el rol.',
+                                    'error'
+                                );
+                            }
+                        },
+                        error: function(xhr) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Ocurrió un error inesperado.'
+                            });
+                        }
                     });
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    Swal.fire(
+                        'Cancelado',
+                        'La operación fue cancelada',
+                        'info'
+                    );
                 }
             });
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-            Swal.fire(
-                'Cancelado',
-                'La operación fue cancelada',
-                'info'
-            );
         }
-    });
-}
-
     </script>
 @endsection
