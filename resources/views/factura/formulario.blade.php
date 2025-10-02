@@ -244,6 +244,7 @@
                     <th>Cliente</th>
                     <th>Fecha</th>
                     <th>Tipo</th>
+                    <th>ESTADO</th>
 
                     <th>Acciones</th>
                 </tr>
@@ -259,12 +260,15 @@
                         <td>{{ $pedido->cliente->nombres ?? 'N/A' }}</td>
                         <td>{{ $pedido->fecha->format('Y-m-d') ?? 'N/A' }}</td>
                         <td>{{ $pedido->tipo }}</td>
+                        <td>{{ $pedido->estado }}</td>
 
                         <td>
                             <!-- <button class="btn btn-icon btn-sm btn-warning btn-circle"
-                                        onclick="editarPedido({{ $pedido->id }})"><i class="fa fa-edit"></i></button>
-                                    <button class="btn btn-icon btn-sm btn-danger btn-circle"
-                                        onclick="eliminarPedido({{ $pedido->id }})"><i class="fa fa-trash"></i></button> -->
+                                                    onclick="editarPedido({{ $pedido->id }})"><i class="fa fa-edit"></i></button>-->
+                            <button class="btn btn-icon btn-sm btn-danger btn-circle" title="Cancelar pedido"
+                                onclick="cancelarPedido({{ $pedido->id }})">
+                                <i class="fa fa-ban"></i>
+                            </button>
                         </td>
                     </tr>
                 @empty
@@ -1585,6 +1589,39 @@
                 order: [[0, 'desc']],
             });
         });
+        //cancelar pedido
+
+        function cancelarPedido(id) {
+            Swal.fire({
+                title: '¿Desea cancelar este pedido?',
+                text: "Esto reingresará los productos al stock",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, cancelar',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/pedidos/' + id + '/cancelar',
+                        type: 'POST',
+                        data: { _token: '{{ csrf_token() }}' },
+                        success: function (res) {
+                            if (res.estado) {
+                                Swal.fire('Cancelado', res.mensaje, 'success');
+
+
+                                $('#pedido-row-' + id).find('td:nth-child(5)').text('CANCELADO');
+                            } else {
+                                Swal.fire('Error', res.mensaje, 'error');
+                            }
+                        },
+                        error: function () {
+                            Swal.fire('Error', 'No se pudo procesar la solicitud', 'error');
+                        }
+                    });
+                }
+            });
+        }
 
     </script>
 @endsection

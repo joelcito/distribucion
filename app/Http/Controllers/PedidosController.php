@@ -42,28 +42,28 @@ class PedidosController extends Controller
 
                 'tipo' => 'required|string',
                 'fecha' => 'required|date',
-                'productos' => 'required' // JSON de productos
+                'productos' => 'required'
             ]);
 
             DB::beginTransaction();
 
-            // Convertir productos JSON en array asociativo
+
             $productos = json_decode($request->productos, true);
             if (!$productos || !is_array($productos)) {
                 throw new \Exception("Formato inválido de productos (JSON esperado).");
             }
 
-            // 1. Guardar pedido
+
             $pedido = new Pedido();
             $pedido->cliente_id = $request->cliente_id;
-            $pedido->usuario_id = $usuario->id;  // usuario que crea el pedido
+            $pedido->usuario_id = $usuario->id;
             $pedido->tipo = $request->tipo;
             $pedido->fecha = $request->fecha;
             $pedido->pedidos_productos = json_encode($productos);
-            $pedido->estado = 'pendiente';
+            $pedido->estado = 'PENDIENTE';
             $pedido->save();
 
-            // 2. Guardar movimientos de salida automáticamente
+
             foreach ($productos as $producto) {
                 Movimiento::create([
                     'usuario_creador_id' => $request->usuario_id,
@@ -91,6 +91,44 @@ class PedidosController extends Controller
 
 
 
+
+    //cancelar pedido
+
+    public function cancelar($id)
+    {
+        try {
+            $pedido = Pedido::findOrFail($id);
+            $pedido->estado = 'CANCELADO';
+            $pedido->save();
+
+            $productos = $pedido->pedidos_productos;
+            if (is_string($productos)) {
+                $productos = json_decode($productos, true) ?? [];
+            }
+
+            foreach ($productos as $producto) {
+                $producto_id = $producto['producto_id'] ?? null;
+                $cantidad = $producto['cantidad'] ?? 0;
+                $sucursal_id = $producto['sucursal_id'] ?? null;
+
+                if ($producto_id && $cantidad > 0) {
+
+                    Movimiento::create([
+                        'producto_id' => $producto_id,
+                        'sucursal_id' => $sucursal_id,
+                        'ingreso' => $cantidad,
+                        'descripcion' => 'Reingreso por cancelación de pedido ' . $pedido->id,
+                        'fecha' => now(),
+                    ]);
+                }
+            }
+
+            return response()->json(['estado' => true, 'mensaje' => 'Pedido cancelado y stock reingresado']);
+        } catch (\Exception $e) {
+            \Log::error('Error al cancelar pedido: ' . $e->getMessage());
+            return response()->json(['estado' => false, 'mensaje' => $e->getMessage()]);
+        }
+    }
 
 
 
