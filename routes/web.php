@@ -119,6 +119,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/store', [App\Http\Controllers\PedidosController::class, 'store'])->name('pedidos.store');
         Route::post('/{id}/confirmar', [App\Http\Controllers\PedidosController::class, 'confirmar'])->name('pedidos.confirmar');
         Route::post('/{id}/cancelar', [App\Http\Controllers\PedidosController::class, 'cancelar'])->name('pedidos.cancelar');
+        Route::get('/{id}/obtener', [App\Http\Controllers\PedidosController::class, 'obtener'])->name('pedidos.obtener');
+        Route::put('/{id}/actualizar', [App\Http\Controllers\PedidosController::class, 'actualizar'])->name('pedidos.actualizar');
 
     });
 

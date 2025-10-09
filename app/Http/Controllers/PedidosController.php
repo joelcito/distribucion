@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Movimiento;
 use App\Models\Cliente;
 use App\Models\Pedido;
+use App\Models\Producto;
 use App\Utils\Respuesta;
 use Auth;
 use DB;
@@ -18,20 +19,30 @@ class PedidosController extends Controller
     // Mostrar formulario de pedido
     public function create(Request $request)
     {
-        // Aquí puedes recibir un cliente_id desde la lista anterior
+
         $clienteSeleccionado = null;
         if ($request->has('cliente_id')) {
             $clienteSeleccionado = Cliente::find($request->cliente_id);
         }
 
-        return view('factura.formulario', compact('clienteSeleccionado'));
+        $productos = Producto::all();
+
+
+        return view('factura.formulario', compact('clienteSeleccionado', 'productos'));
     }
+
+
 
     public function listado()
     {
         $pedidos = Pedido::with('cliente')->orderBy('id', 'desc')->get();
-        return view('factura.formulario', compact('pedidos'));
+        $productos = Producto::all();
+
+        return view('factura.formulario', compact('pedidos', 'productos'));
     }
+
+
+
 
     public function store(Request $request)
     {
@@ -130,6 +141,72 @@ class PedidosController extends Controller
         }
     }
 
+
+    //editar
+
+    public function obtener($id)
+    {
+        try {
+            $pedido = Pedido::findOrFail($id);
+
+            $productos = json_decode($pedido->pedidos_productos, true);
+            if (!is_array($productos)) {
+                $productos = [];
+            }
+
+            return response()->json([
+                'estado' => true,
+                'pedido' => [
+                    'id' => $pedido->id,
+                    'cliente' => $pedido->cliente->nombres ?? 'N/A',
+                    'fecha' => $pedido->fecha ? $pedido->fecha->format('Y-m-d') : 'N/A',
+                    'tipo' => $pedido->tipo,
+                    'estado' => $pedido->estado,
+                    'productos' => $productos
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['estado' => false, 'mensaje' => $e->getMessage()]);
+        }
+    }
+
+
+    public function actualizar(Request $request, $id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $pedido = Pedido::findOrFail($id);
+            $productosEntrada = $request->input('productos');
+
+            if (!is_array($productosEntrada)) {
+                throw new \Exception('Formato inválido de productos');
+            }
+
+            $productos = [];
+            foreach ($productosEntrada as $p) {
+                $prod = Producto::find($p['id']);
+                if (!$prod)
+                    continue;
+
+                $productos[] = [
+                    'producto_id' => $prod->id,
+                    'nombre' => $prod->nombre,
+                    'cantidad' => $p['cantidad']
+                ];
+            }
+
+            $pedido->pedidos_productos = json_encode($productos);
+            $pedido->save();
+
+            DB::commit();
+
+            return response()->json(['estado' => true, 'mensaje' => 'Pedido actualizado correctamente']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['estado' => false, 'mensaje' => 'Error al actualizar pedido: ' . $e->getMessage()]);
+        }
+    }
 
 
 

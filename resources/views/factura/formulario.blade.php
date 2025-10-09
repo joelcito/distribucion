@@ -183,6 +183,16 @@
                                 onclick="mostrarFormularioPedido('RECIBO')">
                                 REALIZAR PEDIDO
                             </button>
+                            <!-- <button type="button" class="btn btn-dark w-100 btn-sm"
+                                onclick="mostrarFormularioPedido('RECIBO', '{{ $cliente->id ?? '' }}', '{{ $cliente->nombres ?? '' }}')">
+                                REALIZAR PEDIDO
+                            </button> -->
+
+
+
+
+
+
                         </div>
                     </div>
 
@@ -192,10 +202,11 @@
                         <div class="row mb-3">
                             <div class="col-md-12">
                                 <label>Cliente</label>
-                                <input type="hidden" name="usuario_id" id="usuario_id" value="{{ auth()->user()->id }}">
+                                <!-- <input type="hidden" name="usuario_id" id="usuario_id" value="{{ auth()->user()->id }}"> -->
 
                                 <input type="text" id="cliente_nombre_pedido" class="form-control" readonly>
                                 <input type="hidden" name="cliente_id" id="cliente_id_pedido">
+
                             </div>
                         </div>
 
@@ -230,9 +241,6 @@
         </div>
     </div>
 
-
-
-
     <hr>
     <hr>
     <h2 class="text-center">Listado de Pedidos</h2>
@@ -263,12 +271,19 @@
                         <td>{{ $pedido->estado }}</td>
 
                         <td>
-                            <!-- <button class="btn btn-icon btn-sm btn-warning btn-circle"
-                                                    onclick="editarPedido({{ $pedido->id }})"><i class="fa fa-edit"></i></button>-->
+                            <button class="btn btn-sm btn-warning" title="Editar pedido"
+                                onclick="editarPedido({{ $pedido->id }})">
+                                <i class="fa fa-edit"></i>
+                            </button>
                             <button class="btn btn-icon btn-sm btn-danger btn-circle" title="Cancelar pedido"
                                 onclick="cancelarPedido({{ $pedido->id }})">
                                 <i class="fa fa-ban"></i>
                             </button>
+                            <button class="btn btn-sm btn-info" title="Ver detalle"
+                                onclick="verDetallePedido({{ $pedido->id }})">
+                                <i class="fa fa-eye"></i>
+                            </button>
+
                         </td>
                     </tr>
                 @empty
@@ -281,9 +296,74 @@
     </div>
 </div>
 </div>
+
+<!--editar-->
+<div class="modal fade" id="modalEditarPedido" tabindex="-1" aria-labelledby="modalEditarPedidoLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-white">
+                <h5 class="modal-title">Editar Pedido</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="pedido_id">
+                <table class="table table-bordered" id="tablaProductosEditar">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <button type="button" class="btn btn-primary btn-sm" id="agregarProductoEditar">+ Agregar
+                    Producto</button>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success" id="guardarCambios">Guardar Cambios</button>
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--ver detalle-->
+<div class="modal fade" id="modalDetallePedido" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Detalle del Pedido</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered" id="tablaDetallePedido">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 @stop()
 
 @section('js')
+
+    @php
+        if (!isset($productos)) {
+            $productos = \App\Models\Producto::all();
+        }
+    @endphp
+
     <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
     <script>
         $.ajaxSetup({
@@ -447,6 +527,8 @@
 
             // Aquí continúa tu lógica original de agregar al carrito
             prepararJSONProducto(); // o tu lógica para armar el objeto del carrito
+
+
             // ...
         }
 
@@ -755,6 +837,7 @@
             $('#bloque_recibo').hide();
             $('#bloqueDatosFactura').hide();
             $('#bloque_facturacion').hide();
+            $('#bloque_formulario_pedido').show();
         }
 
 
@@ -1530,8 +1613,83 @@
             document.getElementById('cliente_fijo').innerHTML = "Cliente seleccionado: <b>" + clienteTexto + "</b>";
         }
 
+
+
+        // function seleccionarCliente(clienteId, clienteNombre) {
+        //     // Poner los valores en el formulario
+        //     $('#cliente_id_pedido').val(clienteId);
+        //     $('#cliente_nombre_pedido').val(clienteNombre);
+
+        //     // Mostrar el formulario de pedido
+        //     $('#bloque_formulario_pedido').show();
+        // }
+
+        function seleccionarCliente(id, nombre) {
+            document.getElementById('cliente_id_pedido').value = id;
+            document.getElementById('cliente_nombre_pedido').value = nombre;
+        }
+
+
+
+
+
+        function prepararJSONProductos() {
+            const productos = [];
+
+            arrayProductoCar.forEach(function (p) {
+                productos.push({
+                    producto_id: p.servicio_id,
+                    cantidad: p.cantidad,
+                    precio: p.precio,
+                    subTotal: p.subTotal,
+                    descripcion_adicional: p.descripcion_adicional
+                });
+            });
+
+            // Guardar JSON en el input hidden
+            $('#productos').val(JSON.stringify(productos));
+        }
+
+
+
+        // function mostrarFormularioPedido(tipo, clienteId = null, clienteNombre = '') {
+        //     const bloque = document.getElementById('bloque_formulario_pedido');
+        //     bloque.style.display = 'block';
+
+        //     // Limpiar campos solo si no se envía cliente
+        //     if (!clienteId) {
+        //         document.getElementById('tipo').value = '';
+        //         document.getElementById('cliente_id_pedido').value = '';
+        //         document.getElementById('cliente_nombre_pedido').value = '';
+        //         document.getElementById('productos').value = '';
+        //     }
+
+        //     // Asignar valores correctos
+        //     document.getElementById('tipo').value = tipo;
+        //     if (clienteId) document.getElementById('cliente_id_pedido').value = clienteId;
+        //     if (clienteNombre) document.getElementById('cliente_nombre_pedido').value = clienteNombre;
+        // }
+
+        function mostrarFormularioPedido(tipo) {
+            const bloque = document.getElementById('bloque_formulario_pedido');
+            bloque.style.display = 'block';
+
+            // Limpiar campos
+            document.getElementById('tipo').value = tipo;
+            document.getElementById('cliente_id_pedido').value = '';
+            document.getElementById('cliente_nombre_pedido').value = '';
+            document.getElementById('productos').value = '';
+        }
+
+
+
+
+
+
+
+
         function guardarPedido() {
-            prepararJSONProductos(); // Convertimos el carrito al formato correcto
+            prepararJSONProductos(); // Llenar el input con JSON válido
 
             let cliente_id = $('#cliente_id_pedido').val();
             let usuario_id = $('#usuario_id').val();
@@ -1558,6 +1716,7 @@
                     if (res.estado) {
                         Swal.fire('Éxito', 'Pedido guardado correctamente', 'success');
                         $('#bloque_formulario_pedido').hide();
+                        location.reload(); // Opcional: recarga para mostrar el pedido
                     } else {
                         Swal.fire('Error', res.message, 'error');
                     }
@@ -1619,6 +1778,136 @@
                             Swal.fire('Error', 'No se pudo procesar la solicitud', 'error');
                         }
                     });
+                }
+            });
+        }
+
+        const productosDisponibles = @json($productos);
+
+        function editarPedido(id) {
+            $.ajax({
+                url: '/pedidos/' + id + '/obtener',
+                type: 'GET',
+                success: function (res) {
+                    if (res.estado) {
+                        const pedido = res.pedido;
+                        $('#pedido_id').val(pedido.id);
+
+                        const tbody = $('#tablaProductosEditar tbody');
+                        tbody.empty();
+
+                        pedido.productos.forEach(prod => {
+                            let opciones = '';
+                            productosDisponibles.forEach(p => {
+                                const selected = (p.id == prod.id) ? 'selected' : '';
+                                opciones += `<option value="${p.id}" ${selected}>${p.nombre}</option>`;
+                            });
+
+                            tbody.append(`
+                                                                                                                                            <tr>
+                                                                                                                                                <td>
+                                                                                                                                                    <select name="productos[][id]" class="form-control">
+                                                                                                                                                        ${opciones}
+                                                                                                                                                    </select>
+                                                                                                                                                </td>
+                                                                                                                                                <td><input type="number" name="productos[][cantidad]" class="form-control" value="${prod.cantidad}"></td>
+                                                                                                                                                <td><button class="btn btn-sm btn-danger" onclick="$(this).closest('tr').remove()">X</button></td>
+                                                                                                                                            </tr>
+                                                                                                                                        `);
+                        });
+
+                        $('#modalEditarPedido').modal('show');
+                    } else {
+                        Swal.fire('Error', res.mensaje, 'error');
+                    }
+                }
+            });
+        }
+
+
+        $('#agregarProductoEditar').click(function () {
+            $('#tablaProductosEditar tbody').append(`
+                                                                                                                                                <tr>
+                                                                                                                                                    <td>
+                                                                                                                                                        <select name="productos[][id]" class="form-control">
+                                                                                                                                                            @foreach($productos as $producto)
+                                                                                                                                                                   <option value="{{ $producto->id }}">{{ $producto->nombre }}</option>
+                                                                                                                                                            @endforeach
+                                                                                                                                                        </select>
+                                                                                                                                                    </td>
+                                                                                                                                                    <td><input type="number" name="productos[][cantidad]" class="form-control" min="1" value="1"></td>
+                                                                                                                                                    <td><button class="btn btn-sm btn-danger" onclick="$(this).closest('tr').remove()">X</button></td>
+                                                                                                                                                </tr>
+                                                                                                                                            `);
+        });
+
+
+        $('#guardarCambios').click(function () {
+            const pedidoId = $('#pedido_id').val();
+            const productos = [];
+
+            $('#tablaProductosEditar tbody tr').each(function () {
+                const productoId = $(this).find('select[name="productos[][id]"]').val();
+                const cantidad = $(this).find('input[name="productos[][cantidad]"]').val();
+
+                if (productoId && cantidad > 0) {
+                    productos.push({ id: productoId, cantidad: cantidad });
+                }
+            });
+
+            if (productos.length === 0) {
+                Swal.fire('Atención', 'Debes agregar al menos un producto', 'warning');
+                return;
+            }
+
+            $.ajax({
+                url: '/pedidos/' + pedidoId + '/actualizar',
+                type: 'PUT',
+                data: JSON.stringify({ productos: productos }),
+                contentType: 'application/json',
+                headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                success: function (res) {
+                    if (res.estado) {
+                        Swal.fire('Éxito', res.mensaje, 'success').then(() => location.reload());
+                    } else {
+                        Swal.fire('Error', res.mensaje, 'error');
+                    }
+                },
+                error: function () {
+                    Swal.fire('Error', 'Error de conexión con el servidor', 'error');
+                }
+            });
+        });
+
+
+        //ver detalle #
+
+        function verDetallePedido(id) {
+            $.ajax({
+                url: '/pedidos/' + id + '/obtener',
+                type: 'GET',
+                success: function (res) {
+                    if (res.estado) {
+                        const pedido = res.pedido;
+                        const tbody = $('#tablaDetallePedido tbody');
+                        tbody.empty();
+
+                        pedido.productos.forEach(prod => {
+                            tbody.append(`
+                                                                                                    <tr>
+                                                                                                        <td>${prod.nombre ?? prod.producto_id}</td>
+                                                                                                        <td>${prod.cantidad}</td>
+                                                                                                    </tr>
+                                                                                                `);
+                        });
+
+                        $('#modalDetallePedido').modal('show');
+                    } else {
+                        Swal.fire('Error', res.mensaje, 'error');
+                    }
+                },
+                error: function () {
+                    Swal.fire('Error', 'No se pudo obtener el detalle del pedido', 'error');
                 }
             });
         }

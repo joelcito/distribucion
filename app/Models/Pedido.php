@@ -27,7 +27,7 @@ class Pedido extends Model
     ];
 
     protected $casts = [
-        'pedidos_productos' => 'array', // convierte automáticamente JSON a array
+        'pedidos_productos' => 'array',
         'fecha' => 'datetime',
     ];
 
