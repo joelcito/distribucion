@@ -113,7 +113,8 @@
                         <a href="{{ url('home') }}">
                             <div class="row mt-4">
                                 <div class="col-md-4">
-                                    <img alt="Logo" src="#" width="100%" />
+                                    <img src="{{ asset('assets/img/image.png') }}" alt="Logo" src="#"
+                                        width="100%" />
                                 </div>
                                 <div class="col-md-8">
                                     <h2 class="text-white mt-6">DISTRIBUCION</h2>

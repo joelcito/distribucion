@@ -28,14 +28,14 @@ return new class extends Migration
 
 
             $table->date('fecha')->nullable();
-            $table->string('nit', 45);
-            $table->string('razon_social', 45);
+            $table->string('nit', 45)->nullable();
+            $table->string('razon_social', 45)->nullable();
             $table->decimal('numero_recibo', 12, 2)->nullable();
             $table->decimal('total', 12, 2)->nullable();
             $table->decimal('descuento_adicional', 12, 2)->nullable();
             $table->text('descripcion')->nullable();
 
-            $table->string('estado_pago', 45);
+            $table->string('estado_pago', 45)->nullable();
 
             $table->string('estado')->nullable();
             $table->datetime('deleted_at')->nullable();

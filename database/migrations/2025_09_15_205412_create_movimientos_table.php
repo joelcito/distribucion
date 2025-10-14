@@ -34,8 +34,8 @@ return new class extends Migration
             $table->decimal('salida', 12, 2)->nullable();
             $table->dateTime('fecha')->nullable();
             $table->text('descripcion')->nullable();
-            $table->decimal('precio_compra', 12, 2)->nullable();
-            $table->decimal('precio_venta', 12, 2)->nullable();
+            // $table->decimal('precio_compra', 12, 2)->nullable();
+            // $table->decimal('precio_venta', 12, 2)->nullable();
             $table->date('fecha_vencimiento')->nullable();
             $table->string('lotes')->nullable();
 

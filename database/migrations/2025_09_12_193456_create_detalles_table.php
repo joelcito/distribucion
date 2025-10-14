@@ -20,6 +20,7 @@ return new class extends Migration
             $table->unsignedBigInteger('usuario_eliminador_id')->nullable();
             $table->foreign('usuario_eliminador_id')->references('id')->on('users');
             $table->unsignedBigInteger('factura_id')->nullable();
+
             $table->foreign('factura_id')->references('id')->on('facturas');
             $table->unsignedBigInteger('cliente_id')->nullable();
             $table->foreign('cliente_id')->references('id')->on('clientes');
@@ -27,7 +28,6 @@ return new class extends Migration
             $table->foreign('producto_id')->references('id')->on('productos');
             $table->unsignedBigInteger('sucursal_id')->nullable();
             $table->foreign('sucursal_id')->references('id')->on('sucursales');
-
 
             $table->decimal('precio', 12, 2)->default(0);
             $table->decimal('cantidad', 12, 2)->default(0);

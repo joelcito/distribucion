@@ -9,10 +9,7 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    public function rol()
-    {
-        return $this->belongsTo(\App\Models\Rol::class, 'rol_id');
-    }
+
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
@@ -27,6 +24,15 @@ class User extends Authenticatable
         'password',
         'celular',
     ];
+
+    public function rol()
+    {
+        return $this->belongsTo(\App\Models\Rol::class, 'rol_id');
+    }
+
+    public function sucursal(){
+        return $this->belongsTo(Sucursal::class, 'sucursal_id');
+    }
 
     /**
      * The attributes that should be hidden for serialization.

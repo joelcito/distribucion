@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Rol;
+use App\Models\Sucursal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Utils\Respuesta;
@@ -12,7 +13,10 @@ class UserController extends Controller
 {
     public function listado()
     {
-        return view('usuario.listado');
+
+        $sucursales = Sucursal::all();
+
+        return view('usuario.listado')->with(compact('sucursales'));
     }
 
     public function ajaxListado(Request $request)
@@ -32,11 +36,12 @@ class UserController extends Controller
     public function guardarUsuario(Request $request)
     {
         if ($request->ajax()) {
-            $usuario_id = $request->input('id');
-            $name = $request->input('name');
-            $email = $request->input('email');
-            $password = $request->input('password');
-            $celular = $request->input('celular');
+            $usuario_id  = $request->input('id');
+            $name        = $request->input('name');
+            $email       = $request->input('email');
+            $password    = $request->input('password');
+            $celular     = $request->input('celular');
+            $sucursal_id = $request->input('sucursal_id');
 
             if ($usuario_id == "0") {
                 $user = new User();
@@ -47,8 +52,9 @@ class UserController extends Controller
                     $user->password = bcrypt($password);
                 }
             }
-            $user->name = $name;
-            $user->email = $email;
+            $user->name        = $name;
+            $user->email       = $email;
+            $user->sucursal_id = $sucursal_id;
             $user->save();
             $data = Respuesta::success(null, "Usuario guardado correctamente");
         } else {

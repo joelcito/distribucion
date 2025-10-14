@@ -72,6 +72,11 @@ Route::middleware('auth')->group(function () {
     Route::prefix('/factura')->group(function () {
         Route::get('/formulario', [FacturaController::class, 'formulario'])->name('factura.formulario');
         Route::post('/ajaxListadoClientesBusqueda', [FacturaController::class, 'ajaxListadoClientesBusqueda'])->name('factura.ajaxListadoClientesBusqueda');
+        Route::get('/formularioVenta', [FacturaController::class, 'formularioVenta'])->name('factura.formularioVenta');
+        Route::post('/emitirRecibo', [FacturaController::class, 'emitirRecibo'])->name('factura.emitirRecibo');
+        Route::get('/listado', [FacturaController::class, 'listado'])->name('factura.listado');
+        Route::post('/ajaxListadoFacturas', [FacturaController::class, 'ajaxListadoFacturas'])->name('factura.ajaxListadoFacturas');
+        Route::get('/imprimeRecibo/{factura_id}', [FacturaController::class, 'imprimeRecibo'])->name('factura.imprimeRecibo');
     });
 
     // CLIENTE

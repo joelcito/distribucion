@@ -61,11 +61,11 @@
         <!--begin::Page bg image-->
         <style>
             body {
-                background-image: url('{{ asset('assets/media/auth/bg1.jpg') }}');
+                background-image: url('{{ asset('assets/media/auth/bg2.jpg') }}');
             }
 
             [data-bs-theme="dark"] body {
-                background-image: url('{{ asset('assets/media/auth/bg4-dark.jpg') }}');
+                background-image: url('{{ asset('assets/media/auth/bg2-dark.jpg') }}');
             }
         </style>
         <!--end::Page bg image-->
@@ -76,7 +76,7 @@
                 <!--begin::Aside-->
                 <div class="d-flex flex-center flex-lg-start flex-column">
                     <!--begin::Logo-->
-                    <img alt="Logo" src="{{ asset('assets/img/siat.png') }}" width="50%" />
+                    <img alt="Logo" src="{{ asset('assets/img/image.png') }}" width="100%" />
                     <!--end::Logo-->
                     <!--begin::Title-->
                     <br>

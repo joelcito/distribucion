@@ -24,10 +24,10 @@ return new class extends Migration {
             $table->unsignedBigInteger('categoria_id')->nullable();
             $table->foreign('categoria_id')->references('id')->on('categorias');
 
-            $table->string('nombre', 45);
-            // $table->decimal('precio_compra', 12, 2);
-            // $table->decimal('precio_venta', 12, 2);
-            $table->string('codigo', 45);
+            $table->string('nombre', 45)->nullable();
+            $table->decimal('precio_compra', 12, 2)->nullable();
+            $table->decimal('precio_venta', 12, 2)->nullable();
+            $table->string('codigo', 45)->nullable();
 
             $table->string('estado')->nullable();
             $table->datetime('deleted_at')->nullable();

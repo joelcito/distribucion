@@ -29,7 +29,7 @@ return new class extends Migration
             $table->decimal('cambio', 12, 2)->default(0);
             $table->date('fecha')->nullable();
             $table->text('descripcion')->nullable();
-            $table->string('tipo_pago', 45);
+            $table->string('tipo_pago', 45)->nullable();
 
             $table->string('estado')->nullable();
             $table->datetime('deleted_at')->nullable();

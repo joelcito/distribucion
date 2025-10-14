@@ -68,6 +68,7 @@ class MovimientoController extends Controller
             $movimiento->detalle_id = $request->input('detalle_id');
             $movimiento->sucursal_id = $request->input('sucursal_id');
             $movimiento->ingreso = $request->input('ingreso');
+            $movimiento->salida = 0;
             //$movimiento->salida = $request->input('salida');
             $movimiento->descripcion = $request->input('descripcion');
             $movimiento->estado = 1;
