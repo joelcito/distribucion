@@ -246,6 +246,16 @@
                             </a>
                         </div>
                     </div>
+
+                    {{-- <div class="menu-item">
+                        <a class="menu-link {{ Route::currentRouteName() == 'pago.listado' ? 'active' : '' }}"
+                            href="{{ route('pago.listado') }}">
+                            <span class="menu-bullet">
+                                <span class="bullet bullet-dot"></span>
+                            </span>
+                            <span class="menu-title text-white">Listado Pagos</span>
+                        </a>
+                    </div> --}}
                 </div>
 
                 {{-- <div data-kt-menu-trigger="click"

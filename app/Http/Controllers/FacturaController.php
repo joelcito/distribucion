@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use PhpParser\Node\Expr\FuncCall;
 use Psy\TabCompletion\Matcher\FunctionsMatcher;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use PDF;
 
 class FacturaController extends Controller
 {
@@ -349,6 +351,61 @@ class FacturaController extends Controller
     }
 
     function imprimeRecibo(Request $request, $factura_id){
+
+        $usuario = Auth::user();
+        $nitSeleccionado = session('nit_seleccionado');
+        $sucursalSeleccionado = session('sucursal_seleccionado');
+        $puntoVentaSeleccionado = session('puntoVenta_seleccionado');
+        // $this->inicializarVariables(
+        //     $nitSeleccionado->api_key,
+        //     $nitSeleccionado->codigo_sistema,
+        //     $nitSeleccionado->numero,
+        //     $nitSeleccionado->razon_social,
+        //     $nitSeleccionado->municipio,
+        //     $nitSeleccionado->celular,
+        //     $nitSeleccionado->cafc,
+        // );
+
+        // $empresa_id     = $usuario->empresa_id;
+        // $punto_venta_id = $usuario->punto_venta_id;
+        // $sucursal_id    = $usuario->sucursal_id;
+        // $empresa        = $usuario->empresa;
+
+        $factura = Factura::find($factura_id);
+
+        if($factura){
+            // if($factura->empresa_id == $empresa_id){
+
+                // $xml     = $factura['productos_xml'];
+
+                // $archivoXML = new SimpleXMLElement($xml);
+
+                // $cabeza = (array) $archivoXML;
+
+                // $cuf            = (string)$cabeza['cabecera']->cuf;
+                // $numeroFactura  = (string)$cabeza['cabecera']->numeroFactura;
+
+
+                // $urlApiServicioSiat = new UrlApiServicio();
+                // $UrlVerificaFactura = $urlApiServicioSiat->getUrlVerificaFactura($this->codigo_ambiente);
+
+                // Genera el texto para el código QR
+                // $textoQR = $factura->empresa->url_verifica."?nit=".$empresa->nit."&cuf=".$factura->cuf."&numero=".$numeroFactura."&t=2";
+                // $textoQR = $UrlVerificaFactura->url_servicio."?nit=".$this->nit."&cuf=".$factura->cuf."&numero=".$numeroFactura."&t=2";
+                // // Genera la ruta temporal para guardar la imagen del código QR
+                // $rutaImagenQR = storage_path('app/public/qr_code.png');
+                // // Genera el código QR y guarda la imagen en la ruta temporal
+                // QrCode::generate($textoQR, $rutaImagenQR);
+
+                $pdf = PDF::loadView('factura.pdf.imprimeRecibo', compact('factura'))->setPaper('letter');
+
+                return $pdf->stream('facturaCv.pdf');
+            // }else{
+            //     throw new AuthorizationException();
+            // }
+        }else{
+            throw new NotFoundHttpException();
+        }
 
     }
 

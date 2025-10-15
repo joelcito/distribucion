@@ -7,350 +7,353 @@
 @endsection
 @section('content')
 
-<div class="d-flex flex-column flex-column-fluid">
-    <div id="kt_app_content" class="app-content flex-column-fluid">
-        <div id="kt_app_content_container" class="app-container container-xxlg">
-            <div class="card">
-                <div class="card-body py-4">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h1
-                                class="page-heading d-flex text-gray-900 fw-bold fs-3 flex-column justify-content-center my-0">
-                                Formulario de Pedido</h1>
-                        </div>
-                    </div>
-                    <hr>
-                    <div id="tabla_clientes">
-                    </div>
-                    <hr>
-                    <div id="tabla_ventas">
-                        <form id="formulario_venta">
-                            <div class="row">
-                                <div class="col-md-11">
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <label class="required fw-semibold fs-6 mb-2">Producto / Servicio</label>
-                                            <select name="serivicio_id_venta" id="serivicio_id_venta"
-                                                class="form-control form-control-sm" onchange="identificaSericio(this)"
-                                                required>
-                                                <option value="">SELECCIONE</option>
-                                                @foreach ($servicios as $s)
-                                                    <option value="{{ $s }}">{{ $s->nombre }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        <div class="col-md-3 visualizacion_m2">
-                                            <label class="required fw-semibold fs-6 mb-2">Cantidad</label>
-                                            <input type="text" class="form-control form-control-sm" id="cantidad_venta"
-                                                name="cantidad_venta" required onchange="calcularPrecioTotal()">
-                                        </div>
-                                        <div class="col-md-3 visualizacion_m2">
-                                            <label class="required fw-semibold fs-6 mb-2">Precio</label>
-                                            <input type="text" class="form-control form-control-sm" id="precio_venta"
-                                                name="precio_venta" onchange="calcularPrecioTotal()" required>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label class="required fw-semibold fs-6 mb-2">Total</label>
-                                            <input type="number" class="form-control form-control-sm" id="total_venta"
-                                                name="total_venta" value="0" min="1" required readonly>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-1 d-flex align-items-end">
-                                    <div class="d-flex justify-content-center gap-2 w-100">
-                                        <button class="btn btn-primary btn-circle btn-sm btn-icon" type="button"
-                                            onclick="mostraBloqueMasDatosProdcuto()" title="Mostrar más opción">
-                                            <i class="fa fa-note-sticky"></i> +
-                                        </button>
-                                        <button class="btn btn-success btn-circle btn-sm btn-icon" type="button"
-                                            onclick="agregarProducto()" title="Agregar al Carro de compras"
-                                            id="boton-agrega-producto">
-                                            <i class="fa fa-xs fa-shopping-cart"></i> +
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row" style="display: none;" id="bloque_mas_datos_productos">
-                                <div class="col-md-6">
-                                    <label class="fw-semibold fs-6 mb-2">Descripcion Adicional</label>
-                                    <textarea class="form-control form-control-sm" name="descripcion_adicional"
-                                        id="descripcion_adicional" cols="30" rows="1"></textarea>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class=" fw-semibold fs-6 mb-2">Numero Serie</label>
-                                    <input type="number" class="form-control form-control-sm" id="numero_serie"
-                                        name="numero_serie" min="1">
-                                </div>
-                                <div class="col-md-3">
-                                    <label class=" fw-semibold fs-6 mb-2">Codigo Imei</label>
-                                    <input type="number" class="form-control form-control-sm" id="codigo_imei"
-                                        name="codigo_imei" min="1">
-                                </div>
-                            </div>
-                        </form>
-                        <hr>
-                        <div id="tabla_detalles" style="display: none;">
-                            <h2 class="text-center">CARRITO DE COMPRAS</h2>
-                            <div class="table-responsive" style="max-width: 100%; overflow-x: auto;">
-                                <table id="carrito" class="table align-middle table-row-dashed fs-6 gy-5">
-                                    <thead>
-                                        <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
-                                            <th>Servicio / Producto</th>
-                                            <th>Medida</th>
-                                            <th>Precio</th>
-                                            <th>Cantidad </th>
-                                            <th>Total</th>
-                                            <th>Descuento</th>
-                                            <th>Sub Total</th>
-                                            <th>Acción</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="text-gray-600 fw-semibold">
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th colspan="6">Descuento Adicional</th>
-                                            <th colspan="2">Monto Total</th>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="6">
-                                                <input class="form-control form-control-sm" name="descuento_adicional"
-                                                    id="descuento_adicional" type="number" value="0"
-                                                    onchange="ejecutarDescuentoAdicional()">
-                                            </td>
-                                            <td colspan="2">
-                                                <input class="form-control form-control-sm" name="monto_total"
-                                                    id="monto_total" type="number" readonly value="0">
-                                            </td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row" id="bloque_seleccionar_cliente" style="display: none">
-                            <div class="col-md-11">
-                                <button class="btn btn-info btn-sm w-100" onclick="mostrarFormularioClientes()"><span
-                                        id="nombre_cliente"></span> <i class="fa fa-user-alt"></i></button>
-                                <input type="hidden" name="cliente_id_escogido" id="cliente_id_escogido">
-                            </div>
-                            <div class="col-md-1">
-                                <button title="Mostrar carro de compras" class="btn btn-dark btn-sm btn-circle btn-icon"
-                                    onclick="mostrarCarritoVentas()"><i class="fa fa-shopping-basket"></i></button>
-                                <button title="Agregar cliente" class="btn btn-primary btn-sm btn-circle btn-icon"
-                                    onclick="modalAgregarCliente()"><i class="fa fa-user-plus"></i></button>
-                            </div>
-                        </div>
-                        <form id="formulario_cliente_escogido" style="display: none">
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <label class="fs-6 fw-semibold form-label mb-2">Cedula / Nit</label>
-                                    <input type="number" class="form-control form-control-sm buscar-persona"
-                                        name="nit_escogido" id="nit_escogido">
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="fs-6 fw-semibold form-label mb-2">Nombre</label>
-                                    <input type="text" class="form-control form-control-sm buscar-persona"
-                                        name="nombre_escogido" id="nombre_escogido">
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="fs-6 fw-semibold form-label mb-2">Ap Paterno</label>
-                                    <input type="text" class="form-control form-control-sm buscar-persona"
-                                        name="ap_paterno_escogido" id="ap_paterno_escogido">
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="fs-6 fw-semibold form-label mb-2">Ap Materno</label>
-                                    <input type="text" class="form-control form-control-sm buscar-persona"
-                                        name="ap_materno_escogido" id="ap_materno_escogido">
-                                </div>
-                            </div>
-                        </form>
-                        <div id="tabla-clientes-buscados">
-
-                        </div>
-                    </div>
-                    <hr>
-                    <!-- <div class="row" id="bloque-botones-emisiones" style="display: none">
-                        <div class="col-md-12">
-                            <button class="btn btn-dark w-100 btn-sm" onclick="escogerVentaTipo('RECIBO')">TICKED
-                                RECEPCION</button>
-                        </div>
-                    </div> -->
-
-                    <div class="row" id="bloque-botones-emisiones" style="display: none">
-                        <div class="col-md-12">
-                            <button type="button" class="btn btn-dark w-100 btn-sm"
-                                onclick="mostrarFormularioPedido('RECIBO')">
-                                REALIZAR PEDIDO
-                            </button>
-                            <!-- <button type="button" class="btn btn-dark w-100 btn-sm"
-                                onclick="mostrarFormularioPedido('RECIBO', '{{ $cliente->id ?? '' }}', '{{ $cliente->nombres ?? '' }}')">
-                                REALIZAR PEDIDO
-                            </button> -->
-
-
-
-
-
-
-                        </div>
-                    </div>
-
-                    <hr>
-
-                    <div id="bloque_formulario_pedido" style="display: none; margin-top: 20px;">
-                        <div class="row mb-3">
-                            <div class="col-md-12">
-                                <label>Cliente</label>
-                                <!-- <input type="hidden" name="usuario_id" id="usuario_id" value="{{ auth()->user()->id }}"> -->
-
-                                <input type="text" id="cliente_nombre_pedido" class="form-control" readonly>
-                                <input type="hidden" name="cliente_id" id="cliente_id_pedido">
-
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-4">
-                                <label>Tipo de Pedido</label>
-                                <select name="tipo" id="tipo" class="form-control" required>
-                                    <option value="">Seleccione</option>
-                                    <option value="RECIBO">RECIBO</option>
-                                    <option value="FACTURA">FACTURA</option>
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <label>Fecha</label>
-                                <input type="date" id="fecha" name="fecha" class="form-control"
-                                    value="{{ date('Y-m-d') }}" required>
-                            </div>
-                        </div>
-                        <input type="hidden" name="productos" id="productos">
-
+    <div class="d-flex flex-column flex-column-fluid">
+        <div id="kt_app_content" class="app-content flex-column-fluid">
+            <div id="kt_app_content_container" class="app-container container-xxlg">
+                <div class="card">
+                    <div class="card-body py-4">
                         <div class="row">
                             <div class="col-md-12">
-                                <button type="button" class="btn btn-primary w-100" onclick="guardarPedido()">Guardar
-                                    Pedido</button>
+                                <h1
+                                    class="page-heading d-flex text-gray-900 fw-bold fs-3 flex-column justify-content-center my-0">
+                                    Formulario de Pedido</h1>
                             </div>
                         </div>
-                    </div>
+                        <hr>
+                        <div id="tabla_clientes">
+                        </div>
+                        <hr>
+                        <div id="tabla_ventas">
+                            <form id="formulario_venta">
+                                <div class="row">
+                                    <div class="col-md-11">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label class="required fw-semibold fs-6 mb-2">Producto / Servicio</label>
+                                                <select name="serivicio_id_venta" id="serivicio_id_venta"
+                                                    class="form-control form-control-sm" onchange="identificaSericio(this)"
+                                                    required>
+                                                    <option value="">SELECCIONE</option>
+                                                    @foreach ($servicios as $s)
+                                                        <option value="{{ $s }}">{{ $s->nombre }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3 visualizacion_m2">
+                                                <label class="required fw-semibold fs-6 mb-2">Cantidad</label>
+                                                <input type="text" class="form-control form-control-sm"
+                                                    id="cantidad_venta" name="cantidad_venta" required
+                                                    onchange="calcularPrecioTotal()">
+                                            </div>
+                                            <div class="col-md-3 visualizacion_m2">
+                                                <label class="required fw-semibold fs-6 mb-2">Precio</label>
+                                                <input type="text" class="form-control form-control-sm" id="precio_venta"
+                                                    name="precio_venta" onchange="calcularPrecioTotal()" required>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="required fw-semibold fs-6 mb-2">Total</label>
+                                                <input type="number" class="form-control form-control-sm" id="total_venta"
+                                                    name="total_venta" value="0" min="1" required readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1 d-flex align-items-end">
+                                        <div class="d-flex justify-content-center gap-2 w-100">
+                                            <button class="btn btn-primary btn-circle btn-sm btn-icon" type="button"
+                                                onclick="mostraBloqueMasDatosProdcuto()" title="Mostrar más opción">
+                                                <i class="fa fa-note-sticky"></i> +
+                                            </button>
+                                            <button class="btn btn-success btn-circle btn-sm btn-icon" type="button"
+                                                onclick="agregarProducto()" title="Agregar al Carro de compras"
+                                                id="boton-agrega-producto">
+                                                <i class="fa fa-xs fa-shopping-cart"></i> +
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="display: none;" id="bloque_mas_datos_productos">
+                                    <div class="col-md-6">
+                                        <label class="fw-semibold fs-6 mb-2">Descripcion Adicional</label>
+                                        <textarea class="form-control form-control-sm" name="descripcion_adicional" id="descripcion_adicional" cols="30"
+                                            rows="1"></textarea>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class=" fw-semibold fs-6 mb-2">Numero Serie</label>
+                                        <input type="number" class="form-control form-control-sm" id="numero_serie"
+                                            name="numero_serie" min="1">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class=" fw-semibold fs-6 mb-2">Codigo Imei</label>
+                                        <input type="number" class="form-control form-control-sm" id="codigo_imei"
+                                            name="codigo_imei" min="1">
+                                    </div>
+                                </div>
+                            </form>
+                            <hr>
+                            <div id="tabla_detalles" style="display: none;">
+                                <h2 class="text-center">CARRITO DE COMPRAS</h2>
+                                <div class="table-responsive" style="max-width: 100%; overflow-x: auto;">
+                                    <table id="carrito" class="table align-middle table-row-dashed fs-6 gy-5">
+                                        <thead>
+                                            <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+                                                <th>Servicio / Producto</th>
+                                                <th>Medida</th>
+                                                <th>Precio</th>
+                                                <th>Cantidad </th>
+                                                <th>Total</th>
+                                                <th>Descuento</th>
+                                                <th>Sub Total</th>
+                                                <th>Acción</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="text-gray-600 fw-semibold">
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th colspan="6">Descuento Adicional</th>
+                                                <th colspan="2">Monto Total</th>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6">
+                                                    <input class="form-control form-control-sm" name="descuento_adicional"
+                                                        id="descuento_adicional" type="number" value="0"
+                                                        onchange="ejecutarDescuentoAdicional()">
+                                                </td>
+                                                <td colspan="2">
+                                                    <input class="form-control form-control-sm" name="monto_total"
+                                                        id="monto_total" type="number" readonly value="0">
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row" id="bloque_seleccionar_cliente" style="display: none">
+                                <div class="col-md-11">
+                                    <button class="btn btn-info btn-sm w-100" onclick="mostrarFormularioClientes()"><span
+                                            id="nombre_cliente"></span> <i class="fa fa-user-alt"></i></button>
+                                    <input type="hidden" name="cliente_id_escogido" id="cliente_id_escogido">
+                                </div>
+                                <div class="col-md-1">
+                                    <button title="Mostrar carro de compras"
+                                        class="btn btn-dark btn-sm btn-circle btn-icon"
+                                        onclick="mostrarCarritoVentas()"><i class="fa fa-shopping-basket"></i></button>
+                                    <button title="Agregar cliente" class="btn btn-primary btn-sm btn-circle btn-icon"
+                                        onclick="modalAgregarCliente()"><i class="fa fa-user-plus"></i></button>
+                                </div>
+                            </div>
+                            <form id="formulario_cliente_escogido" style="display: none">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label class="fs-6 fw-semibold form-label mb-2">Cedula / Nit</label>
+                                        <input type="number" class="form-control form-control-sm buscar-persona"
+                                            name="nit_escogido" id="nit_escogido">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="fs-6 fw-semibold form-label mb-2">Nombre</label>
+                                        <input type="text" class="form-control form-control-sm buscar-persona"
+                                            name="nombre_escogido" id="nombre_escogido">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="fs-6 fw-semibold form-label mb-2">Ap Paterno</label>
+                                        <input type="text" class="form-control form-control-sm buscar-persona"
+                                            name="ap_paterno_escogido" id="ap_paterno_escogido">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="fs-6 fw-semibold form-label mb-2">Ap Materno</label>
+                                        <input type="text" class="form-control form-control-sm buscar-persona"
+                                            name="ap_materno_escogido" id="ap_materno_escogido">
+                                    </div>
+                                </div>
+                            </form>
+                            <div id="tabla-clientes-buscados">
 
+                            </div>
+                        </div>
+                        <hr>
+                        <!-- <div class="row" id="bloque-botones-emisiones" style="display: none">
+                                        <div class="col-md-12">
+                                            <button class="btn btn-dark w-100 btn-sm" onclick="escogerVentaTipo('RECIBO')">TICKED
+                                                RECEPCION</button>
+                                        </div>
+                                    </div> -->
+
+                        <div class="row" id="bloque-botones-emisiones" style="display: none">
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-dark w-100 btn-sm"
+                                    onclick="mostrarFormularioPedido('RECIBO')">
+                                    REALIZAR PEDIDO
+                                </button>
+                                <!-- <button type="button" class="btn btn-dark w-100 btn-sm"
+                                                onclick="mostrarFormularioPedido('RECIBO', '{{ $cliente->id ?? '' }}', '{{ $cliente->nombres ?? '' }}')">
+                                                REALIZAR PEDIDO
+                                            </button> -->
+
+
+
+
+
+
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div id="bloque_formulario_pedido" style="display: none; margin-top: 20px;">
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <label>Cliente</label>
+                                    <!-- <input type="hidden" name="usuario_id" id="usuario_id" value="{{ auth()->user()->id }}"> -->
+
+                                    <input type="text" id="cliente_nombre_pedido" class="form-control" readonly>
+                                    <input type="hidden" name="cliente_id" id="cliente_id_pedido">
+
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label>Tipo de Pedido</label>
+                                    <select name="tipo" id="tipo" class="form-control" required>
+                                        <option value="">Seleccione</option>
+                                        <option value="RECIBO">RECIBO</option>
+                                        <option value="FACTURA">FACTURA</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label>Fecha</label>
+                                    <input type="date" id="fecha" name="fecha" class="form-control"
+                                        value="{{ date('Y-m-d') }}" required>
+                                </div>
+                            </div>
+                            <input type="hidden" name="productos" id="productos">
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <button type="button" class="btn btn-primary w-100"
+                                        onclick="guardarPedido()">Guardar
+                                        Pedido</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <hr>
+        <hr>
+        <h2 class="text-center">Listado de Pedidos</h2>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover table-sm" id="kt_table_pedidos">
+                <thead>
+                    <tr class="text-center text-muted fw-bold fs-7 text-uppercase gs-0">
+                        <th>ID</th>
+                        <th>Cliente</th>
+                        <th>Fecha</th>
+                        <th>Tipo</th>
+                        <th>ESTADO</th>
+
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php
+                        use App\Models\Pedido;
+                        $pedidos = Pedido::with('cliente')->orderBy('id', 'desc')->get();
+                    @endphp
+                    @forelse ($pedidos as $pedido)
+                        <tr class="text-center">
+                            <td>{{ $pedido->id }}</td>
+                            <td>{{ $pedido->cliente->nombres ?? 'N/A' }}</td>
+                            <td>{{ $pedido->fecha->format('Y-m-d') ?? 'N/A' }}</td>
+                            <td>{{ $pedido->tipo }}</td>
+                            <td>{{ $pedido->estado }}</td>
+
+                            <td>
+                                <button class="btn btn-sm btn-warning" title="Editar pedido"
+                                    onclick="editarPedido({{ $pedido->id }})">
+                                    <i class="fa fa-edit"></i>
+                                </button>
+                                <button class="btn btn-icon btn-sm btn-danger btn-circle" title="Cancelar pedido"
+                                    onclick="cancelarPedido({{ $pedido->id }})">
+                                    <i class="fa fa-ban"></i>
+                                </button>
+                                <button class="btn btn-sm btn-info" title="Ver detalle"
+                                    onclick="verDetallePedido({{ $pedido->id }})">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="text-center text-danger">No hay datos</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+
+    <!--editar-->
+    <div class="modal fade" id="modalEditarPedido" tabindex="-1" aria-labelledby="modalEditarPedidoLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-white">
+                    <h5 class="modal-title">Editar Pedido</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="pedido_id">
+                    <table class="table table-bordered" id="tablaProductosEditar">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <button type="button" class="btn btn-primary btn-sm" id="agregarProductoEditar">+ Agregar
+                        Producto</button>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success" id="guardarCambios">Guardar Cambios</button>
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                 </div>
             </div>
-
         </div>
     </div>
 
-    <hr>
-    <hr>
-    <h2 class="text-center">Listado de Pedidos</h2>
-    <div class="table-responsive">
-        <table class="table table-bordered table-hover table-sm" id="kt_table_pedidos">
-            <thead>
-                <tr class="text-center text-muted fw-bold fs-7 text-uppercase gs-0">
-                    <th>ID</th>
-                    <th>Cliente</th>
-                    <th>Fecha</th>
-                    <th>Tipo</th>
-                    <th>ESTADO</th>
-
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @php
-                    use App\Models\Pedido;
-                    $pedidos = Pedido::with('cliente')->orderBy('id', 'desc')->get();
-                @endphp
-                @forelse ($pedidos as $pedido)
-                    <tr class="text-center">
-                        <td>{{ $pedido->id }}</td>
-                        <td>{{ $pedido->cliente->nombres ?? 'N/A' }}</td>
-                        <td>{{ $pedido->fecha->format('Y-m-d') ?? 'N/A' }}</td>
-                        <td>{{ $pedido->tipo }}</td>
-                        <td>{{ $pedido->estado }}</td>
-
-                        <td>
-                            <button class="btn btn-sm btn-warning" title="Editar pedido"
-                                onclick="editarPedido({{ $pedido->id }})">
-                                <i class="fa fa-edit"></i>
-                            </button>
-                            <button class="btn btn-icon btn-sm btn-danger btn-circle" title="Cancelar pedido"
-                                onclick="cancelarPedido({{ $pedido->id }})">
-                                <i class="fa fa-ban"></i>
-                            </button>
-                            <button class="btn btn-sm btn-info" title="Ver detalle"
-                                onclick="verDetallePedido({{ $pedido->id }})">
-                                <i class="fa fa-eye"></i>
-                            </button>
-
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="6" class="text-center text-danger">No hay datos</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
-</div>
-</div>
-
-<!--editar-->
-<div class="modal fade" id="modalEditarPedido" tabindex="-1" aria-labelledby="modalEditarPedidoLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header bg-warning text-white">
-                <h5 class="modal-title">Editar Pedido</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" id="pedido_id">
-                <table class="table table-bordered" id="tablaProductosEditar">
-                    <thead>
-                        <tr>
-                            <th>Producto</th>
-                            <th>Cantidad</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-                <button type="button" class="btn btn-primary btn-sm" id="agregarProductoEditar">+ Agregar
-                    Producto</button>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-success" id="guardarCambios">Guardar Cambios</button>
-                <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+    <!--ver detalle-->
+    <div class="modal fade" id="modalDetallePedido" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Detalle del Pedido</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered" id="tablaDetallePedido">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
-<!--ver detalle-->
-<div class="modal fade" id="modalDetallePedido" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Detalle del Pedido</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <table class="table table-bordered" id="tablaDetallePedido">
-                    <thead>
-                        <tr>
-                            <th>Producto</th>
-                            <th>Cantidad</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
 
 
 
@@ -377,7 +380,7 @@
         var table;
         var arrayProductoCar = [];
 
-        $(document).ready(function () {
+        $(document).ready(function() {
 
             $("#serivicio_id_venta, #documento_sector_siat_id_new_servicio, #actividad_economica_siat_id_new_servicio, #producto_servicio_siat_id_new_servicio, #unidad_medida_siat_id_new_servicio, #facturacion_datos_tipo_metodo_pago, #facturacion_datos_tipo_moneda, #tipo_documento")
                 .select2();
@@ -401,14 +404,14 @@
                 responsive: true
             });
             let debounceTimer;
-            $('.buscar-persona').on('keyup', function () {
+            $('.buscar-persona').on('keyup', function() {
                 clearTimeout(debounceTimer);
-                debounceTimer = setTimeout(function () {
+                debounceTimer = setTimeout(function() {
                     ajaxListadoClientes();
                 }, 300); // Espera 300 ms antes de ejecutar la función
             });
 
-            $('input[name="uso_cafc"]').on('change', function () {
+            $('input[name="uso_cafc"]').on('change', function() {
                 verificarRadioSeleccionado();
             });
 
@@ -422,7 +425,7 @@
                 url: "{{ url('factura/ajaxListadoServicios') }}",
                 method: "POST",
                 data: datos,
-                success: function (data) {
+                success: function(data) {
                     if (data.estado === 'success') {
                         $('#tabla_clientes').html(data.listado)
                     } else {
@@ -754,7 +757,7 @@
                     url: "{{ url('factura/ajaxListadoClientesBusqueda') }}",
                     method: "POST",
                     data: datos,
-                    success: function (data) {
+                    success: function(data) {
                         if (data.estado) {
                             if (data.data.cantidad > 0)
                                 $('#tabla-clientes-buscados').show('toogle')
@@ -824,8 +827,8 @@
 
             // Mostrar el cliente en los bloques correspondientes
             $('#nombre_cliente').text(nombreusuario);
-            $('#cliente_nombre_pedido').val(nombreusuario);  // bloque de pedido
-            $('#cliente_id_pedido').val(cliente);            // bloque de pedido
+            $('#cliente_nombre_pedido').val(nombreusuario); // bloque de pedido
+            $('#cliente_id_pedido').val(cliente); // bloque de pedido
 
             // Ocultar formulario de búsqueda
             $('#formulario_cliente_escogido').hide();
@@ -965,7 +968,7 @@
                             monto_pagado: $('#monto_pagado').val(),
                             cambio_pagado: $('#cambio_pagado').val()
                         },
-                        success: function (data) {
+                        success: function(data) {
                             if (data.estado === "VALIDADA") {
                                 Swal.fire({
                                     icon: 'success',
@@ -1017,7 +1020,7 @@
                                 iconoCarga.hide();
                             }
                         },
-                        error: function (error) {
+                        error: function(error) {
 
                         }
                     })
@@ -1103,7 +1106,7 @@
                     url: "{{ url('factura/sacaNumeroCafcUltimo') }}",
                     method: "POST",
                     dataType: 'json',
-                    success: function (data) {
+                    success: function(data) {
                         if (data.estado) {
                             $("#numero_factura_cafc").val(data.data.numero);
                             $('#numero_fac_cafc').show('toggle');
@@ -1169,7 +1172,7 @@
                     url: "{{ url('cliente/guardarClienteFactura') }}",
                     method: "POST",
                     data: datos,
-                    success: function (data) {
+                    success: function(data) {
                         if (data.estado) {
                             Swal.fire({
                                 icon: 'success',
@@ -1227,7 +1230,7 @@
                     data: formData,
                     processData: false,
                     contentType: false,
-                    success: function (data) {
+                    success: function(data) {
                         if (data.estado === 'success') {
 
 
@@ -1248,7 +1251,7 @@
                             select.append('<option value="">SELECCIONE</option>');
 
                             // Volver a llenar el select con las nuevas opciones
-                            $.each(nuevosServicios, function (index, servicio) {
+                            $.each(nuevosServicios, function(index, servicio) {
                                 let d = JSON.stringify(servicio)
                                 select.append('<option value=\'' + d + '\'>' + servicio.descripcion +
                                     '</option>');
@@ -1283,7 +1286,7 @@
                     url: "{{ url('eventoSignificativo/sacarCufdsPorTipoEvento') }}",
                     method: "POST",
                     data: {},
-                    success: function (data) {
+                    success: function(data) {
                         if (data.estado) {
                             // REMPLAZAR LOS CUFDS VIGENTES
                             $('#select_cufd_vigentes').html(data.data.select)
@@ -1318,7 +1321,7 @@
                     url: "{{ url('caja/guardarAperturaCaja') }}",
                     method: "POST",
                     data: datos,
-                    success: function (resultado) {
+                    success: function(resultado) {
                         if (resultado.estado) {
                             Swal.fire({
                                 title: "EL REGISTRO FUE EXITOSO.",
@@ -1332,7 +1335,7 @@
 
                         }
                     },
-                    error: function (xhr) {
+                    error: function(xhr) {
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',
@@ -1378,7 +1381,7 @@
                     url: "{{ url('caja/guardarCerrarCaja') }}",
                     method: "POST",
                     data: datos,
-                    success: function (resultado) {
+                    success: function(resultado) {
                         if (resultado.estado) {
                             Swal.fire({
                                 title: "EL REGISTRO FUE EXITOSO.",
@@ -1392,7 +1395,7 @@
 
                         }
                     },
-                    error: function (xhr) {
+                    error: function(xhr) {
 
                         Swal.fire({
                             icon: 'error',
@@ -1510,7 +1513,7 @@
                             monto_pagado: $('#monto_pagado_recibo').val(),
                             cambio_pagado: $('#cambio_pagado_recibo').val()
                         },
-                        success: function (data) {
+                        success: function(data) {
                             if (data.estado) {
                                 Swal.fire({
                                     icon: 'success',
@@ -1536,7 +1539,7 @@
                                 iconoCarga.hide();
                             }
                         },
-                        error: function (error) {
+                        error: function(error) {
 
                         }
                     })
@@ -1636,7 +1639,7 @@
         function prepararJSONProductos() {
             const productos = [];
 
-            arrayProductoCar.forEach(function (p) {
+            arrayProductoCar.forEach(function(p) {
                 productos.push({
                     producto_id: p.servicio_id,
                     cantidad: p.cantidad,
@@ -1712,7 +1715,7 @@
                     productos: productos_json,
                     _token: "{{ csrf_token() }}"
                 },
-                success: function (res) {
+                success: function(res) {
                     if (res.estado) {
                         Swal.fire('Éxito', 'Pedido guardado correctamente', 'success');
                         $('#bloque_formulario_pedido').hide();
@@ -1721,14 +1724,14 @@
                         Swal.fire('Error', res.message, 'error');
                     }
                 },
-                error: function (xhr) {
+                error: function(xhr) {
                     Swal.fire('Error', 'Error interno al guardar el pedido', 'error');
                 }
             });
         }
 
 
-        $(document).ready(function () {
+        $(document).ready(function() {
             $('#kt_table_pedidos').DataTable({
                 lengthMenu: [10, 25, 50, 100],
                 scrollX: true,
@@ -1745,7 +1748,9 @@
                     info: 'Mostrando _START_ a _END_ de _TOTAL_ registros',
                     emptyTable: 'No hay datos disponibles'
                 },
-                order: [[0, 'desc']],
+                order: [
+                    [0, 'desc']
+                ],
             });
         });
         //cancelar pedido
@@ -1763,8 +1768,10 @@
                     $.ajax({
                         url: '/pedidos/' + id + '/cancelar',
                         type: 'POST',
-                        data: { _token: '{{ csrf_token() }}' },
-                        success: function (res) {
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(res) {
                             if (res.estado) {
                                 Swal.fire('Cancelado', res.mensaje, 'success');
 
@@ -1774,7 +1781,7 @@
                                 Swal.fire('Error', res.mensaje, 'error');
                             }
                         },
-                        error: function () {
+                        error: function() {
                             Swal.fire('Error', 'No se pudo procesar la solicitud', 'error');
                         }
                     });
@@ -1786,9 +1793,10 @@
 
         function editarPedido(id) {
             $.ajax({
-                url: '/pedidos/' + id + '/obtener',
+                // url: '/pedidos/' + id + '/obtener',
+                url: "{{ url('pedidos') }}/" + id + "/obtener",
                 type: 'GET',
-                success: function (res) {
+                success: function(res) {
                     if (res.estado) {
                         const pedido = res.pedido;
                         $('#pedido_id').val(pedido.id);
@@ -1800,20 +1808,23 @@
                             let opciones = '';
                             productosDisponibles.forEach(p => {
                                 const selected = (p.id == prod.id) ? 'selected' : '';
-                                opciones += `<option value="${p.id}" ${selected}>${p.nombre}</option>`;
+                                opciones +=
+                                    `<option value="${p.id}" ${selected}>${p.nombre}</option>`;
                             });
 
-                            tbody.append(`
-                                                                                                                                            <tr>
-                                                                                                                                                <td>
-                                                                                                                                                    <select name="productos[][id]" class="form-control">
-                                                                                                                                                        ${opciones}
-                                                                                                                                                    </select>
-                                                                                                                                                </td>
-                                                                                                                                                <td><input type="number" name="productos[][cantidad]" class="form-control" value="${prod.cantidad}"></td>
-                                                                                                                                                <td><button class="btn btn-sm btn-danger" onclick="$(this).closest('tr').remove()">X</button></td>
-                                                                                                                                            </tr>
-                                                                                                                                        `);
+                            tbody.append(
+                                `
+                                    <tr>
+                                        <td>
+                                            <select name="productos[][id]" class="form-control">
+                                                ${opciones}
+                                            </select>
+                                        </td>
+                                        <td><input type="number" name="productos[][cantidad]" class="form-control" value="${prod.cantidad}"></td>
+                                        <td><button class="btn btn-sm btn-danger" onclick="$(this).closest('tr').remove()">X</button></td>
+                                    </tr>
+                                `
+                            );
                         });
 
                         $('#modalEditarPedido').modal('show');
@@ -1825,12 +1836,13 @@
         }
 
 
-        $('#agregarProductoEditar').click(function () {
-            $('#tablaProductosEditar tbody').append(`
+        $('#agregarProductoEditar').click(function() {
+            $('#tablaProductosEditar tbody').append(
+                `
                                                                                                                                                 <tr>
                                                                                                                                                     <td>
                                                                                                                                                         <select name="productos[][id]" class="form-control">
-                                                                                                                                                            @foreach($productos as $producto)
+                                                                                                                                                            @foreach ($productos as $producto)
                                                                                                                                                                    <option value="{{ $producto->id }}">{{ $producto->nombre }}</option>
                                                                                                                                                             @endforeach
                                                                                                                                                         </select>
@@ -1838,20 +1850,24 @@
                                                                                                                                                     <td><input type="number" name="productos[][cantidad]" class="form-control" min="1" value="1"></td>
                                                                                                                                                     <td><button class="btn btn-sm btn-danger" onclick="$(this).closest('tr').remove()">X</button></td>
                                                                                                                                                 </tr>
-                                                                                                                                            `);
+                                                                                                                                            `
+            );
         });
 
 
-        $('#guardarCambios').click(function () {
+        $('#guardarCambios').click(function() {
             const pedidoId = $('#pedido_id').val();
             const productos = [];
 
-            $('#tablaProductosEditar tbody tr').each(function () {
+            $('#tablaProductosEditar tbody tr').each(function() {
                 const productoId = $(this).find('select[name="productos[][id]"]').val();
                 const cantidad = $(this).find('input[name="productos[][cantidad]"]').val();
 
                 if (productoId && cantidad > 0) {
-                    productos.push({ id: productoId, cantidad: cantidad });
+                    productos.push({
+                        id: productoId,
+                        cantidad: cantidad
+                    });
                 }
             });
 
@@ -1863,17 +1879,21 @@
             $.ajax({
                 url: '/pedidos/' + pedidoId + '/actualizar',
                 type: 'PUT',
-                data: JSON.stringify({ productos: productos }),
+                data: JSON.stringify({
+                    productos: productos
+                }),
                 contentType: 'application/json',
-                headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
-                success: function (res) {
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                success: function(res) {
                     if (res.estado) {
                         Swal.fire('Éxito', res.mensaje, 'success').then(() => location.reload());
                     } else {
                         Swal.fire('Error', res.mensaje, 'error');
                     }
                 },
-                error: function () {
+                error: function() {
                     Swal.fire('Error', 'Error de conexión con el servidor', 'error');
                 }
             });
@@ -1884,9 +1904,10 @@
 
         function verDetallePedido(id) {
             $.ajax({
-                url: '/pedidos/' + id + '/obtener',
+                // url: '/pedidos/' + id + '/obtener',
+                url: "{{ url('pedidos') }}/" + id + "/obtener",
                 type: 'GET',
-                success: function (res) {
+                success: function(res) {
                     if (res.estado) {
                         const pedido = res.pedido;
                         const tbody = $('#tablaDetallePedido tbody');
@@ -1894,11 +1915,11 @@
 
                         pedido.productos.forEach(prod => {
                             tbody.append(`
-                                                                                                    <tr>
-                                                                                                        <td>${prod.nombre ?? prod.producto_id}</td>
-                                                                                                        <td>${prod.cantidad}</td>
-                                                                                                    </tr>
-                                                                                                `);
+                                <tr>
+                                    <td>${prod.nombre ?? prod.producto_id}</td>
+                                    <td>${prod.cantidad}</td>
+                                </tr>
+                            `);
                         });
 
                         $('#modalDetallePedido').modal('show');
@@ -1906,11 +1927,10 @@
                         Swal.fire('Error', res.mensaje, 'error');
                     }
                 },
-                error: function () {
+                error: function() {
                     Swal.fire('Error', 'No se pudo obtener el detalle del pedido', 'error');
                 }
             });
         }
-
     </script>
 @endsection

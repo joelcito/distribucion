@@ -37,4 +37,8 @@ class Detalle extends Model
     public function factura(){
         return $this->belongsTo(Factura::class);
     }
+
+    public function producto(){
+        return $this->belongsTo('App\Models\Producto', 'producto_id');
+    }
 }
