@@ -8,294 +8,59 @@
 @section('content')
 
 <div class="d-flex flex-column flex-column-fluid">
-    <div id="kt_app_content" class="app-content flex-column-fluid">
-        <div id="kt_app_content_container" class="app-container container-xxlg">
-            <div class="card">
-                <div class="card-body py-4">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h1
-                                class="page-heading d-flex text-gray-900 fw-bold fs-3 flex-column justify-content-center my-0">
-                                Formulario de Pedido</h1>
-                        </div>
-                    </div>
-                    <hr>
-                    <div id="tabla_clientes">
-                    </div>
-                    <hr>
-                    <div id="tabla_ventas">
-                        <form id="formulario_venta">
-                            <div class="row">
-                                <div class="col-md-11">
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <label class="required fw-semibold fs-6 mb-2">Producto / Servicio</label>
-                                            <select name="serivicio_id_venta" id="serivicio_id_venta"
-                                                class="form-control form-control-sm" onchange="identificaSericio(this)"
-                                                required>
-                                                <option value="">SELECCIONE</option>
-                                                @foreach ($servicios as $s)
-                                                    <option value="{{ $s }}">{{ $s->nombre }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        <div class="col-md-3 visualizacion_m2">
-                                            <label class="required fw-semibold fs-6 mb-2">Cantidad</label>
-                                            <input type="text" class="form-control form-control-sm" id="cantidad_venta"
-                                                name="cantidad_venta" required onchange="calcularPrecioTotal()">
-                                        </div>
-                                        <div class="col-md-3 visualizacion_m2">
-                                            <label class="required fw-semibold fs-6 mb-2">Precio</label>
-                                            <input type="text" class="form-control form-control-sm" id="precio_venta"
-                                                name="precio_venta" onchange="calcularPrecioTotal()" required>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label class="required fw-semibold fs-6 mb-2">Total</label>
-                                            <input type="number" class="form-control form-control-sm" id="total_venta"
-                                                name="total_venta" value="0" min="1" required readonly>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-1 d-flex align-items-end">
-                                    <div class="d-flex justify-content-center gap-2 w-100">
-                                        <button class="btn btn-primary btn-circle btn-sm btn-icon" type="button"
-                                            onclick="mostraBloqueMasDatosProdcuto()" title="Mostrar más opción">
-                                            <i class="fa fa-note-sticky"></i> +
-                                        </button>
-                                        <button class="btn btn-success btn-circle btn-sm btn-icon" type="button"
-                                            onclick="agregarProducto()" title="Agregar al Carro de compras"
-                                            id="boton-agrega-producto">
-                                            <i class="fa fa-xs fa-shopping-cart"></i> +
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row" style="display: none;" id="bloque_mas_datos_productos">
-                                <div class="col-md-6">
-                                    <label class="fw-semibold fs-6 mb-2">Descripcion Adicional</label>
-                                    <textarea class="form-control form-control-sm" name="descripcion_adicional"
-                                        id="descripcion_adicional" cols="30" rows="1"></textarea>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class=" fw-semibold fs-6 mb-2">Numero Serie</label>
-                                    <input type="number" class="form-control form-control-sm" id="numero_serie"
-                                        name="numero_serie" min="1">
-                                </div>
-                                <div class="col-md-3">
-                                    <label class=" fw-semibold fs-6 mb-2">Codigo Imei</label>
-                                    <input type="number" class="form-control form-control-sm" id="codigo_imei"
-                                        name="codigo_imei" min="1">
-                                </div>
-                            </div>
-                        </form>
-                        <hr>
-                        <div id="tabla_detalles" style="display: none;">
-                            <h2 class="text-center">CARRITO DE COMPRAS</h2>
-                            <div class="table-responsive" style="max-width: 100%; overflow-x: auto;">
-                                <table id="carrito" class="table align-middle table-row-dashed fs-6 gy-5">
-                                    <thead>
-                                        <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
-                                            <th>Servicio / Producto</th>
-                                            <th>Medida</th>
-                                            <th>Precio</th>
-                                            <th>Cantidad </th>
-                                            <th>Total</th>
-                                            <th>Descuento</th>
-                                            <th>Sub Total</th>
-                                            <th>Acción</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="text-gray-600 fw-semibold">
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th colspan="6">Descuento Adicional</th>
-                                            <th colspan="2">Monto Total</th>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="6">
-                                                <input class="form-control form-control-sm" name="descuento_adicional"
-                                                    id="descuento_adicional" type="number" value="0"
-                                                    onchange="ejecutarDescuentoAdicional()">
-                                            </td>
-                                            <td colspan="2">
-                                                <input class="form-control form-control-sm" name="monto_total"
-                                                    id="monto_total" type="number" readonly value="0">
-                                            </td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row" id="bloque_seleccionar_cliente" style="display: none">
-                            <div class="col-md-11">
-                                <button class="btn btn-info btn-sm w-100" onclick="mostrarFormularioClientes()"><span
-                                        id="nombre_cliente"></span> <i class="fa fa-user-alt"></i></button>
-                                <input type="hidden" name="cliente_id_escogido" id="cliente_id_escogido">
-                            </div>
-                            <div class="col-md-1">
-                                <button title="Mostrar carro de compras" class="btn btn-dark btn-sm btn-circle btn-icon"
-                                    onclick="mostrarCarritoVentas()"><i class="fa fa-shopping-basket"></i></button>
-                                <button title="Agregar cliente" class="btn btn-primary btn-sm btn-circle btn-icon"
-                                    onclick="modalAgregarCliente()"><i class="fa fa-user-plus"></i></button>
-                            </div>
-                        </div>
-                        <form id="formulario_cliente_escogido" style="display: none">
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <label class="fs-6 fw-semibold form-label mb-2">Cedula / Nit</label>
-                                    <input type="number" class="form-control form-control-sm buscar-persona"
-                                        name="nit_escogido" id="nit_escogido">
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="fs-6 fw-semibold form-label mb-2">Nombre</label>
-                                    <input type="text" class="form-control form-control-sm buscar-persona"
-                                        name="nombre_escogido" id="nombre_escogido">
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="fs-6 fw-semibold form-label mb-2">Ap Paterno</label>
-                                    <input type="text" class="form-control form-control-sm buscar-persona"
-                                        name="ap_paterno_escogido" id="ap_paterno_escogido">
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="fs-6 fw-semibold form-label mb-2">Ap Materno</label>
-                                    <input type="text" class="form-control form-control-sm buscar-persona"
-                                        name="ap_materno_escogido" id="ap_materno_escogido">
-                                </div>
-                            </div>
-                        </form>
-                        <div id="tabla-clientes-buscados">
+    <h2 class="text-center">Listado de Pedidos</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover table-sm" id="kt_table_pedidos">
+            <thead>
+                <tr class="text-center text-muted fw-bold fs-7 text-uppercase gs-0">
+                    <th>ID</th>
+                    <th>Cliente</th>
+                    <th>Fecha</th>
+                    <th>Tipo</th>
+                    <th>ESTADO</th>
 
-                        </div>
-                    </div>
-                    <hr>
-                    <!-- <div class="row" id="bloque-botones-emisiones" style="display: none">
-                                        <div class="col-md-12">
-                                            <button class="btn btn-dark w-100 btn-sm" onclick="escogerVentaTipo('RECIBO')">TICKED
-                                                RECEPCION</button>
-                                        </div>
-                                    </div> -->
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @php
+                    use App\Models\Pedido;
+                    $pedidos = Pedido::with('cliente')->orderBy('id', 'desc')->get();
+                @endphp
+                @forelse ($pedidos as $pedido)
+                    <tr class="text-center">
+                        <td>{{ $pedido->id }}</td>
+                        <td>{{ $pedido->cliente->nombres ?? 'N/A' }}</td>
+                        <td>{{ $pedido->fecha->format('Y-m-d') ?? 'N/A' }}</td>
+                        <td>{{ $pedido->tipo }}</td>
+                        <td>{{ $pedido->estado }}</td>
 
-                    <div class="row" id="bloque-botones-emisiones" style="display: none">
-                        <div class="col-md-12">
-                            <button type="button" class="btn btn-dark w-100 btn-sm"
-                                onclick="mostrarFormularioPedido('RECIBO')">
-                                REALIZAR PEDIDO
+                        <td>
+                            <button class="btn btn-sm btn-warning" title="Editar pedido"
+                                onclick="editarPedido({{ $pedido->id }})">
+                                <i class="fa fa-edit"></i>
                             </button>
-                            <!-- <button type="button" class="btn btn-dark w-100 btn-sm"
-                                                onclick="mostrarFormularioPedido('RECIBO', '{{ $cliente->id ?? '' }}', '{{ $cliente->nombres ?? '' }}')">
-                                                REALIZAR PEDIDO
-                                            </button> -->
+                            <button class="btn btn-icon btn-sm btn-danger btn-circle" title="Cancelar pedido"
+                                onclick="cancelarPedido({{ $pedido->id }})">
+                                <i class="fa fa-ban"></i>
+                            </button>
+                            <button class="btn btn-sm btn-info" title="Ver detalle"
+                                onclick="verDetallePedido({{ $pedido->id }})">
+                                <i class="fa fa-eye"></i>
+                            </button>
 
-
-
-
-
-
-                        </div>
-                    </div>
-
-                    <hr>
-
-                    <div id="bloque_formulario_pedido" style="display: none; margin-top: 20px;">
-                        <div class="row mb-3">
-                            <div class="col-md-12">
-                                <label>Cliente</label>
-                                <!-- <input type="hidden" name="usuario_id" id="usuario_id" value="{{ auth()->user()->id }}"> -->
-
-                                <input type="text" id="cliente_nombre_pedido" class="form-control" readonly>
-                                <input type="hidden" name="cliente_id" id="cliente_id_pedido">
-
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-4">
-                                <label>Tipo de Pedido</label>
-                                <select name="tipo" id="tipo" class="form-control" required>
-                                    <option value="">Seleccione</option>
-                                    <option value="RECIBO">RECIBO</option>
-                                    <option value="FACTURA">FACTURA</option>
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <label>Fecha</label>
-                                <input type="date" id="fecha" name="fecha" class="form-control"
-                                    value="{{ date('Y-m-d') }}" required>
-                            </div>
-                        </div>
-                        <input type="hidden" name="productos" id="productos">
-
-                        <div class="row">
-                            <div class="col-md-12">
-                                <button type="button" class="btn btn-primary w-100" onclick="guardarPedido()">Guardar
-                                    Pedido</button>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <hr>
-    <hr>
-    <!-- <h2 class="text-center">Listado de Pedidos</h2>
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover table-sm" id="kt_table_pedidos">
-                <thead>
-                    <tr class="text-center text-muted fw-bold fs-7 text-uppercase gs-0">
-                        <th>ID</th>
-                        <th>Cliente</th>
-                        <th>Fecha</th>
-                        <th>Tipo</th>
-                        <th>ESTADO</th>
-
-                        <th>Acciones</th>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    @php
-                        use App\Models\Pedido;
-                        $pedidos = Pedido::with('cliente')->orderBy('id', 'desc')->get();
-                    @endphp
-                    @forelse ($pedidos as $pedido)
-                        <tr class="text-center">
-                            <td>{{ $pedido->id }}</td>
-                            <td>{{ $pedido->cliente->nombres ?? 'N/A' }}</td>
-                            <td>{{ $pedido->fecha->format('Y-m-d') ?? 'N/A' }}</td>
-                            <td>{{ $pedido->tipo }}</td>
-                            <td>{{ $pedido->estado }}</td>
-
-                            <td>
-                                <button class="btn btn-sm btn-warning" title="Editar pedido"
-                                    onclick="editarPedido({{ $pedido->id }})">
-                                    <i class="fa fa-edit"></i>
-                                </button>
-                                <button class="btn btn-icon btn-sm btn-danger btn-circle" title="Cancelar pedido"
-                                    onclick="cancelarPedido({{ $pedido->id }})">
-                                    <i class="fa fa-ban"></i>
-                                </button>
-                                <button class="btn btn-sm btn-info" title="Ver detalle"
-                                    onclick="verDetallePedido({{ $pedido->id }})">
-                                    <i class="fa fa-eye"></i>
-                                </button>
-
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="6" class="text-center text-danger">No hay datos</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div> -->
+                @empty
+                    <tr>
+                        <td colspan="6" class="text-center text-danger">No hay datos</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
 </div>
-</div>
+
 
 <!--editar-->
 <div class="modal fade" id="modalEditarPedido" tabindex="-1" aria-labelledby="modalEditarPedidoLabel"
@@ -446,60 +211,7 @@
                 $('#precio_venta').val((cantidad_venta * precio_venta));
                 $('#total_venta').val(precio_venta * cantidad_venta);
 
-                //     $('#precio_venta').val(json.precio_venta)
-                //     $('#cantidad_venta').val(1)
-                //     $('#total_venta').val((1 * json.precio_venta))
-                //     $('#numero_serie').val(json.numero_serie)
-                //     $('#codigo_imei').val(json.codigo_imei)
-                //     // $('#stock_producto').val(json.stock === null ? 0 : json.stock)
-                //     let stockGeneral ;
 
-                //     $('#equivalente_unidad').val(json.equivalente_unidad)
-                //     $('#cantidad_por_caja').val(json.cantidad_por_caja)
-
-                //     if(json.unidad_medida_id == "{{ config('siat.metro_cuadrado') }}"){
-                //         $('.visualizacion_m2').show('toogle')
-                //         $('#medida_producto').attr("required", true);
-                //         $('#metro2xcaja').attr("required", true);
-                //         $('#nro_cajas').attr("required", true);
-                //         $('#nro_piezas').attr("required", true);
-                //         stockGeneral = json.stockM2;
-                //         $('#stock_producto').val(stockGeneral === null ? 0 : stockGeneral)
-                //     }else{
-                //         $('.visualizacion_m2').hide('toogle')
-                //         $('#medida_producto').attr("required", false);
-                //         $('#metro2xcaja').attr("required", false);
-                //         $('#nro_cajas').attr("required", false);
-                //         $('#nro_piezas').attr("required", false);
-                //         stockGeneral = json.stock;
-                //         $('#stock_producto').val(stockGeneral === null ? 0 : stockGeneral)
-                //     }
-
-                //     if (stockGeneral > 0 || stockGeneral !== null) {
-                //         $('#boton-agrega-producto').attr('disabled', false);
-                //         $('#stock-bajo').text('');
-                //         $('#stock_producto').removeClass('is-invalid');
-                //     } else {
-                //         $('#boton-agrega-producto').attr('disabled', true);
-                //         $('#stock-bajo').text('Stock insuficiente!!');
-                //         $('#stock_producto').addClass('is-invalid');
-                //     }
-                // } else {
-                //     $('#precio_venta').val(0)
-                //     $('#cantidad_venta').val(0)
-                //     $('#total_venta').val(0)
-                //     $('#numero_serie').val(null)
-                //     $('#codigo_imei').val(null)
-                //     $('#descripcion_adicional').val(null)
-                //     $('#stock_producto').val(0)
-                //     $('#medida_producto').val(null)
-                //     $('#metro2xcaja').val(null)
-                //     $('#equivalente_unidad').val(0)
-                //     $('#cantidad_por_caja').val(0)
-                //     $('#nro_cajas').val(0)
-                //     $('#nro_piezas').val(0)
-
-                //     $('#cantidad_venta').removeAttr('max');
 
             }
         }
@@ -567,70 +279,12 @@
 
                 if (filaExistente.node()) {
 
-                    // // Si el producto ya está en el carrito, aumenta la cantidad en 2
-                    // var cantidadCell = $(filaExistente.node()).find('.cantidad');
-                    // var cantidadActual = parseFloat(cantidadCell.text());
-                    // var nuevaCantidad = cantidadActual + parseFloat(cantidad);
-                    // cantidadCell.text(nuevaCantidad);
 
-                    // // Actualiza el total
-                    // nuevoTotal = nuevaCantidad * precio
-                    // var totalCell = $(filaExistente.node()).find('.total');
-                    // totalCell.text((nuevoTotal).toFixed(2));
-
-                    // var subTotalCell = $(filaExistente.node()).find('.subTotal');
-                    // var valorSubTotal = parseFloat(subTotalCell.text())
-                    // var nuevoSubTotal = nuevoTotal - parseFloat($('#descuento_' + id).val())
-                    // subTotalCell.text((nuevoSubTotal).toFixed(2));
-
-                    // let servicio = arrayProductoCar.find(s => s.servicio_id === servicioDatos.id);
-                    // if (servicio) {
-
-                    //     servicio.cantidad = parseFloat(servicio.cantidad) + parseFloat(cantidad);
-                    //     servicio.total = parseFloat(nuevoTotal);
-                    //     servicio.subTotal = parseFloat(nuevoSubTotal);
-                    //     servicio.descripcion_adicional = $('#descripcion_adicional').val();
-
-                    //     let sumaTotal = arrayProductoCar.reduce((sum, current) => sum + current.subTotal, 0);
-                    //     let descuentoAdicional = $('#descuento_adicional').val()
-
-                    //     $('#monto_total, #monto_total_pagado, #monto_total_pagado_recibo').val(parseFloat(sumaTotal) -
-                    //         parseFloat(descuentoAdicional))
-                    //     $('#monto_gift_card').attr('max', parseFloat(sumaTotal) - parseFloat(descuentoAdicional));
-
-                    // } else {
-                    //     Swal.fire({
-                    //         icon: 'error',
-                    //         title: "ERROR!",
-                    //         text: "Error al actualizar el descuento.",
-                    //         timer: 4000
-                    //     })
-                    // }
 
                 } else {
                     var subTotal = (precio * cantidad).toFixed(2);
 
-                    // let cant_piezaz_vender = '';
-                    // let cant_piezaz_sobrantes = '';
 
-                    // if(servicioDatos.unidad_medida_id == "{{ config('siat.metro_cuadrado') }}"){
-                    //     // PARA EL CALCULO DE LAS CAJAS Y PIEZAS
-                    //     let cantidadSolicitada = parseFloat(cantidad);
-                    //     let equivalenteUnidadM2 = parseFloat(servicioDatos.equivalente_unidad);
-                    //     let cantidadCaja = parseFloat(servicioDatos.cantidad_por_caja);
-
-                    //     let cantidadTotalPiezas = cantidadSolicitada / equivalenteUnidadM2;
-                    //     let cantidadTotalCajas = cantidadTotalPiezas / cantidadCaja;
-                    //     let cantidadTotalPiezasSueltas = cantidadTotalPiezas % cantidadCaja;
-
-                    //     if (Math.round(cantidadTotalPiezasSueltas) == cantidadCaja) {
-                    //         cant_piezaz_vender = Math.floor((cantidadTotalCajas)) + 1;
-                    //         cant_piezaz_sobrantes = 0;
-                    //     } else {
-                    //         cant_piezaz_vender = Math.floor((cantidadTotalCajas));
-                    //         cant_piezaz_sobrantes = Math.round(cantidadTotalPiezasSueltas);
-                    //     }
-                    // }
 
                     table.row.add([
                         servicioDatos.nombre + " " + descripcion_adicional,
@@ -772,35 +426,6 @@
 
             $('#bloque_mas_datos_productos').toggle('show')
         }
-
-        // function escogerCliente(cliente, nombres, ap_paterno, ap_materno, cedula, nit, razon_social) {
-
-
-
-        //     $('#cliente_id_escogido').val(cliente);
-
-        //     $('#nombre_escogido').val('');
-        //     $('#ap_paterno_escogido').val('');
-        //     $('#ap_materno_escogido ').val('');
-        //     $('#cedula_escogido').val('');
-
-        //     $('#nit_factura').val(nit);
-        //     $('#razon_factura').val(razon_social);
-
-        //     $('#tabla-clientes-buscados').hide('toggle')
-
-        //     let nombreusuario = "CLIENTE ESCOGIDO: " + cedula + " | " + nombres + " | " + ap_paterno + " | " + ap_materno;
-
-        //     $('#nombre_cliente').text(nombreusuario)
-
-        //     $('#formulario_cliente_escogido').toggle('hide');
-
-        //     $('#bloque-botones-emisiones').show('toggle');
-
-        //     $('#bloque_recibo').hide('toggle');
-        //     $('#bloqueDatosFactura').hide('toggle');
-        //     $('#bloque_facturacion').hide('toggle');
-        // }
 
 
         function escogerCliente(cliente, nombres, ap_paterno, ap_materno, cedula, nit, razon_social) {
@@ -1400,25 +1025,7 @@
                             text: 'Ocurrió un error inesperado.' + xhr,
                         });
 
-                        // limpiarErorres();
 
-                        // if (xhr.status === 422) {
-                        //     let errores = xhr.responseJSON.errors;
-
-                        //     for (let campo in errores) {
-                        //         let mensaje = errores[campo][0];
-
-                        //         let input = $(`[name="${campo}"]`);
-                        //         input.addClass("is-invalid");
-                        //         input.after(`<div class="invalid-feedback">${mensaje}</div>`);
-                        //     }
-                        // } else {
-                        //     Swal.fire({
-                        //         icon: 'error',
-                        //         title: 'Error',
-                        //         text: 'Ocurrió un error inesperado.',
-                        //     });
-                        // }
                     }
                 });
             } else {
@@ -1486,13 +1093,6 @@
             if ($("#formularioGeneraRecibo")[0].checkValidity()) {
 
                 if (arrayProductoCar.length > 0) {
-
-                    // // Obtén el botón y el icono de carga
-                    // var boton = $("#boton_enviar_recibo");
-                    // var iconoCarga = boton.find("i");
-                    // // Deshabilita el botón y muestra el icono de carga
-                    // boton.attr("disabled", true);
-                    // iconoCarga.show();
 
                     $.ajax({
                         url: "{{ url('factura/emitirRecibo') }}",
@@ -1614,16 +1214,6 @@
         }
 
 
-
-        // function seleccionarCliente(clienteId, clienteNombre) {
-        //     // Poner los valores en el formulario
-        //     $('#cliente_id_pedido').val(clienteId);
-        //     $('#cliente_nombre_pedido').val(clienteNombre);
-
-        //     // Mostrar el formulario de pedido
-        //     $('#bloque_formulario_pedido').show();
-        // }
-
         function seleccionarCliente(id, nombre) {
             document.getElementById('cliente_id_pedido').value = id;
             document.getElementById('cliente_nombre_pedido').value = nombre;
@@ -1652,24 +1242,6 @@
 
 
 
-        // function mostrarFormularioPedido(tipo, clienteId = null, clienteNombre = '') {
-        //     const bloque = document.getElementById('bloque_formulario_pedido');
-        //     bloque.style.display = 'block';
-
-        //     // Limpiar campos solo si no se envía cliente
-        //     if (!clienteId) {
-        //         document.getElementById('tipo').value = '';
-        //         document.getElementById('cliente_id_pedido').value = '';
-        //         document.getElementById('cliente_nombre_pedido').value = '';
-        //         document.getElementById('productos').value = '';
-        //     }
-
-        //     // Asignar valores correctos
-        //     document.getElementById('tipo').value = tipo;
-        //     if (clienteId) document.getElementById('cliente_id_pedido').value = clienteId;
-        //     if (clienteNombre) document.getElementById('cliente_nombre_pedido').value = clienteNombre;
-        // }
-
         function mostrarFormularioPedido(tipo) {
             const bloque = document.getElementById('bloque_formulario_pedido');
             bloque.style.display = 'block';
@@ -1680,12 +1252,6 @@
             document.getElementById('cliente_nombre_pedido').value = '';
             document.getElementById('productos').value = '';
         }
-
-
-
-
-
-
 
 
         function guardarPedido() {
@@ -1716,7 +1282,7 @@
                     if (res.estado) {
                         Swal.fire('Éxito', 'Pedido guardado correctamente', 'success');
                         $('#bloque_formulario_pedido').hide();
-                        //  location.reload(); // Opcional: recarga para mostrar el pedido
+                        location.reload(); // Opcional: recarga para mostrar el pedido
                     } else {
                         Swal.fire('Error', res.message, 'error');
                     }
@@ -1763,7 +1329,8 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: '/pedidos/' + id + '/cancelar',
+                        // url: '/pedidos/' + id + '/cancelar',
+                        url: "{{ url('pedidos') }}/" + id + "/cancelar",
                         type: 'POST',
                         data: {
                             _token: '{{ csrf_token() }}'
@@ -1836,18 +1403,18 @@
         $('#agregarProductoEditar').click(function () {
             $('#tablaProductosEditar tbody').append(
                 `
-                                                                                                                                                        <tr>
-                                                                                                                                                            <td>
-                                                                                                                                                                <select name="productos[][id]" class="form-control">
-                                                                                                                                                                    @foreach ($productos as $producto)
-                                                                                                                                                                           <option value="{{ $producto->id }}">{{ $producto->nombre }}</option>
-                                                                                                                                                                    @endforeach
-                                                                                                                                                                </select>
-                                                                                                                                                            </td>
-                                                                                                                                                            <td><input type="number" name="productos[][cantidad]" class="form-control" min="1" value="1"></td>
-                                                                                                                                                            <td><button class="btn btn-sm btn-danger" onclick="$(this).closest('tr').remove()">X</button></td>
-                                                                                                                                                        </tr>
-                                                                                                                                                    `
+                        <tr>
+                            <td>
+                                <select name="productos[][id]" class="form-control">
+                                    @foreach ($productos as $producto)
+                                        <option value="{{ $producto->id }}">{{ $producto->nombre }}</option>
+                                    @endforeach
+                                </select>
+                            </td>
+                            <td><input type="number" name="productos[][cantidad]" class="form-control" min="1" value="1"></td>
+                            <td><button class="btn btn-sm btn-danger" onclick="$(this).closest('tr').remove()">X</button></td>
+                        </tr>
+                    `
             );
         });
 

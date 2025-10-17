@@ -71,6 +71,8 @@ Route::middleware('auth')->group(function () {
     // FACTURA
     Route::prefix('/factura')->group(function () {
         Route::get('/formulario', [FacturaController::class, 'formulario'])->name('factura.formulario');
+        Route::get('/formularioPedido', [FacturaController::class, 'formularioPedido'])->name('factura.formularioPedido');
+
         Route::post('/ajaxListadoClientesBusqueda', [FacturaController::class, 'ajaxListadoClientesBusqueda'])->name('factura.ajaxListadoClientesBusqueda');
         Route::get('/formularioVenta', [FacturaController::class, 'formularioVenta'])->name('factura.formularioVenta');
         Route::post('/emitirRecibo', [FacturaController::class, 'emitirRecibo'])->name('factura.emitirRecibo');

@@ -2,8 +2,9 @@
     <!--begin::Menu wrapper-->
     <div id="kt_app_sidebar_menu_wrapper" class="app-sidebar-wrapper">
         <!--begin::Scroll wrapper-->
-        <div id="kt_app_sidebar_menu_scroll" class="scroll-y my-5 mx-3" data-kt-scroll="true" data-kt-scroll-activate="true"
-            data-kt-scroll-height="auto" data-kt-scroll-dependencies="#kt_app_sidebar_logo, #kt_app_sidebar_footer"
+        <div id="kt_app_sidebar_menu_scroll" class="scroll-y my-5 mx-3" data-kt-scroll="true"
+            data-kt-scroll-activate="true" data-kt-scroll-height="auto"
+            data-kt-scroll-dependencies="#kt_app_sidebar_logo, #kt_app_sidebar_footer"
             data-kt-scroll-wrappers="#kt_app_sidebar_menu" data-kt-scroll-offset="5px" data-kt-scroll-save-state="true">
             <!--begin::Menu-->
             <div class="menu menu-column menu-rounded menu-sub-indention fw-semibold fs-6" id="#kt_app_sidebar_menu"
@@ -67,14 +68,14 @@
                             </a>
                         </div>
                         {{-- <div class="menu-item">
-                        <a class="menu-link {{ Route::currentRouteName() == 'unidadMedida.listado' ? 'active' : '' }}"
-                            href="{{ route('unidadMedida.listado') }}">
-                            <span class="menu-bullet">
-                                <span class="bullet bullet-dot"></span>
-                            </span>
-                            <span class="menu-title text-white">Unidad de Medidas</span>
-                        </a>
-                    </div> --}}
+                            <a class="menu-link {{ Route::currentRouteName() == 'unidadMedida.listado' ? 'active' : '' }}"
+                                href="{{ route('unidadMedida.listado') }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title text-white">Unidad de Medidas</span>
+                            </a>
+                        </div> --}}
                         <div class="menu-item">
                             <a class="menu-link {{ Route::currentRouteName() == 'sucursal.listado' ? 'active' : '' }}"
                                 href="{{ route('sucursal.listado') }}">
@@ -85,33 +86,33 @@
                             </a>
                         </div>
                         {{-- <div class="menu-item">
-                        <a class="menu-link {{ Route::currentRouteName() == 'puntoVenta.listado' ? 'active' : '' }}"
-                            href="{{ route('puntoVenta.listado') }}">
-                            <span class="menu-bullet">
-                                <span class="bullet bullet-dot"></span>
-                            </span>
-                            <span class="menu-title text-white">Punto de ventas</span>
-                        </a>
-                    </div> --}}
+                            <a class="menu-link {{ Route::currentRouteName() == 'puntoVenta.listado' ? 'active' : '' }}"
+                                href="{{ route('puntoVenta.listado') }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title text-white">Punto de ventas</span>
+                            </a>
+                        </div> --}}
                         {{-- <div class="menu-item">
-                        <a class="menu-link {{ Route::currentRouteName() == 'productoServicio.listado' ? 'active' : '' }}"
-                            href="{{ route('productoServicio.listado') }}">
-                            <span class="menu-bullet">
-                                <span class="bullet bullet-dot"></span>
-                            </span>
-                            <span class="menu-title text-white">Productos Servicios</span>
-                        </a>
-                    </div>
-                    <div class="menu-item">
-                        <a class="menu-link {{ Route::currentRouteName() == 'producto.listado' ? 'active' : '' }}"
-                            href="#">
-                            <span class="menu-bullet">
-                                <span class="bullet bullet-dot"></span>
-                            </span>
-                            <span class="menu-title text-white">Productos</span>
-                        </a>
-                    </div>
-                    --}}
+                            <a class="menu-link {{ Route::currentRouteName() == 'productoServicio.listado' ? 'active' : '' }}"
+                                href="{{ route('productoServicio.listado') }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title text-white">Productos Servicios</span>
+                            </a>
+                        </div>
+                        <div class="menu-item">
+                            <a class="menu-link {{ Route::currentRouteName() == 'producto.listado' ? 'active' : '' }}"
+                                href="#">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title text-white">Productos</span>
+                            </a>
+                        </div>
+                        --}}
                         <div class="menu-item">
                             <a class="menu-link {{ Route::currentRouteName() == 'cliente.listado' ? 'active' : '' }}"
                                 href="{{ route('cliente.listado') }}">
@@ -218,7 +219,18 @@
                                 <span class="menu-bullet">
                                     <span class="bullet bullet-dot"></span>
                                 </span>
-                                <span class="menu-title text-white">Pedidos</span>
+                                <span class="menu-title text-white">Nuevo Pedido</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a class="menu-link" href="{{ route('factura.formularioPedido') }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title text-white">Listado Pedido</span>
                             </a>
                         </div>
                     </div>
