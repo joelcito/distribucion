@@ -30,6 +30,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/guardarProducto', [App\Http\Controllers\ProductoController::class, 'guardarProducto'])->name('producto.guardarProducto');
         Route::post('/eliminarProducto', [App\Http\Controllers\ProductoController::class, 'eliminarProducto'])->name('producto.eliminarProducto');
         Route::post('/ajaxStockSucursal', [App\Http\Controllers\ProductoController::class, 'ajaxStockSucursal'])->name('producto.ajaxStockSucursal');
+        Route::post('/ajaxPorCategoria', [App\Http\Controllers\ProductoController::class, 'ajaxPorCategoria'])->name('producto.ajaxPorCategoria');
+        Route::post('/obtenerProducto', [App\Http\Controllers\ProductoController::class, 'obtenerProducto'])->name('producto.obtenerProducto');
 
     });
     // PROVEEDOR
@@ -128,6 +130,13 @@ Route::middleware('auth')->group(function () {
         Route::post('/{id}/cancelar', [App\Http\Controllers\PedidosController::class, 'cancelar'])->name('pedidos.cancelar');
         Route::get('/{id}/obtener', [App\Http\Controllers\PedidosController::class, 'obtener'])->name('pedidos.obtener');
         Route::put('/{id}/actualizar', [App\Http\Controllers\PedidosController::class, 'actualizar'])->name('pedidos.actualizar');
+        Route::get('/imprimePedido/{id}', [App\Http\Controllers\PedidosController::class, 'imprimePedido'])->name('pedidos.imprimePedido');
+
+    });
+
+    //CATALOGO
+    Route::prefix('catalogo')->group(function () {
+        Route::get('/listadoCatalogo', [App\Http\Controllers\ProductoController::class, 'listadoCatalogo'])->name('catalogo.listadoCatalogo');
 
     });
 

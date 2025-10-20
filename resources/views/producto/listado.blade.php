@@ -52,6 +52,31 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label class="required fw-semibold fs-6 mb-2">Precio de Venta</label>
+                                    <input type="number" min="0" step="0.01" class="form-control form-control-sm"
+                                        id="precio_venta" name="precio_venta">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label class="required fw-semibold fs-6 mb-2">Precio de Compra</label>
+                                    <input type="number" min="0" step="0.01" class="form-control form-control-sm"
+                                        id="precio_compra" name="precio_compra">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label class="fw-semibold fs-6 mb-2">Imágenes del producto</label>
+                                    <input type="file" id="imagenes" name="imagenes[]" class="form-control form-control-sm"
+                                        accept="image/*" multiple>
+                                    <div id="previewImagenes" class="mt-3 d-flex flex-wrap gap-2"></div>
+                                </div>
+                            </div>
+
+
+
                         </div>
                     </form>
                 </div>
@@ -242,12 +267,12 @@
                             </div>
                         </div>
                         <!-- <div class="row mb-3">
-                                                <div class="col-md-12">
-                                                    <label class="fw-semibold">Descripción</label>
-                                                    <textarea class="form-control form-control-sm" id="descripcion_transferencia"
-                                                        rows="3"></textarea>
-                                                </div>
-                                            </div> -->
+                                                                                                    <div class="col-md-12">
+                                                                                                        <label class="fw-semibold">Descripción</label>
+                                                                                                        <textarea class="form-control form-control-sm" id="descripcion_transferencia"
+                                                                                                            rows="3"></textarea>
+                                                                                                    </div>
+                                                                                                </div> -->
                         <div class="row">
                             <div class="col-md-12">
                                 <button type="button" class="btn btn-success w-100" onclick="guardarTransferencia()">Guardar
@@ -324,40 +349,84 @@
             $('#precio_venta').val('');
         }
 
+        // function guardarProducto() {
+        //     var id = $('#id').val();
+        //     var codigo = $('#codigo').val();
+        //     var nombre = $('#nombre').val();
+        //     var proveedores_idproveedores = $('#proveedores_idproveedores').val();
+        //     var categoria_id = $('#categoria_id').val();;
+        //     var precio_compra = parseFloat($('#precio_compra').val()) || 0;
+        //     var precio_venta = parseFloat($('#precio_venta').val()) || 0;
+
+
+        //     $.ajax({
+        //         url: '{{ route('producto.guardarProducto') }}',
+        //         type: 'POST',
+        //         data: {
+        //             id: id,
+        //             codigo: codigo,
+        //             nombre: nombre,
+        //             proveedores_idproveedores: proveedores_idproveedores,
+        //             categoria_id: categoria_id,
+        //             precio_compra: precio_compra,
+        //             precio_venta: precio_venta
+        //         },
+        //         headers: {
+        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //         },
+        //         success: function (response) {
+        //             if (response.estado) {
+        //                 $('#modalProducto').modal('hide');
+        //                 cargarListadoProductos();
+        //             } else {
+        //                 alert(response.message || 'Error al guardar');
+        //             }
+        //         },
+        //         error: function () {
+        //             alert('Error de conexión');
+        //         }
+        //     });
+        // }
+
         function guardarProducto() {
-            var id = $('#id').val();
-            var codigo = $('#codigo').val();
-            var nombre = $('#nombre').val();
-            var proveedores_idproveedores = $('#proveedores_idproveedores').val();
-            var precio_compra = $('#precio_compra').val();
-            var precio_venta = $('#precio_venta').val();
+            let formData = new FormData();
+            formData.append('id', $('#id').val());
+            formData.append('codigo', $('#codigo').val());
+            formData.append('nombre', $('#nombre').val());
+            formData.append('proveedores_idproveedores', $('#proveedores_idproveedores').val());
+            formData.append('categoria_id', $('#categoria_id').val());
+            formData.append('precio_compra', $('#precio_compra').val());
+            formData.append('precio_venta', $('#precio_venta').val());
+
+            // Agregar todas las imágenes seleccionadas al FormData
+            imagenesSeleccionadas.forEach((img, i) => {
+                formData.append('imagenes[]', img);
+            });
+
             $.ajax({
-                url: '{{ route('producto.guardarProducto') }}',
+                url: '{{ route("producto.guardarProducto") }}',
                 type: 'POST',
-                data: {
-                    id: id,
-                    codigo: codigo,
-                    nombre: nombre,
-                    proveedores_idproveedores: proveedores_idproveedores,
-                    precio_compra: precio_compra,
-                    precio_venta: precio_venta
-                },
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
+                data: formData,
+                processData: false,
+                contentType: false,
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                 success: function (response) {
                     if (response.estado) {
+                        Swal.fire('Éxito', 'Producto guardado correctamente', 'success');
                         $('#modalProducto').modal('hide');
+                        imagenesSeleccionadas = []; // limpiar imágenes
                         cargarListadoProductos();
                     } else {
-                        alert(response.message || 'Error al guardar');
+                        Swal.fire('Error', response.message || 'Error al guardar el producto', 'error');
                     }
                 },
                 error: function () {
-                    alert('Error de conexión');
+                    Swal.fire('Error', 'Error de conexión con el servidor', 'error');
                 }
             });
         }
+
+
 
         function editarProducto(producto) {
             $('#id').val(producto.idproductos);
@@ -755,6 +824,94 @@
                     Swal.fire('Error', 'Error de conexión', 'error');
                 }
             });
+        }
+
+        //imagenes
+        let imagenesSeleccionadas = [];
+
+        $('#imagenes').on('change', function () {
+            const files = Array.from(this.files);
+            imagenesSeleccionadas = [...imagenesSeleccionadas, ...files]; // acumula las imágenes nuevas
+            mostrarPreviewImagenes();
+            $(this).val(''); // limpia el input para poder volver a seleccionar las mismas si se desea
+        });
+
+        function mostrarPreviewImagenes() {
+            const preview = $('#previewImagenes');
+            preview.empty();
+
+            imagenesSeleccionadas.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    preview.append(`
+                        <div class="position-relative" style="display:inline-block;">
+                            <img src="${e.target.result}" class="rounded border" style="width:80px;height:80px;object-fit:cover;">
+                            <button type="button" 
+                                    class="btn btn-sm btn-danger position-absolute top-0 end-0 p-0 px-1"
+                                    onclick="eliminarImagen(${index})">x</button>
+                        </div>
+                    `);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+
+        function abrirModalProducto(productoId) {
+            $.ajax({
+                url: '{{ route("producto.obtenerProducto") }}',
+                type: 'POST',
+                data: { id: productoId },
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                success: function (res) {
+                    if (res.estado) {
+                        const p = res.data;
+                        $('#id').val(p.id);
+                        $('#nombre').val(p.nombre);
+                        $('#proveedores_idproveedores').val(p.proveedor_id);
+                        $('#categoria_id').val(p.categoria_id);
+                        $('#precio_compra').val(p.precio_compra);
+                        $('#precio_venta').val(p.precio_venta);
+
+                        imagenesExistentes = p.imagenes || [];
+                        imagenesAEliminar = [];
+
+                        mostrarImagenes();
+                        $('#modalProducto').modal('show');
+                    } else {
+                        alert(res.message || 'Producto no encontrado');
+                    }
+                },
+                error: function () {
+                    alert('Error de conexión');
+                }
+            });
+        }
+
+        function mostrarImagenes() {
+            let html = '';
+
+            imagenesExistentes.forEach((url, index) => {
+                html += `
+                <div class="position-relative m-1">
+                    <img src="${url}" class="img-thumbnail" style="width:60px;">
+                    <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0" onclick="eliminarImagenExistente(${index})">&times;</button>
+                </div>
+            `;
+            });
+
+            $('#contenedorImagenes').html(html);
+        }
+
+        function eliminarImagenExistente(index) {
+            imagenesAEliminar.push(imagenesExistentes[index]); // marcaremos para eliminar en backend
+            imagenesExistentes.splice(index, 1);
+            mostrarImagenes();
+        }
+
+        function eliminarImagen(index) {
+            imagenesSeleccionadas.splice(index, 1);
+            mostrarPreviewImagenes();
         }
 
     </script>

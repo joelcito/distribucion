@@ -22,8 +22,8 @@
                         {{-- <button class="btn btn-icon btn-sm btn-warning btn-circle" title="Editar producto"
                             onclick="editarProducto({{ json_encode($producto) }})"><i class="fa fa-edit"></i></button>
                         <button class="btn btn-icon btn-sm btn-danger btn-circle" title="Eliminar producto"
-                            onclick="eliminarProducto('{{ $producto->idproductos }}')"><i
-                                class="fa fa-trash"></i></button> --}}
+                            onclick="eliminarProducto('{{ $producto->idproductos }}')"><i class="fa fa-trash"></i></button>
+                        --}}
                         <div class="btn-group">
                             <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-bs-toggle="dropdown"
                                 data-bs-display="static" aria-expanded="false">
@@ -38,10 +38,16 @@
                                         onclick="transferenciaSucursal({{ json_encode($producto) }})"><i
                                             class="fa fa-arrow-right"></i> Transferencia</button></li>
                                 {{-- @endif --}}
-                                <li><button class="dropdown-item" type="button"
-                                        onclick="editarProducto({{ json_encode($producto) }})"><i
-                                            class="fa fa-edit"></i>
-                                        Editar</button></li>
+                                <li>
+                                    <!-- <button class="dropdown-item" type="button"
+                                                        onclick="editarProducto({{ json_encode($producto) }})"><i
+                                                            class="fa fa-edit"></i>
+                                                        Editar</button> -->
+                                    <button class="dropdown-item" type="button"
+                                        onclick="abrirModalProducto({{ $producto->id }})">
+                                        Editar
+                                    </button>
+                                </li>
                                 <li><button class="dropdown-item" type="button"
                                         onclick="eliminarProducto('{{ $producto->idproductos }}')"><i
                                             class="fa fa-trash"></i>
@@ -57,7 +63,7 @@
     </table>
 </div>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('#kt_table_productos').DataTable({
             lengthMenu: [10, 25, 50, 100],
             dom: '<"dt-head row"<"col-md-6"l><"col-md-6"f>><"clear">t<"dt-footer row"<"col-md-5"i><"col-md-7"p>>',
@@ -77,4 +83,46 @@
             responsive: true
         });
     });
+
+    let imagenesAEliminar = []; // ✅ Solo una vez
+    let imagenesExistentes = []; // Para editar
+
+    function abrirModalProducto(productoId) {
+        console.log('ID a editar:', productoId); // 🔹 log para depuración
+        $.ajax({
+            url: '{{ route("producto.obtenerProducto") }}',
+            type: 'POST',
+            data: { id: productoId },
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            success: function (res) {
+                console.log(res); // 🔹 ver qué responde el servidor
+                if (res.estado) {
+                    const p = res.data;
+                    $('#id').val(p.id);
+                    $('#nombre').val(p.nombre);
+                    $('#codigo').val(p.codigo);
+                    $('#proveedores_idproveedores').val(p.proveedor_id);
+                    $('#categoria_id').val(p.categoria_id);
+                    $('#precio_compra').val(p.precio_compra);
+                    $('#precio_venta').val(p.precio_venta);
+                    imagenesExistentes = p.imagenes || [];
+                    imagenesAEliminar = [];
+                    mostrarImagenes();
+                    $('#modalProducto').modal('show');
+                } else {
+                    alert(res.message || 'Producto no encontrado');
+                }
+            },
+            error: function (xhr) {
+                console.error(xhr.responseText); // 🔹 ver detalle del error
+                alert('Error de conexión');
+            }
+        });
+    }
+
+
+    function eliminarImagenExistente(index) {
+        imagenesAEliminar.push(index);
+        $(`#contenedorImagenesExistentes div:eq(${index})`).remove();
+    }
 </script>

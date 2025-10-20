@@ -140,6 +140,15 @@
                                 <span class="menu-title text-white">Categorias</span>
                             </a>
                         </div>
+                        <div class="menu-item">
+                            <a class="menu-link {{ Route::currentRouteName() == 'catalogo.listadoCatalogo' ? 'active' : '' }}"
+                                href="{{ route('catalogo.listadoCatalogo') }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title text-white">Catalogo</span>
+                            </a>
+                        </div>
                         {{--
                         <div class="menu-item">
                             <a class="menu-link {{ Route::currentRouteName() == 'urlApiServicio.listado' ? 'active' : '' }}"

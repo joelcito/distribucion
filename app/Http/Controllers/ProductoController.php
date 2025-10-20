@@ -18,6 +18,14 @@ class ProductoController extends Controller
         return view('producto.listado')->with(compact('categotias'));
     }
 
+    public function listadoCatalogo()
+    {
+        $categorias = Categoria::all(); // ⚡ nombre correcto
+        return view('producto.listadoCatalogo', compact('categorias'));
+    }
+
+
+
     public function ajaxListado(Request $request)
     {
         if ($request->ajax()) {
@@ -32,37 +40,85 @@ class ProductoController extends Controller
         return $data;
     }
 
+    // public function guardarProducto(Request $request)
+    // {
+    //     if ($request->ajax()) {
+    //         $producto_id = $request->input('id');
+    //         $codigo = $request->input('codigo');
+    //         $nombre = $request->input('nombre');
+    //         $proveedores_idproveedores = $request->input('proveedores_idproveedores');
+    //         $categoria_id = $request->input('categoria_id');
+    //         $precio_compra = $request->input('precio_compra');
+    //         $precio_venta = $request->input('precio_venta');
+    //         $usuario = Auth::user();
+
+    //         if ($producto_id == "0") {
+    //             $producto = new Producto();
+    //             $producto->usuario_creador_id = $usuario->id;
+    //             $producto->usuario_modificador_id = $usuario->id;
+    //         } else {
+    //             $producto = Producto::find($producto_id);
+    //             $producto->usuario_modificador_id = $usuario->id;
+    //         }
+    //         $producto->codigo = 123;
+    //         $producto->nombre = $nombre;
+    //         $producto->proveedor_id = $proveedores_idproveedores;
+    //         $producto->categoria_id = $categoria_id;
+    //         $producto->precio_compra = $precio_compra;
+    //         $producto->precio_venta = $precio_venta;
+    //         $producto->save();
+    //         $data = Respuesta::success(null, "Producto guardado correctamente");
+    //     } else {
+    //         $data = Respuesta::error(null, "Error al guardar el producto");
+    //     }
+    //     return $data;
+    // }
+
     public function guardarProducto(Request $request)
     {
         if ($request->ajax()) {
             $producto_id = $request->input('id');
-            $codigo = $request->input('codigo');
-            $nombre = $request->input('nombre');
-            $proveedores_idproveedores = $request->input('proveedores_idproveedores');
-            $precio_compra = $request->input('precio_compra');
-            $precio_venta = $request->input('precio_venta');
             $usuario = Auth::user();
 
+            // Buscar o crear producto
             if ($producto_id == "0") {
                 $producto = new Producto();
                 $producto->usuario_creador_id = $usuario->id;
-                $producto->usuario_modificador_id = $usuario->id;
             } else {
                 $producto = Producto::find($producto_id);
-                $producto->usuario_modificador_id = $usuario->id;
             }
+
+            $producto->usuario_modificador_id = $usuario->id;
             $producto->codigo = 123;
-            $producto->nombre = $nombre;
-            $producto->proveedor_id = $proveedores_idproveedores;
-            // $producto->precio_compra = $precio_compra;
-            // $producto->precio_venta  = $precio_venta;
+            $producto->nombre = $request->input('nombre');
+            $producto->proveedor_id = $request->input('proveedores_idproveedores');
+            $producto->categoria_id = $request->input('categoria_id');
+            $producto->precio_compra = $request->input('precio_compra');
+            $producto->precio_venta = $request->input('precio_venta');
+
+            // Guardar imágenes (array de objetos)
+            if ($request->hasFile('imagenes')) {
+                $imagenesGuardadas = $producto->imagenes ?? [];
+                foreach ($request->file('imagenes') as $imagen) {
+                    $nombre = time() . '_' . $imagen->getClientOriginalName();
+                    $ruta = 'uploads/productos/' . $nombre;
+                    $imagen->move(public_path('uploads/productos'), $nombre);
+                    $imagenesGuardadas[] = [
+                        'ruta' => $ruta,
+                        'nombre' => $imagen->getClientOriginalName()
+                    ];
+                }
+                $producto->imagenes = $imagenesGuardadas;
+            }
+
             $producto->save();
-            $data = Respuesta::success(null, "Producto guardado correctamente");
-        } else {
-            $data = Respuesta::error(null, "Error al guardar el producto");
+
+            return Respuesta::success(null, "Producto guardado correctamente");
         }
-        return $data;
+
+        return Respuesta::error(null, "Error al guardar el producto");
     }
+
 
     public function eliminarProducto(Request $request)
     {
@@ -109,6 +165,106 @@ class ProductoController extends Controller
             $data = Respuesta::error(null, "Error al obtener los datos");
         }
         return $data;
+    }
+
+
+    // public function ajaxPorCategoria(Request $request)
+    // {
+    //     $categoria_id = $request->categoria_id;
+    //     $productos = Producto::where('categoria_id', $categoria_id)->get();
+
+    //     $listadoHtml = view('producto.listado', compact('productos'))->render();
+
+    //     return response()->json([
+    //         'estado' => true,
+    //         'data' => ['listado' => $listadoHtml]
+    //     ]);
+    // }
+
+
+    public function ajaxPorCategoria(Request $request)
+    {
+        $categoriaId = $request->categoria_id;
+
+        $productos = Producto::where('categoria_id', $categoriaId)->get();
+
+        $data = $productos->map(function ($p) {
+            return [
+                'id' => $p->id,
+                'nombre' => $p->nombre,
+                'proveedores_idproveedores' => $p->proveedor_id,
+                'categoria_id' => $p->categoria_id,
+                'precio_compra' => $p->precio_compra,
+                'precio_venta' => $p->precio_venta,
+                'imagenes' => is_array($p->imagenes) ? $p->imagenes : json_decode($p->imagenes, true) ?? []
+            ];
+        });
+
+        return response()->json([
+            'estado' => true,
+            'data' => $data
+        ]);
+    }
+
+    // public function obtenerProducto(Request $request)
+    // {
+    //     $producto = Producto::find($request->id);
+
+    //     if (!$producto) {
+    //         return response()->json(['estado' => false, 'message' => 'Producto no encontrado']);
+    //     }
+
+    //     return response()->json([
+    //         'estado' => true,
+    //         'data' => [
+    //             'id' => $producto->id,
+    //             'nombre' => $producto->nombre,
+    //             'categoria_id' => $producto->categoria_id,
+    //             'precio_venta' => $producto->precio_venta,
+    //             'imagenes' => json_decode($producto->imagenes) ?? []
+    //         ]
+    //     ]);
+    // }
+
+
+    public function obtenerProducto(Request $request)
+    {
+        try {
+            $producto = Producto::find($request->id);
+
+            if (!$producto) {
+                return response()->json(['estado' => false, 'message' => 'Producto no encontrado']);
+            }
+
+            // Verificar si es string antes de json_decode
+            if (is_string($producto->imagenes)) {
+                $imagenes = json_decode($producto->imagenes, true) ?? [];
+            } elseif (is_array($producto->imagenes)) {
+                $imagenes = $producto->imagenes;
+            } else {
+                $imagenes = [];
+            }
+
+            return response()->json([
+                'estado' => true,
+                'data' => [
+                    'id' => $producto->id,
+                    'nombre' => $producto->nombre,
+                    'codigo' => $producto->codigo,
+                    'proveedor_id' => $producto->proveedor_id,
+                    'categoria_id' => $producto->categoria_id,
+                    'precio_compra' => $producto->precio_compra,
+                    'precio_venta' => $producto->precio_venta,
+                    'imagenes' => $imagenes,
+                ]
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'estado' => false,
+                'message' => 'Error al obtener el producto: ' . $e->getMessage()
+            ]);
+        }
     }
 
 

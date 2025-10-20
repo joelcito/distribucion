@@ -19,12 +19,16 @@ class Producto extends Model
         'proveedor_id',
         'precio_compra',
         'precio_venta',
+        'imagenes',
         'usuario_creador_id',
         'usuario_modificador_id',
         'usuario_eliminador_id',
         'deleted_at'
     ];
 
+    protected $casts = [
+        'imagenes' => 'array',
+    ];
     public function proveedor()
     {
         return $this->belongsTo('App\Models\Proveedor', 'proveedor_id');

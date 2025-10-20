@@ -187,12 +187,6 @@
                                                 onclick="mostrarFormularioPedido('RECIBO', '{{ $cliente->id ?? '' }}', '{{ $cliente->nombres ?? '' }}')">
                                                 REALIZAR PEDIDO
                                             </button> -->
-
-
-
-
-
-
                         </div>
                     </div>
 
@@ -553,6 +547,8 @@
 
                 let servicio = {
                     servicio_id: servicioDatos.id,
+                    nombre: servicioDatos.nombre,          // <- agregamos nombre
+                    categoria_id: servicioDatos.categoria_id || null, // <- agregamos categoria_id si existe
                     descripcion: servicioDatos.nombre,
                     precio: parseFloat(precio).toFixed(2),
                     numero_serie: $("#numero_serie").val(),
@@ -1639,6 +1635,8 @@
             arrayProductoCar.forEach(function (p) {
                 productos.push({
                     producto_id: p.servicio_id,
+                    categoria_id: p.categoria_id,
+                    servicio_id: p.servicio_id,
                     cantidad: p.cantidad,
                     precio: p.precio,
                     subTotal: p.subTotal,
@@ -1647,28 +1645,10 @@
             });
 
             // Guardar JSON en el input hidden
+            console.log("Productos JSON:", productos);
             $('#productos').val(JSON.stringify(productos));
         }
 
-
-
-        // function mostrarFormularioPedido(tipo, clienteId = null, clienteNombre = '') {
-        //     const bloque = document.getElementById('bloque_formulario_pedido');
-        //     bloque.style.display = 'block';
-
-        //     // Limpiar campos solo si no se envía cliente
-        //     if (!clienteId) {
-        //         document.getElementById('tipo').value = '';
-        //         document.getElementById('cliente_id_pedido').value = '';
-        //         document.getElementById('cliente_nombre_pedido').value = '';
-        //         document.getElementById('productos').value = '';
-        //     }
-
-        //     // Asignar valores correctos
-        //     document.getElementById('tipo').value = tipo;
-        //     if (clienteId) document.getElementById('cliente_id_pedido').value = clienteId;
-        //     if (clienteNombre) document.getElementById('cliente_nombre_pedido').value = clienteNombre;
-        // }
 
         function mostrarFormularioPedido(tipo) {
             const bloque = document.getElementById('bloque_formulario_pedido');
@@ -1680,12 +1660,6 @@
             document.getElementById('cliente_nombre_pedido').value = '';
             document.getElementById('productos').value = '';
         }
-
-
-
-
-
-
 
 
         function guardarPedido() {
@@ -1811,16 +1785,16 @@
 
                             tbody.append(
                                 `
-                                            <tr>
-                                                <td>
-                                                    <select name="productos[][id]" class="form-control">
-                                                        ${opciones}
-                                                    </select>
-                                                </td>
-                                                <td><input type="number" name="productos[][cantidad]" class="form-control" value="${prod.cantidad}"></td>
-                                                <td><button class="btn btn-sm btn-danger" onclick="$(this).closest('tr').remove()">X</button></td>
-                                            </tr>
-                                        `
+                                                                                            <tr>
+                                                                                                <td>
+                                                                                                    <select name="productos[][id]" class="form-control">
+                                                                                                        ${opciones}
+                                                                                                    </select>
+                                                                                                </td>
+                                                                                                <td><input type="number" name="productos[][cantidad]" class="form-control" value="${prod.cantidad}"></td>
+                                                                                                <td><button class="btn btn-sm btn-danger" onclick="$(this).closest('tr').remove()">X</button></td>
+                                                                                            </tr>
+                                                                                        `
                             );
                         });
 
@@ -1836,18 +1810,18 @@
         $('#agregarProductoEditar').click(function () {
             $('#tablaProductosEditar tbody').append(
                 `
-                                                                                                                                                        <tr>
-                                                                                                                                                            <td>
-                                                                                                                                                                <select name="productos[][id]" class="form-control">
-                                                                                                                                                                    @foreach ($productos as $producto)
-                                                                                                                                                                           <option value="{{ $producto->id }}">{{ $producto->nombre }}</option>
-                                                                                                                                                                    @endforeach
-                                                                                                                                                                </select>
-                                                                                                                                                            </td>
-                                                                                                                                                            <td><input type="number" name="productos[][cantidad]" class="form-control" min="1" value="1"></td>
-                                                                                                                                                            <td><button class="btn btn-sm btn-danger" onclick="$(this).closest('tr').remove()">X</button></td>
-                                                                                                                                                        </tr>
-                                                                                                                                                    `
+                                                                <tr>
+                                                                    <td>
+                                                                        <select name="productos[][id]" class="form-control">
+                                                                            @foreach ($productos as $producto)
+                                                                                <option value="{{ $producto->id }}">{{ $producto->nombre }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </td>
+                                                                    <td><input type="number" name="productos[][cantidad]" class="form-control" min="1" value="1"></td>
+                                                                    <td><button class="btn btn-sm btn-danger" onclick="$(this).closest('tr').remove()">X</button></td>
+                                                                </tr>
+                                                            `
             );
         });
 
@@ -1912,11 +1886,11 @@
 
                         pedido.productos.forEach(prod => {
                             tbody.append(`
-                                        <tr>
-                                            <td>${prod.nombre ?? prod.producto_id}</td>
-                                            <td>${prod.cantidad}</td>
-                                        </tr>
-                                    `);
+                                                                                        <tr>
+                                                                                            <td>${prod.nombre ?? prod.producto_id}</td>
+                                                                                            <td>${prod.cantidad}</td>
+                                                                                        </tr>
+                                                                                    `);
                         });
 
                         $('#modalDetallePedido').modal('show');
@@ -1929,5 +1903,7 @@
                 }
             });
         }
+
+
     </script>
 @endsection

@@ -44,9 +44,17 @@
                                 onclick="cancelarPedido({{ $pedido->id }})">
                                 <i class="fa fa-ban"></i>
                             </button>
-                            <button class="btn btn-sm btn-info" title="Ver detalle"
-                                onclick="verDetallePedido({{ $pedido->id }})">
-                                <i class="fa fa-eye"></i>
+                            <!-- <button class="btn btn-sm btn-info" title="Ver detalle"
+                                                                        onclick="verDetallePedido({{ $pedido->id }})">
+                                                                        <i class="fa fa-eye"></i>
+                                                                    </button> -->
+
+                            <!-- <button type="button" id="botom_genera_pdf" class="btn btn-danger btn-sm btn-icon"
+                                            title="Expotar en PDF" onclick="reportePDF({{ $pedido->id }})"><i
+                                                class="fa fa-file-pdf"></i></button> -->
+                            <button type="button" class="btn btn-danger btn-sm btn-icon" title="Exportar en PDF"
+                                onclick="imprimePedido({{ $pedido->id }})">
+                                <i class="fa fa-file-pdf"></i>
                             </button>
 
                         </td>
@@ -1229,6 +1237,7 @@
             arrayProductoCar.forEach(function (p) {
                 productos.push({
                     producto_id: p.servicio_id,
+                    nombre: p.nombre,
                     cantidad: p.cantidad,
                     precio: p.precio,
                     subTotal: p.subTotal,
@@ -1378,16 +1387,16 @@
 
                             tbody.append(
                                 `
-                                            <tr>
-                                                <td>
-                                                    <select name="productos[][id]" class="form-control">
-                                                        ${opciones}
-                                                    </select>
-                                                </td>
-                                                <td><input type="number" name="productos[][cantidad]" class="form-control" value="${prod.cantidad}"></td>
-                                                <td><button class="btn btn-sm btn-danger" onclick="$(this).closest('tr').remove()">X</button></td>
-                                            </tr>
-                                        `
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <select name="productos[][id]" class="form-control">
+                                                                                                ${opciones}
+                                                                                            </select>
+                                                                                        </td>
+                                                                                        <td><input type="number" name="productos[][cantidad]" class="form-control" value="${prod.cantidad}"></td>
+                                                                                        <td><button class="btn btn-sm btn-danger" onclick="$(this).closest('tr').remove()">X</button></td>
+                                                                                    </tr>
+                                                                                `
                             );
                         });
 
@@ -1403,18 +1412,18 @@
         $('#agregarProductoEditar').click(function () {
             $('#tablaProductosEditar tbody').append(
                 `
-                        <tr>
-                            <td>
-                                <select name="productos[][id]" class="form-control">
-                                    @foreach ($productos as $producto)
-                                        <option value="{{ $producto->id }}">{{ $producto->nombre }}</option>
-                                    @endforeach
-                                </select>
-                            </td>
-                            <td><input type="number" name="productos[][cantidad]" class="form-control" min="1" value="1"></td>
-                            <td><button class="btn btn-sm btn-danger" onclick="$(this).closest('tr').remove()">X</button></td>
-                        </tr>
-                    `
+                                                                <tr>
+                                                                    <td>
+                                                                        <select name="productos[][id]" class="form-control">
+                                                                            @foreach ($productos as $producto)
+                                                                                <option value="{{ $producto->id }}">{{ $producto->nombre }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </td>
+                                                                    <td><input type="number" name="productos[][cantidad]" class="form-control" min="1" value="1"></td>
+                                                                    <td><button class="btn btn-sm btn-danger" onclick="$(this).closest('tr').remove()">X</button></td>
+                                                                </tr>
+                                                            `
             );
         });
 
@@ -1479,11 +1488,11 @@
 
                         pedido.productos.forEach(prod => {
                             tbody.append(`
-                                        <tr>
-                                            <td>${prod.nombre ?? prod.producto_id}</td>
-                                            <td>${prod.cantidad}</td>
-                                        </tr>
-                                    `);
+                                                                                <tr>
+                                                                                    <td>${prod.nombre ?? prod.producto_id}</td>
+                                                                                    <td>${prod.cantidad}</td>
+                                                                                </tr>
+                                                                            `);
                         });
 
                         $('#modalDetallePedido').modal('show');
@@ -1493,6 +1502,121 @@
                 },
                 error: function () {
                     Swal.fire('Error', 'No se pudo obtener el detalle del pedido', 'error');
+                }
+            });
+        }
+
+        function imprimePedido(pedido) {
+            href = "{{ url('pedidos/imprimePedido') }}/" + pedido;
+            // window.location.href = href;
+            window.open(href, '_blank');
+        }
+
+
+
+
+        function reportePDF() {
+
+            let datos = $('#formulario-busqueda-factura').serializeArray();
+
+            // Mostrar SweetAlert2 antes de enviar la solicitud
+            Swal.fire({
+                title: 'Generando PDF...',
+                text: 'Por favor espera mientras generamos el archivo.',
+                allowOutsideClick: false, // Evitar que se cierre al hacer clic fuera
+                didOpen: () => {
+                    Swal.showLoading(); // Mostrar el spinner de carga
+                }
+            });
+
+            $.ajax({
+                url: "{{ url('pedidos/reportePDF') }}",
+                method: "POST",
+                data: datos,
+                xhrFields: {
+                    responseType: 'blob' // Esto le dice a jQuery que espere un archivo binario (PDF)
+                },
+                success: function (data, status, xhr) {
+                    // Ocultar SweetAlert2 cuando la solicitud sea exitosa
+                    Swal.close();
+
+                    // Crear un enlace temporal para iniciar la descarga
+                    var blob = new Blob([data], {
+                        type: 'application/pdf'
+                    });
+                    var link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = "reporte_pedido.pdf"; // Nombre del archivo
+                    link.click();
+                },
+                error: function (xhr, status, error) {
+                    // Mostrar error si algo falla
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'No se pudo generar el PDF. Inténtalo de nuevo.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                    console.error("Error al generar el PDF: ", error);
+                }
+            });
+
+        }
+
+        function exportarExcel() {
+            let datos = $('#formulario-busqueda-factura').serializeArray();
+
+            // // Mostrar SweetAlert2 antes de enviar la solicitud
+            // Swal.fire({
+            //     title: 'Generando PDF...',
+            //     text: 'Por favor espera mientras generamos el archivo.',
+            //     allowOutsideClick: false, // Evitar que se cierre al hacer clic fuera
+            //     didOpen: () => {
+            //         Swal.showLoading(); // Mostrar el spinner de carga
+            //     }
+            // });
+
+            // Mostrar SweetAlert2 antes de enviar la solicitud
+            Swal.fire({
+                title: 'Generando Excel...',
+                text: 'Por favor espera mientras generamos el archivo.',
+                allowOutsideClick: false, // Evitar que se cierre al hacer clic fuera
+                didOpen: () => {
+                    Swal.showLoading(); // Mostrar el spinner de carga
+                }
+            });
+
+            $.ajax({
+                url: "{{ url('pedidos/reporteExcel') }}",
+                method: "POST",
+                data: datos,
+                xhrFields: {
+                    responseType: 'blob' // Esto le dice a jQuery que espere un archivo binario (PDF)
+                },
+                success: function (data, status, xhr) {
+                    // // Ocultar SweetAlert2 cuando la solicitud sea exitosa
+                    Swal.close();
+
+                    // Assume `data` contains the binary response from the server
+                    var blob = new Blob([data], {
+                        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                    });
+                    var link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = 'reporte_facturas.xlsx'; // Nombre del archivo Excel
+                    document.body.appendChild(link); // Required for Firefox
+                    link.click();
+                    document.body.removeChild(link);
+                },
+                error: function (xhr, status, error) {
+                    // Mostrar error si algo falla
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'No se pudo generar el PDF. Inténtalo de nuevo.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                    console.error("Error al generar el PDF: ", error);
                 }
             });
         }

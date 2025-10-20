@@ -10,6 +10,8 @@ use App\Utils\Respuesta;
 use Auth;
 use DB;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use PDF;
 
 class PedidosController extends Controller
 {
@@ -44,6 +46,8 @@ class PedidosController extends Controller
 
 
 
+
+
     public function store(Request $request)
     {
         try {
@@ -67,6 +71,7 @@ class PedidosController extends Controller
 
             $pedido = new Pedido();
             $pedido->cliente_id = $request->cliente_id;
+            $pedido->usuario_creador_id = $usuario->id;
             $pedido->usuario_id = $usuario->id;
             $pedido->tipo = $request->tipo;
             $pedido->fecha = $request->fecha;
@@ -77,7 +82,8 @@ class PedidosController extends Controller
 
             foreach ($productos as $producto) {
                 Movimiento::create([
-                    'usuario_creador_id' => $request->usuario_id,
+                    'usuario_creador_id' => $usuario->id,
+                    'usuario_id' => $usuario->id,
                     'producto_id' => $producto['producto_id'],
                     'sucursal_id' => $producto['sucursal_id'] ?? null,
                     'salida' => $producto['cantidad'],
@@ -208,6 +214,22 @@ class PedidosController extends Controller
         }
     }
 
+
+    public function imprimePedido(Request $request, $id)
+    {
+        $usuario = Auth::user();
+        $sucursalSeleccionado = session('sucursal_seleccionado');
+        $puntoVentaSeleccionado = session('puntoVenta_seleccionado');
+
+        $pedido = Pedido::find($id);
+
+        if ($pedido) {
+            $pdf = PDF::loadView('factura.pdf.imprimePedido', compact('pedido'))->setPaper('letter');
+            return $pdf->stream('pedido.pdf');
+        } else {
+            abort(404);
+        }
+    }
 
 
 
