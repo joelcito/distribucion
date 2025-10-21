@@ -76,9 +76,9 @@
                         </div>
                     </form>
                 </div>
-                <div class="modal-footer">
-                    <button class="btn btn-success w-100" onclick="guardarProducto()">Guardar</button>
-                </div>
+                <!-- <div class="modal-footer">
+                        <button class="btn btn-success w-100" onclick="guardarProducto()">Guardar</button>
+                    </div> -->
             </div>
         </div>
     </div>
@@ -93,7 +93,7 @@
 
         $(document).ready(function () {
 
-            let defaultImg = "{{ asset('img/default.png') }}"; // Imagen por defecto
+            let defaultImg = "{{ asset('img/default.png') }}";
             let idCategoriaSeleccionada = null;
 
             // 1️⃣ Click en categorías
@@ -103,7 +103,7 @@
                 cargarProductosPorCategoria(idCategoriaSeleccionada);
             });
 
-            // 2️⃣ Función para cargar productos de la categoría
+            // 2️⃣ Cargar productos por categoría
             function cargarProductosPorCategoria(idCategoria) {
                 $('#galeriaProductos').html('<div>Cargando productos...</div>');
 
@@ -123,20 +123,21 @@
 
                                 if (producto.imagenes && producto.imagenes.length) {
                                     if (typeof producto.imagenes[0] === 'string') {
-                                        img = "{{ url('/') }}/" + producto.imagenes[0]; // caso string
+                                        img = "{{ url('/') }}/" + producto.imagenes[0];
                                     } else if (typeof producto.imagenes[0] === 'object' && producto.imagenes[0].ruta) {
-                                        img = "{{ url('/') }}/" + producto.imagenes[0].ruta; // caso objeto
+                                        img = "{{ url('/') }}/" + producto.imagenes[0].ruta;
                                     }
                                 }
 
                                 html += `
-            <div class="card m-2" style="width: 150px; cursor:pointer;" onclick="abrirModalProducto(${producto.id})">
-                <img src="${img}" class="card-img-top" alt="${producto.nombre}">
-                <div class="card-body p-2">
-                    <p class="card-text text-center">${producto.nombre}</p>
-                </div>
-            </div>
-        `;
+                                        <div class="card m-2" style="width: 150px; cursor:pointer;" 
+                                            onclick="abrirModalProducto(${producto.id})">
+                                            <img src="${img}" class="card-img-top" alt="${producto.nombre}">
+                                            <div class="card-body p-2">
+                                                <p class="card-text text-center">${producto.nombre}</p>
+                                            </div>
+                                        </div>
+                                    `;
                             });
 
                             $('#galeriaProductos').html(`<div class="d-flex flex-wrap">${html}</div>`);
@@ -150,7 +151,7 @@
                 });
             }
 
-            // 3️⃣ Abrir modal producto para editar
+            // 3️⃣ Abrir modal con la información del producto
             window.abrirModalProducto = function (productoId) {
                 $.ajax({
                     url: '{{ route("producto.obtenerProducto") }}',
@@ -161,8 +162,39 @@
                         if (res.estado) {
                             const p = res.data;
                             console.log('Producto cargado:', p);
-                            // Aquí se puede abrir tu modal y llenar los campos
-                            // $('#modalProducto').modal('show');
+
+                            // Llenar campos del modal
+                            $('#id').val(p.id);
+                            $('#nombre').val(p.nombre);
+                            $('#proveedores_idproveedores').val(p.proveedores_idproveedores);
+                            $('#precio_compra').val(p.precio_compra);
+                            $('#precio_venta').val(p.precio_venta);
+
+                            // Limpiar y mostrar imágenes
+                            let htmlImagenes = '';
+                            if (p.imagenes && p.imagenes.length) {
+                                p.imagenes.forEach(img => {
+                                    let ruta = '';
+                                    if (typeof img === 'string') {
+                                        ruta = "{{ url('/') }}/" + img;
+                                    } else if (img.ruta) {
+                                        ruta = "{{ url('/') }}/" + img.ruta;
+                                    }
+
+                                    htmlImagenes += `
+                                            <div class="m-2 text-center">
+                                                <img src="${ruta}" style="width: 100px; height: 100px; object-fit: cover;" class="rounded shadow-sm">
+                                            </div>
+                                        `;
+                                });
+                            } else {
+                                htmlImagenes = `<div class="text-muted">Sin imágenes</div>`;
+                            }
+
+                            $('#contenedorImagenes').html(htmlImagenes);
+
+                            // Mostrar modal
+                            $('#modalProducto').modal('show');
                         } else {
                             Swal.fire('Error', 'No se pudo cargar el producto', 'error');
                         }
@@ -171,7 +203,7 @@
                         Swal.fire('Error', 'Error de conexión', 'error');
                     }
                 });
-            }
+            };
 
         });
 
