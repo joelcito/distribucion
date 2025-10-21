@@ -6,7 +6,14 @@
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 @endsection
 @section('content')
+    <div class="d-flex">
 
+        <!-- CATEGORIAS -->
+        <div class="col-md-12">
+            <h3 class="fw-bold">CATÀLOGO DE PRODUCTOS</h3>
+        </div>
+
+    </div>
 
 
     <div class="d-flex">
@@ -77,8 +84,8 @@
                     </form>
                 </div>
                 <!-- <div class="modal-footer">
-                        <button class="btn btn-success w-100" onclick="guardarProducto()">Guardar</button>
-                    </div> -->
+                                <button class="btn btn-success w-100" onclick="guardarProducto()">Guardar</button>
+                            </div> -->
             </div>
         </div>
     </div>
@@ -130,14 +137,14 @@
                                 }
 
                                 html += `
-                                        <div class="card m-2" style="width: 150px; cursor:pointer;" 
-                                            onclick="abrirModalProducto(${producto.id})">
-                                            <img src="${img}" class="card-img-top" alt="${producto.nombre}">
-                                            <div class="card-body p-2">
-                                                <p class="card-text text-center">${producto.nombre}</p>
-                                            </div>
-                                        </div>
-                                    `;
+                                                <div class="card m-2" style="width: 150px; cursor:pointer;" 
+                                                    onclick="abrirModalProducto(${producto.id})">
+                                                    <img src="${img}" class="card-img-top" alt="${producto.nombre}">
+                                                    <div class="card-body p-2">
+                                                        <p class="card-text text-center">${producto.nombre}</p>
+                                                    </div>
+                                                </div>
+                                            `;
                             });
 
                             $('#galeriaProductos').html(`<div class="d-flex flex-wrap">${html}</div>`);
@@ -182,10 +189,10 @@
                                     }
 
                                     htmlImagenes += `
-                                            <div class="m-2 text-center">
-                                                <img src="${ruta}" style="width: 100px; height: 100px; object-fit: cover;" class="rounded shadow-sm">
-                                            </div>
-                                        `;
+                                                    <div class="m-2 text-center">
+                                                        <img src="${ruta}" style="width: 100px; height: 100px; object-fit: cover;" class="rounded shadow-sm">
+                                                    </div>
+                                                `;
                                 });
                             } else {
                                 htmlImagenes = `<div class="text-muted">Sin imágenes</div>`;
