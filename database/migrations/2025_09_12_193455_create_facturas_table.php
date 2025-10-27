@@ -23,9 +23,10 @@ return new class extends Migration
             $table->foreign('cliente_id')->references('id')->on('clientes');
             $table->unsignedBigInteger('sucursal_id')->nullable();
             $table->foreign('sucursal_id')->references('id')->on('sucursales');
+            $table->unsignedBigInteger('pedido_id')->nullable();
+            $table->foreign('pedido_id')->references('id')->on('pedidos');
            // $table->unsignedBigInteger('provincias_idprovincias')->nullable();
             //$table->foreign('provincias_idprovincias')->references('id')->on('provincias');
-
 
             $table->date('fecha')->nullable();
             $table->string('nit', 45)->nullable();

@@ -5,6 +5,7 @@ use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\DepartamentoController;
 use App\Http\Controllers\FacturaController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PagoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProvinciaController;
 use App\Http\Controllers\RolController;
@@ -81,6 +82,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/listado', [FacturaController::class, 'listado'])->name('factura.listado');
         Route::post('/ajaxListadoFacturas', [FacturaController::class, 'ajaxListadoFacturas'])->name('factura.ajaxListadoFacturas');
         Route::get('/imprimeRecibo/{factura_id}', [FacturaController::class, 'imprimeRecibo'])->name('factura.imprimeRecibo');
+        Route::get('/formularioVentaPedido/{pedido_id}', [FacturaController::class, 'formularioVentaPedido'])->name('factura.formularioVentaPedido');
+
     });
 
     // CLIENTE
@@ -140,7 +143,16 @@ Route::middleware('auth')->group(function () {
 
     });
 
-
+    //PAGO
+    Route::prefix('/pago')->group(function(){
+        Route::post('/guardarTipoIngresoSalida', [PagoController::class, 'guardarTipoIngresoSalida']);
+        Route::get('/listado', [PagoController::class, 'listado'])->name('pago.listado');
+        Route::post('/ajaxListado', [PagoController::class, 'ajaxListado'])->name('pago.ajaxListado');
+        Route::get('/listadoDeuda', [PagoController::class, 'listadoDeuda'])->name('pago.listadoDeuda');
+        Route::post('/ajaxListadoDeuda', [PagoController::class, 'ajaxListadoDeuda'])->name('pago.ajaxListadoDeuda');
+        Route::post('/ajaxFormPagoDeuda', [PagoController::class, 'ajaxFormPagoDeuda'])->name('pago.ajaxFormPagoDeuda');
+        Route::post('/guardarPagoDeuda', [PagoController::class, 'guardarPagoDeuda'])->name('pago.guardarPagoDeuda');
+    });
 
 });
 

@@ -33,26 +33,30 @@
                         <td>{{ $pedido->cliente->nombres ?? 'N/A' }}</td>
                         <td>{{ $pedido->fecha->format('Y-m-d') ?? 'N/A' }}</td>
                         <td>{{ $pedido->tipo }}</td>
-                        <td>{{ $pedido->estado }}</td>
-
                         <td>
-                            <button class="btn btn-sm btn-warning" title="Editar pedido"
-                                onclick="editarPedido({{ $pedido->id }})">
-                                <i class="fa fa-edit"></i>
-                            </button>
-                            <button class="btn btn-icon btn-sm btn-danger btn-circle" title="Cancelar pedido"
-                                onclick="cancelarPedido({{ $pedido->id }})">
-                                <i class="fa fa-ban"></i>
-                            </button>
-                            <!-- <button class="btn btn-sm btn-info" title="Ver detalle"
-                                                                        onclick="verDetallePedido({{ $pedido->id }})">
-                                                                        <i class="fa fa-eye"></i>
-                                                                    </button> -->
-
-                            <!-- <button type="button" id="botom_genera_pdf" class="btn btn-danger btn-sm btn-icon"
-                                            title="Expotar en PDF" onclick="reportePDF({{ $pedido->id }})"><i
-                                                class="fa fa-file-pdf"></i></button> -->
-                            <button type="button" class="btn btn-danger btn-sm btn-icon" title="Exportar en PDF"
+                            @if ($pedido->estado == "PENDIENTE")
+                                <span class="badge badge-warning">{{ $pedido->estado }}</span>
+                            @elseif ($pedido->estado == "CANCELADO")
+                                <span class="badge badge-danger">{{ $pedido->estado }}</span>
+                            @elseif ($pedido->estado == "VENDIDO")
+                                <span class="badge badge-success">{{ $pedido->estado }}</span>
+                            @else
+                                {{ $pedido->estado }}
+                            @endif
+                        </td>
+                        <td>
+                            @if ($pedido->estado != "CANCELADO" && $pedido->estado != "VENDIDO")
+                                <a href="{{ url('factura/formularioVentaPedido', [$pedido->id]) }}" class="btn btn-icon btn-sm btn-dark btn-circle" title="Realizar Venta"><i class="fa fa-balance-scale" aria-hidden="true"></i></a>
+                                <button class="btn btn-icon btn-sm btn-warning btn-circle" title="Editar pedido"
+                                    onclick="editarPedido({{ $pedido->id }})">
+                                    <i class="fa fa-edit"></i>
+                                </button>
+                                <button class="btn btn-icon btn-sm btn-danger btn-circle" title="Cancelar pedido"
+                                    onclick="cancelarPedido({{ $pedido->id }})">
+                                    <i class="fa fa-ban"></i>
+                                </button>
+                            @endif
+                            <button type="button" class="btn btn-icon btn-sm btn-info btn-circle" title="Exportar en PDF"
                                 onclick="imprimePedido({{ $pedido->id }})">
                                 <i class="fa fa-file-pdf"></i>
                             </button>
@@ -120,6 +124,21 @@
                     </thead>
                     <tbody></tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--ver detalle-->
+<div class="modal fade" id="modalRealizarVenta" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Formulario Venta</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="contenedorFormularioVenta"></div>
             </div>
         </div>
     </div>
@@ -1619,6 +1638,34 @@
                     console.error("Error al generar el PDF: ", error);
                 }
             });
+        }
+
+        function ajaxFormularioVenta(pedido){
+
+            $.ajax({
+                url: "{{ url('factura/ajaxFormularioVenta') }}",
+                method: "POST",
+                data: {pedido:pedido},
+                // xhrFields: {
+                //     responseType: 'blob' // Esto le dice a jQuery que espere un archivo binario (PDF)
+                // },
+                success: function (data, status, xhr) {
+
+                    $('#modalRealizarVenta').modal('show')
+                },
+                error: function (xhr, status, error) {
+                    // Mostrar error si algo falla
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'No se pudo generar el PDF. Inténtalo de nuevo.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                    console.error("Error al generar el PDF: ", error);
+                }
+            });
+
+
         }
     </script>
 @endsection

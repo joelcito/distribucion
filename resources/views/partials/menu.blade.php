@@ -149,6 +149,17 @@
                                 <span class="menu-title text-white">Catalogo</span>
                             </a>
                         </div>
+
+                        <div class="menu-item">
+                            <a class="menu-link {{ Route::currentRouteName() == 'pago.listadoDeuda' ? 'active' : '' }}"
+                                href="{{ route('pago.listadoDeuda') }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title text-white">Cuentas por Cobrar</span>
+                            </a>
+                        </div>
+
                         {{--
                         <div class="menu-item">
                             <a class="menu-link {{ Route::currentRouteName() == 'urlApiServicio.listado' ? 'active' : '' }}"

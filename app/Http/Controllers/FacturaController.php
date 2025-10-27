@@ -6,6 +6,7 @@ use App\Models\Cliente;
 use App\Models\Detalle;
 use App\Models\Factura;
 use App\Models\Movimiento;
+use App\Models\Pedido;
 use App\Models\Pago;
 use App\Models\Producto;
 use App\Utils\Respuesta;
@@ -114,21 +115,19 @@ class FacturaController extends Controller
 
                 // dd($request->all());
 
-                $usuario = Auth::user();
-                // $punto_venta_objeto  = $usuario->punto_venta;
-                // $punto_venta_id      = $punto_venta_objeto->id;
-                $sucursal_objeto = $usuario->sucursal;
-                $sucursal_id = $sucursal_objeto->id;
-
-                $carroVentas = $request->input('carrito');
-                $cliente_id = $request->input('cliente_id');
+                $usuario             = Auth::user();
+                $sucursal_objeto     = $usuario->sucursal;
+                $sucursal_id         = $sucursal_objeto->id;
+                $carroVentas         = $request->input('carrito');
+                $cliente_id          = $request->input('cliente_id');
                 $descuento_adicional = $request->input('descuento_adicional');
-                $monto_total = (float) $request->input('monto_total');
-                $tipo_pago_pagado = $request->input('tipo_pago_pagado');
-                $realizo_pago = $request->input('realizo_pago');
-                $monto_total_pagado = (float) $request->input('monto_total_pagado');
-                $monto_pagado = (float) $request->input('monto_pagado');
-                $cambio_pagado = (float) $request->input('cambio_pagado');
+                $monto_total         = (float) $request->input('monto_total');
+                $tipo_pago_pagado    = $request->input('tipo_pago_pagado');
+                $realizo_pago        = $request->input('realizo_pago');
+                $monto_total_pagado  = (float) $request->input('monto_total_pagado');
+                $monto_pagado        = (float) $request->input('monto_pagado');
+                $cambio_pagado       = (float) $request->input('cambio_pagado');
+                $pedido_id           = (int) $request->input('pedido_id');
 
                 // dd($request->all());
 
@@ -142,21 +141,21 @@ class FacturaController extends Controller
 
                     $servicio = Producto::find($item['servicio_id']);
 
-                    $detalle = new Detalle();
+                    $detalle                     = new Detalle();
                     $detalle->usuario_creador_id = $usuario->id;
-                    $detalle->sucursal_id = $sucursal_id;
-                    $detalle->cliente_id = $cliente_id;
-                    $detalle->producto_id = $item['servicio_id'];
-                    // $detalle->descripcion_adicional = $item['descripcion_adicional'];
-                    // $detalle->numero_serie          = $item['numero_serie'];
-                    // $detalle->numero_imei           = $item['numero_imei'];
-                    $detalle->precio = $item['precio'];
-                    $detalle->cantidad = $item['cantidad'];
+                    $detalle->sucursal_id        = $sucursal_id;
+                    $detalle->cliente_id         = $cliente_id;
+                    $detalle->producto_id        = $item['servicio_id'];
+                      // $detalle->descripcion_adicional = $item['descripcion_adicional'];
+                      // $detalle->numero_serie          = $item['numero_serie'];
+                      // $detalle->numero_imei           = $item['numero_imei'];
+                    $detalle->precio    = $item['precio'];
+                    $detalle->cantidad  = $item['cantidad'];
                     $detalle->descuento = $item['descuento'];
-                    $detalle->total = $item['total'];
-                    $detalle->importe = $item['subTotal'];
-                    $detalle->fecha = date('Y-m-d H:i:s');
-                    $detalle->estado = 'Parapagar';
+                    $detalle->total     = $item['total'];
+                    $detalle->importe   = $item['subTotal'];
+                    $detalle->fecha     = date('Y-m-d H:i:s');
+                    $detalle->estado    = 'Parapagar';
                     $detalle->save();
 
                     //VERIFICAMOS QUE EXISTA EN ALMACEN ANTES DE CONTINUAR
@@ -201,18 +200,16 @@ class FacturaController extends Controller
                 $cliente = Cliente::find($cliente_id);
 
                 // ESTO ES PARA LA FACTURA LA CREACION
-                $facturaVerdad = new Factura();
-                $facturaVerdad->usuario_creador_id = Auth::user()->id;
-                $facturaVerdad->cliente_id = $cliente->id;
-                $facturaVerdad->sucursal_id = $sucursal_objeto->id;
-                $facturaVerdad->fecha = date('Y-m-d H:i:s');
-                $facturaVerdad->numero_recibo = $numeroFacturaRecibo;
-                // $facturaVerdad->facturado               = "No";
-                $facturaVerdad->total = $monto_total;
-                // $facturaVerdad->monto_total_subjeto_iva = $monto_total;
+                $facturaVerdad                      = new Factura();
+                $facturaVerdad->usuario_creador_id  = Auth::user()->id;
+                $facturaVerdad->cliente_id          = $cliente->id;
+                $facturaVerdad->sucursal_id         = $sucursal_objeto->id;
+                $facturaVerdad->fecha               = date('Y-m-d H:i:s');
+                $facturaVerdad->numero_recibo       = $numeroFacturaRecibo;
+                $facturaVerdad->total               = $monto_total;
                 $facturaVerdad->descuento_adicional = $descuento_adicional;
-                $facturaVerdad->estado_pago = ($monto_pagado == $monto_total) ? 'PAGADO' : 'DEUDA';
-                // $facturaVerdad->estado_venta             = 'RECEPCIONADO';
+                $facturaVerdad->pedido_id           = $pedido_id == 0 ? null : $pedido_id;
+                $facturaVerdad->estado_pago         = ($monto_pagado == $monto_total) ? 'PAGADO' : 'DEUDA';
                 $facturaVerdad->save();
 
                 // AHORA AREMOS PARA LOS DETALLES
@@ -224,17 +221,23 @@ class FacturaController extends Controller
 
                 if ($realizo_pago === "true") {
                     // PARA LA TABLA PAGOS
-                    $pago = new Pago();
+                    $pago                     = new Pago();
                     $pago->usuario_creador_id = $usuario->id;
-                    $pago->factura_id = $facturaVerdad->id;
-                    $pago->monto = ($monto_pagado <= $monto_total) ? $monto_pagado : $monto_total;
-                    $pago->sucursal_id = $sucursal_id;
-                    $pago->cambio = $cambio_pagado;
-                    $pago->fecha = $facturaVerdad->fecha;
-                    $pago->descripcion = 'VENTA';
-                    $pago->tipo_pago = $tipo_pago_pagado;
-                    $pago->estado = 'INGRESO';
+                    $pago->factura_id         = $facturaVerdad->id;
+                    $pago->monto              = ($monto_pagado <= $monto_total) ? $monto_pagado : $monto_total;
+                    $pago->sucursal_id        = $sucursal_id;
+                    $pago->cambio             = $cambio_pagado;
+                    $pago->fecha              = $facturaVerdad->fecha;
+                    $pago->descripcion        = 'VENTA';
+                    $pago->tipo_pago          = $tipo_pago_pagado;
+                    $pago->estado             = 'INGRESO';
                     $pago->save();
+                }
+
+                if($pedido_id != 0){
+                    $pedido         = Pedido::find($pedido_id);
+                    $pedido->estado = "VENDIDO";
+                    $pedido->save();
                 }
 
                 $data = Respuesta::success(null, "Se registro con exito el recibo!");
@@ -400,7 +403,7 @@ class FacturaController extends Controller
 
 
             // $urlApiServicioSiat = new UrlApiServicio();
-            // $UrlVerificaFactura = $urlApiServicioSiat->getUrlVerificaFactura($this->codigo_ambiente);
+        // $UrlVerificaFactura = $urlApiServicioSiat->getUrlVerificaFactura($this->codigo_ambiente);
 
             // Genera el texto para el código QR
             // $textoQR = $factura->empresa->url_verifica."?nit=".$empresa->nit."&cuf=".$factura->cuf."&numero=".$numeroFactura."&t=2";
@@ -419,6 +422,25 @@ class FacturaController extends Controller
         } else {
             throw new NotFoundHttpException();
         }
+
+    }
+
+    public function formularioVentaPedido(Request $request, $pedido_id){
+
+        // dd($pedido_id);
+
+        $servicios = Producto::select('productos.id', 'productos.nombre', 'productos.precio_venta')
+                                ->join('movimientos', 'movimientos.producto_id', '=', 'productos.id')
+                                ->selectRaw('SUM(movimientos.ingreso) - SUM(movimientos.salida) as stock')
+                                ->groupBy('productos.id', 'productos.nombre')
+                                ->get();
+
+        $pedido = Pedido::find($pedido_id);
+        $pedidos = json_decode($pedido->pedidos_productos, true);
+
+        $cliente = $pedido->cliente;
+
+        return view('factura.formularioVentaPedido')->with(compact('servicios', 'pedidos', 'pedido', 'cliente'));
 
     }
 
