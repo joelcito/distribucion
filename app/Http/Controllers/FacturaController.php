@@ -9,6 +9,7 @@ use App\Models\Movimiento;
 use App\Models\Pedido;
 use App\Models\Pago;
 use App\Models\Producto;
+use App\Models\Promocion;
 use App\Utils\Respuesta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -103,7 +104,9 @@ class FacturaController extends Controller
             ->groupBy('productos.id', 'productos.nombre')
             ->get();
 
-        return view('factura.formularioVenta')->with(compact('servicios'));
+        $promociones = Promocion::all();
+
+        return view('factura.formularioVenta')->with(compact('servicios', 'promociones'));
 
     }
 

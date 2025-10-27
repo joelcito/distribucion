@@ -28,6 +28,8 @@ return new class extends Migration
             $table->foreign('producto_id')->references('id')->on('productos');
             $table->unsignedBigInteger('sucursal_id')->nullable();
             $table->foreign('sucursal_id')->references('id')->on('sucursales');
+            $table->unsignedBigInteger('promocion_id')->nullable();
+            $table->foreign('promocion_id')->references('id')->on('promociones');
 
             $table->decimal('precio', 12, 2)->default(0);
             $table->decimal('cantidad', 12, 2)->default(0);

@@ -237,6 +237,15 @@
                                                     @endforeach
                                                 </select>
                                             </div>
+                                            <div class="col-md-2">
+                                                <label class="fw-semibold fs-6 mb-2">Promocion</label>
+                                                <select name="promocion_id" id="promocion_id" class="form-control form-control-sm" >
+                                                    <option value="">SELECCIONE</option>
+                                                    @foreach ($promociones as $pro)
+                                                        <option value="{{ $pro }}">{{ $pro->nombre }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
                                             <div class="col-md-3 visualizacion_m2">
                                                 <label class="required fw-semibold fs-6 mb-2">Cantidad</label>
                                                 <input type="text" class="form-control form-control-sm"
@@ -248,46 +257,12 @@
                                                 <input type="text" class="form-control form-control-sm"
                                                     id="stock_sucursal" name="stock_sucursal" required readonly>
                                             </div>
-                                            <div class="col-md-2 visualizacion_m2">
+                                            <div class="col-md-1 visualizacion_m2">
                                                 <label class="required fw-semibold fs-6 mb-2">Precio</label>
                                                 <input type="text" class="form-control form-control-sm" id="precio_venta"
                                                     name="precio_venta" onchange="calcularPrecioTotal()" required>
                                             </div>
-                                            {{-- <div class="col-md">
-                                                <label class="required fw-semibold fs-6 mb-2">Cant. en m<sup>2</sup>
-                                                </label>
-                                                <input type="number" step="any" class="form-control form-control-sm is-valid"
-                                                    id="cantidad_venta" name="cantidad_venta" value="0" required
-                                                    onkeyup="calcularPrecioTotal()" onclick="this.select()">
-                                                <input type="hidden" id="equivalente_unidad" name="equivalente_unidad">
-                                                <input type="hidden" id="cantidad_por_caja" name="cantidad_por_caja">
-                                            </div>
-                                            <div class="col-md visualizacion_m2">
-                                                <label class="required fw-semibold fs-6 mb-2">N. Cajas</label>
-                                                <input type="number" class="form-control form-control-sm" id="nro_cajas"
-                                                    name="nro_cajas" value="0" required step="any"
-                                                    onkeyup="calcularCajasPiezas()" onclick="this.select()">
-                                            </div>
-                                            <div class="col-md visualizacion_m2">
-                                                <label class="required fw-semibold fs-6 mb-2">N Piezas</label>
-                                                <input type="number" class="form-control form-control-sm" id="nro_piezas"
-                                                    name="nro_piezas" value="0" required step="any"
-                                                    onkeyup="calcularCajasPiezas()" onclick="this.select()">
-                                            </div>
-                                            <div class="col-md">
-                                                <label class="required fw-semibold fs-6 mb-2">Precio</label>
-                                                <input type="number" class="form-control form-control-sm" id="precio_venta"
-                                                    name="precio_venta" value="0" min="1" required
-                                                    onchange="calcularPrecioTotal()" step="any">
-                                            </div>
-                                            <div class="col-md">
-                                                <label class="required fw-semibold fs-6 mb-2">Stock</label>
-                                                <input type="number" class="form-control form-control-sm"
-                                                    id="stock_producto" name="stock_producto" value="0" min="1"
-                                                    required readonly>
-                                                <div class="text-danger error-message" id="stock-bajo"></div>
-                                            </div> --}}
-                                            <div class="col-md-2">
+                                            <div class="col-md-1">
                                                 <label class="required fw-semibold fs-6 mb-2">Total</label>
                                                 <input type="number" class="form-control form-control-sm" id="total_venta"
                                                     name="total_venta" value="0" min="1" required readonly>
@@ -296,10 +271,6 @@
                                     </div>
                                     <div class="col-md-1 d-flex align-items-end">
                                         <div class="d-flex justify-content-center gap-2 w-100">
-                                            {{-- <button class="btn btn-info btn-circle btn-sm btn-icon"
-                                                type="button" onclick="modalAgregarProducto()" title="Agregar Producto">
-                                                <i class="fa fa-cubes"></i> +
-                                            </button> --}}
                                             <button class="btn btn-primary btn-circle btn-sm btn-icon" type="button"
                                                 onclick="mostraBloqueMasDatosProdcuto()" title="Mostrar más opción">
                                                 <i class="fa fa-note-sticky"></i> +
@@ -897,29 +868,31 @@
 
                 console.log(servicioDatos);
 
-                let id = servicioDatos.id;
-                var filaExistente = table.row("#producto-" + id);
-                var precio = parseFloat($('#precio_venta').val()).toFixed(2);
-                var cantidad = parseFloat($('#cantidad_venta').val());
-                var total = parseFloat(precio * cantidad).toFixed(2);
-                var subTotal = (precio * cantidad) - 0;
+                let id                    = servicioDatos.id;
+                var filaExistente         = table.row("#producto-" + id);
+                var precio                = parseFloat($('#precio_venta').val()).toFixed(2);
+                var cantidad              = parseFloat($('#cantidad_venta').val());
+                var total                 = parseFloat(precio * cantidad).toFixed(2);
+                var subTotal              = (precio * cantidad) - 0;
                 var descripcion_adicional = $('#descripcion_adicional').val();
-                var monto_total = $('#monto_total').val();
-                var numero_serie = $("#numero_serie").val();
-                var codigo_imei = $("#codigo_imei").val();
+                var monto_total           = $('#monto_total').val();
+                var numero_serie          = $("#numero_serie").val();
+                var codigo_imei           = $("#codigo_imei").val();
+                var promocion_id          = $("#promocion_id").val();
 
                 let servicio = {
-                    servicio_id: servicioDatos.id,
-                    descripcion: servicioDatos.nombre,
-                    precio: parseFloat(precio).toFixed(2),
-                    numero_serie: numero_serie,
-                    numero_imei: codigo_imei,
-                    empresa_id: servicioDatos.empresa_id,
-                    cantidad: parseFloat(cantidad),
-                    total: parseFloat(total).toFixed(2),
-                    descuento: parseFloat(0).toFixed(2),
-                    subTotal: parseFloat(subTotal.toFixed(2)),
-                    descripcion_adicional: descripcion_adicional
+                    servicio_id          : servicioDatos.id,
+                    descripcion          : servicioDatos.nombre,
+                    precio               : parseFloat(precio).toFixed(2),
+                    numero_serie         : numero_serie,
+                    numero_imei          : codigo_imei,
+                    empresa_id           : servicioDatos.empresa_id,
+                    cantidad             : parseFloat(cantidad),
+                    total                : parseFloat(total).toFixed(2),
+                    descuento            : parseFloat(0).toFixed(2),
+                    subTotal             : parseFloat(subTotal.toFixed(2)),
+                    descripcion_adicional: descripcion_adicional,
+                    promocion_id         : promocion_id,
                 }
 
                 if (filaExistente.node()) {
@@ -995,8 +968,14 @@
                                                 <i class='fa fa-trash'></i>
                                         </button>`;
 
+                    let span = '';
+
+                    if(promocion_id != null && promocion_id != ''){
+                        span = span + '<span class="badge badge-info">nuevo'+promocion_id+'</span>';
+                    }
+
                     table.row.add([
-                        servicioDatos.nombre + " " + descripcion_adicional,
+                        servicioDatos.nombre + " " + descripcion_adicional + span,
                         precio,
                         "<span class='cantidad'>" + cantidad + "</span>",
                         "<span class='total'>" + total + "</span>",
