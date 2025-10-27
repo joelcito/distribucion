@@ -232,14 +232,18 @@
     <table id="table_casa_matriz2">
         <tr>
             <td><b>DEPARTAMENTO:</b></td>
-            <td width="120px">LA PAZ</td>
+            <td width="120px">
+                {{ optional(optional(optional($pedido->cliente)->provincia)->departamento)->nombre ?? 'SIN DEPARTAMENTO' }}
+            </td>
         </tr>
     </table>
 
     <table id="table_nuew_num_fac2">
         <tr>
             <td><b>PROVINCIA:</b></td>
-            <td width="120px">MURILLO</td>
+            <td width="120px">
+                {{ optional(optional($pedido->cliente)->provincia)->nombre ?? 'SIN PROVINCIA' }}
+            </td>
         </tr>
 
     </table>
@@ -326,20 +330,23 @@
                 <td>{{ number_format($total, 2) }}</td>
             </tr>
             <tr>
-                <td style="border:none; background:white"></td>
+                <td style="border:none; background:white">
+                    @php
+                        $to        = $total;
+                        $entero    = floor($to);
+                        $decimal   = round(($to - $entero) * 100);
+                        $formatter = new NumberFormatter('es', NumberFormatter::SPELLOUT);
+                        $literal   = ucfirst($formatter->format($entero));
+                        $centavos  = str_pad($decimal, 2, '0', STR_PAD_LEFT);
+                    @endphp
+                    <b>Son: {{ $literal }} {{ $centavos }}/100 Bolivianos</b>
+                </td>
                 <td style="border:none; background:white"></td>
                 <td style="border:none; background:white"></td>
                 <td style="border:none; background:white"></td>
                 <td style="border:none; background:white"></td>
             </tr>
-
         </tbody>
     </table>
-
-    {{-- @if ($factura->estado === 'Anulado')
-    <p id="anulado">ANULADO</p>
-    @endif --}}
-
 </body>
-
 </html>

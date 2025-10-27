@@ -28,4 +28,8 @@ class Cliente extends Model
          'deleted_at'
     ];
 
+    public function provincia(){
+        return $this->belongsTo('App\Models\Provincia', 'provincia_id');
+    }
+
 }

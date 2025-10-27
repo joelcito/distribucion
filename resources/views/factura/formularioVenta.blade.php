@@ -242,7 +242,7 @@
                                                 <select name="promocion_id" id="promocion_id" class="form-control form-control-sm" >
                                                     <option value="">SELECCIONE</option>
                                                     @foreach ($promociones as $pro)
-                                                        <option value="{{ $pro }}">{{ $pro->nombre }}</option>
+                                                        <option value="{{ $pro->id }}" data-nombre="{{ $pro->nombre }}">{{ $pro->nombre }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -971,7 +971,8 @@
                     let span = '';
 
                     if(promocion_id != null && promocion_id != ''){
-                        span = span + '<span class="badge badge-info">nuevo'+promocion_id+'</span>';
+                        let nombre = $('#promocion_id option:selected').data('nombre');
+                        span = span + '<span class="badge badge-info">nuevo'+nombre+'</span>';
                     }
 
                     table.row.add([
@@ -1000,6 +1001,7 @@
                     $('#cantidad_venta').val(0)
                     $('#precio_venta').val(0)
                     $('#total_venta').val(0)
+                    $('#promocion_id').val('')
                     $('#numero_serie').val('')
                     $('#stock_sucursal').val(0)
 

@@ -43,6 +43,13 @@
             width: 720px;
         }
 
+        #table_casa_matriz2 {
+            width: 180px;
+            margin-left: 130px;
+            font-size: 9px;
+            margin-top: 120px;
+        }
+
         .datos th {
             height: 25px;
             background-color: #f5f5f5;
@@ -167,58 +174,37 @@
             left: 20%;
             transform: rotate(-45deg);
         }
+
+        #table_nuew_num_fac2 {
+            position: absolute;
+            right: 10px;
+            top: 120px;
+            margin-right: 100px;
+            font-size: 9px;
+            width: 50px;
+        }
     </style>
 </head>
 
 <body>
     @php
-        // $documento_sector      = $factura->siat_tipo_documento_sector;
-        // $tipo_documento_sector = $documento_sector->codigo_clasificador;
-
-        // $documento_sector = $factura->siat_tipo_documento_sector;
         $tipo_documento_sector = 1;
-
-        // dd($documento_sector, $tipo_documento_sector);
-
     @endphp
 
     <table id="table_casa_matriz">
-        {{-- <thead>
-            <tr>
-                <th style="text-align: center;">
-                    CONTACTOS
-                    <br>
-                    78945612
-                </th>
-            </tr>
-        </thead>
-        <tbody> --}}
         <tr>
-            <td><b>FARMACIA</b></td>
-            <td width="100px">nombre farmcia</td>
+            <td><b>NOMBRE FARMACIA:</b></td>
+            <td width="150px;">{{ $factura->cliente->nombre_farmcia }}</td>
         </tr>
         <tr>
-            <td><b>CONTACTO</b></td>
-            <td>789456123</td>
-            {{-- </tr>
-        <tr>
-            <td>Telefono: 7777777777777777</td>
+            <td><b>DIRECCIÓN CLIENTE:</b></td>
+            <td width="150px;">{{ $factura->cliente->ubicacion }}</td>
         </tr>
         <tr>
-            <td>MUNICIPIO</td>
-        </tr> --}}
-            {{-- </tbody> --}}
+            <td><b>TELEFONO CLIENTE:</b></td>
+            <td width="150px;">{{ $factura->cliente->numero_celular }}</td>
+        </tr>
     </table>
-
-    {{-- @if (!is_null($empresa->logo)) --}}
-    {{-- <table id="logo_factura">
-        <tr>
-            <td>
-                <img src="{{ public_path('assets/img/lop.jpg') }}" alt="" width="100%"><br>
-            </td>
-        </tr> --}}
-    </table>
-    {{-- @endif --}}
 
     <table id="table_nuew_num_fac">
         <tr>
@@ -229,14 +215,29 @@
             <td><b>FECHA</b></td>
             <td width="100px">{{ $factura->fecha }}</td>
         </tr>
-        {{-- <tr>
-            <td><b>CÓD. AUTORIZACIÓN</b></td>
-            <td>
-                <div class="estatico">
-                    COD
-                </div>
+        <tr>
+            <td><b>NOMBRE VENDEDOR</b></td>
+            <td width="100px">{{ $factura->usuarioCreador->name }}</td>
+        </tr>
+    </table>
+
+    <table id="table_casa_matriz2">
+        <tr>
+            <td><b>DEPARTAMENTO:</b></td>
+            <td width="120px">
+                {{ optional(optional(optional($factura->cliente)->provincia)->departamento)->nombre ?? '' }}
             </td>
-        </tr> --}}
+        </tr>
+    </table>
+
+    <table id="table_nuew_num_fac2">
+        <tr>
+            <td><b>PROVINCIA:</b></td>
+            <td width="120px">
+                {{ optional(optional($factura->cliente)->provincia)->nombre ?? '' }}
+            </td>
+        </tr>
+        </tr>
     </table>
 
     <table id="TableFactura">
@@ -249,13 +250,6 @@
                 </th>
             </tr>
         </thead>
-        {{-- <tbody>
-            <tr>
-                <td style="font-size: 8;">
-                    (Con Derecho a Crédito Fiscal)
-                </td>
-            </tr>
-        </tbody> --}}
     </table>
 
     <table class="datos">
@@ -263,7 +257,7 @@
             <tr>
                 <th><br>CANTIDAD<br><br></th>
                 <th>PRODUCTOS</th>
-                <th><br>DETALLE<br><br></th>
+                <th><br>CATEGORIA<br><br></th>
                 <th>PRECIO UNITARIO</th>
                 <th>TOTAL</th>
             </tr>
@@ -285,7 +279,7 @@
                 <tr>
                     <td>{{ $detalle->cantidad }}</td>
                     <td>{{ $detalle->producto->nombre }}</td>
-                    <td></td>
+                    <td>{{ $detalle->producto->categoria->nombre }}</td>
                     <td>{{ $detalle->precio }}</td>
                     <td>{{ $detalle->total }}</td>
                 </tr>
@@ -293,28 +287,14 @@
             <tr style="align: right;">
                 <td style="background: white; border: none;" colspan="3" rowspan="3">
                     @php
-
-                        // function getXmlValue($element, $default = 0)
-                        // {
-                        //     return isset($element) && (string) $element !== '' ? (float) (string) $element : $default;
-                        // }
-
-                        // $monto_gif_card = getXmlValue($archivoXML->cabecera->montoGiftCard);
-                        // $monto_total = getXmlValue($archivoXML->cabecera->montoTotal);
-
-                        // $to = $monto_total - $monto_gif_card;
-
-                        // // Separar la parte entera y la parte decimal del monto
-                        // $entero = floor($to); // Parte entera
-                        // $decimal = round(($to - $entero) * 100); // Parte decimal, redondeada a dos decimales
-
-                        // // Crear una instancia de NumberFormatter para el idioma español
-                        // $formatter = new NumberFormatter('es', NumberFormatter::SPELLOUT);
-
-                        // // Convertir solo la parte entera a su forma literal
-                        // $literal = $formatter->format($entero);
+                        $to        = $factura->total;
+                        $entero    = floor($to);
+                        $decimal   = round(($to - $entero) * 100);
+                        $formatter = new NumberFormatter('es', NumberFormatter::SPELLOUT);
+                        $literal   = ucfirst($formatter->format($entero));
+                        $centavos  = str_pad($decimal, 2, '0', STR_PAD_LEFT);
                     @endphp
-                    {{-- <b>Son: /100 Bolivianos</b> --}}
+                    <b>Son: {{ $literal }} {{ $centavos }}/100 Bolivianos</b>
                 </td>
                 <td style="text-align: right; padding-right: 10px;">SUBTOTAL Bs</td>
                 <td style="text-align: right;"> {{ $factura->total }}</td>
@@ -326,13 +306,6 @@
             <tr>
                 <td style="text-align: right; padding-right: 10px;">TOTAL Bs</td>
                 <td style="text-align: right;">
-                    {{-- @php
-                        $monto_gif_card = getXmlValue($archivoXML->cabecera->montoGiftCard);
-                        $monto_total = getXmlValue($archivoXML->cabecera->montoTotal);
-
-                        $total = $monto_total - $monto_gif_card;
-                    @endphp --}}
-
                     {{ number_format($factura->total - $factura->descuento_adicional, 2) }}
                 </td>
             </tr>
@@ -343,14 +316,7 @@
                 <td style="border:none; background:white"></td>
                 <td style="border:none; background:white"></td>
             </tr>
-
         </tbody>
     </table>
-
-    {{-- @if ($factura->estado === 'Anulado')
-        <p id="anulado">ANULADO</p>
-    @endif --}}
-
 </body>
-
 </html>
