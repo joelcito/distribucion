@@ -41,7 +41,7 @@
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="fw-bold">Editar Producto</h3>
+                    <h3 class="fw-bold">Producto</h3>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -52,16 +52,7 @@
                                 <label class="fw-semibold">Nombre</label>
                                 <input type="text" class="form-control form-control-sm" id="nombre" name="nombre">
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="fw-semibold">Proveedor</label>
-                                <select class="form-control form-control-sm" id="proveedores_idproveedores"
-                                    name="proveedores_idproveedores">
-                                    <option value="">Seleccione proveedor</option>
-                                    @foreach (\App\Models\Proveedor::all() as $proveedor)
-                                        <option value="{{ $proveedor->id }}">{{ $proveedor->nombre }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+
 
                             <div class="col-md-3 mb-3">
                                 <label class="fw-semibold">Precio Compra</label>
@@ -76,26 +67,42 @@
 
                             <div class="col-12 mb-3">
                                 <label class="fw-semibold">Imágenes del producto</label>
-                                <input type="file" id="imagenes" name="imagenes[]" multiple accept="image/*"
-                                    class="form-control form-control-sm">
+                                <!-- <input type="file" id="imagenes" name="imagenes[]" multiple accept="image/*"
+                                                                                        class="form-control form-control-sm"> -->
                                 <div id="contenedorImagenes" class="d-flex flex-wrap mt-2"></div>
                             </div>
                         </div>
                     </form>
                 </div>
                 <!-- <div class="modal-footer">
-                                <button class="btn btn-success w-100" onclick="guardarProducto()">Guardar</button>
-                            </div> -->
+                                                                                            <button class="btn btn-success w-100" onclick="guardarProducto()">Guardar</button>
+                                                                                        </div> -->
             </div>
         </div>
     </div>
 
 
 @endsection
+@section('css')
+    <link href="{{ asset('assets/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" rel="stylesheet">
+
+    <style>
+        .glightbox-container {
+            z-index: 5000 !important;
+        }
+
+        .glightbox-overlay {
+            background-color: rgba(0, 0, 0, 0.9) !important;
+        }
+    </style>
+@endsection
 @section('js')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
     <script>
 
         $(document).ready(function () {
@@ -137,14 +144,14 @@
                                 }
 
                                 html += `
-                                                <div class="card m-2" style="width: 150px; cursor:pointer;" 
-                                                    onclick="abrirModalProducto(${producto.id})">
-                                                    <img src="${img}" class="card-img-top" alt="${producto.nombre}">
-                                                    <div class="card-body p-2">
-                                                        <p class="card-text text-center">${producto.nombre}</p>
-                                                    </div>
-                                                </div>
-                                            `;
+                                                                                                            <div class="card m-2" style="width: 150px; cursor:pointer;" 
+                                                                                                                onclick="abrirModalProducto(${producto.id})">
+                                                                                                                <img src="${img}" class="card-img-top" alt="${producto.nombre}">
+                                                                                                                <div class="card-body p-2">
+                                                                                                                    <p class="card-text text-center">${producto.nombre}</p>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        `;
                             });
 
                             $('#galeriaProductos').html(`<div class="d-flex flex-wrap">${html}</div>`);
@@ -158,6 +165,7 @@
                 });
             }
 
+            let lightbox = null;
             // 3️⃣ Abrir modal con la información del producto
             window.abrirModalProducto = function (productoId) {
                 $.ajax({
@@ -170,29 +178,22 @@
                             const p = res.data;
                             console.log('Producto cargado:', p);
 
-                            // Llenar campos del modal
                             $('#id').val(p.id);
                             $('#nombre').val(p.nombre);
-                            $('#proveedores_idproveedores').val(p.proveedores_idproveedores);
                             $('#precio_compra').val(p.precio_compra);
                             $('#precio_venta').val(p.precio_venta);
 
-                            // Limpiar y mostrar imágenes
                             let htmlImagenes = '';
                             if (p.imagenes && p.imagenes.length) {
-                                p.imagenes.forEach(img => {
-                                    let ruta = '';
-                                    if (typeof img === 'string') {
-                                        ruta = "{{ url('/') }}/" + img;
-                                    } else if (img.ruta) {
-                                        ruta = "{{ url('/') }}/" + img.ruta;
-                                    }
-
+                                p.imagenes.forEach((img, index) => {
+                                    let ruta = typeof img === 'string' ? "{{ url('/') }}/" + img : "{{ url('/') }}/" + img.ruta;
                                     htmlImagenes += `
-                                                    <div class="m-2 text-center">
-                                                        <img src="${ruta}" style="width: 100px; height: 100px; object-fit: cover;" class="rounded shadow-sm">
-                                                    </div>
-                                                `;
+                <div class="m-2 text-center">
+                    <img src="${ruta}" 
+                         style="width: 100px; height: 100px; object-fit: cover;" 
+                         class="rounded shadow-sm border" 
+                         onclick="abrirLightbox(${JSON.stringify(p.imagenes)}, '${p.nombre}')">
+                </div>`;
                                 });
                             } else {
                                 htmlImagenes = `<div class="text-muted">Sin imágenes</div>`;
@@ -200,8 +201,23 @@
 
                             $('#contenedorImagenes').html(htmlImagenes);
 
-                            // Mostrar modal
+                            // 🔹 Mostrar modal
+                            $('#modalProducto').off('shown.bs.modal'); // limpia eventos previos
                             $('#modalProducto').modal('show');
+
+                            // 🔹 Inicializar GLightbox cuando el modal esté visible
+                            $('#modalProducto').on('shown.bs.modal', function () {
+                                if (window.lightbox) window.lightbox.destroy();
+                                window.lightbox = GLightbox({
+                                    selector: '.glightbox',
+                                    touchNavigation: true,
+                                    loop: true,
+                                    zoomable: true,
+                                    openEffect: 'zoom',
+                                    closeEffect: 'fade'
+                                });
+                            });
+
                         } else {
                             Swal.fire('Error', 'No se pudo cargar el producto', 'error');
                         }
@@ -213,6 +229,30 @@
             };
 
         });
+
+
+        function abrirLightbox(imagenes, nombreProducto) {
+            // Prepara un arreglo de slides
+            const slides = imagenes.map(img => {
+                let ruta = typeof img === 'string' ? "{{ url('/') }}/" + img : "{{ url('/') }}/" + img.ruta;
+                return {
+                    href: ruta,
+                    title: nombreProducto,
+                    type: 'image'
+                };
+            });
+
+            if (window.lightbox) window.lightbox.destroy(); // destruye instancias previas
+            window.lightbox = GLightbox({
+                elements: slides,
+                touchNavigation: true,
+                loop: true,
+                zoomable: true,
+                openEffect: 'zoom',
+                closeEffect: 'fade'
+            });
+            window.lightbox.open(); // abre directamente
+        }
 
 
     </script>
