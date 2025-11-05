@@ -27,7 +27,6 @@
                         @else
                             <span class="text-primary">REC: </span>{{ $factura->numero_recibo }}
                         @endif
-                        {{-- {{ $factura->numero_factura ?? $factura->numero_recibo }} --}}
                     </td>
                     <td>{{ $factura->fecha }}</td>
                     <td>

@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cliente;
+use App\Models\Departamento;
 use App\Models\Factura;
 use App\Models\Pago;
+use App\Models\Provincia;
 use App\Models\Sucursal;
 use App\Models\User;
 use App\Utils\Respuesta;
@@ -114,14 +117,60 @@ class PagoController extends Controller
     // /*Cuentas por cobrar */
     public function listadoDeuda(){
 
-        $usuario = Auth::user();
+        $usuario       = Auth::user();
+        $departamentos = Departamento::all();
+        $clientes      = Cliente::all();
 
-        return view('pago.listadoDeuda')->with(compact('usuario'));
+        return view('pago.listadoDeuda')->with(compact('usuario', 'departamentos', 'clientes'));
     }
 
     public function ajaxListadoDeuda(Request $request){
         if($request->ajax()){
-            $facturas = Factura::with(['cliente', 'sucursal'])->where('estado_pago', 'DEUDA')->get();
+
+            // dd($request->all());
+
+            $departamento_id = $request->input('departamento_id');
+            $provincia_id    = $request->input('provincia_id');
+            $fecha_inicio    = $request->input('fecha_inicio');
+            $fecha_fin       = $request->input('fecha_fin');
+            $cliente_id      = $request->input('cliente_id');
+
+            // $facturas = Factura::with(['cliente', 'sucursal'])->where('estado_pago', 'DEUDA')->get();
+            $query = Factura::select('*');
+
+            if (!is_null($departamento_id)) {
+                $query->join('clientes', 'clientes.id', '=', 'facturas.cliente_id');
+                if (!is_null($provincia_id)) {
+                    $query->join('provincias', 'provincias.id', '=', 'clientes.provincia_id')
+                            ->where('provincias.id', $provincia_id)
+                            ->where('provincias.departamento_id', $departamento_id);
+                }else{
+                    $query->join('provincias', 'provincias.id', '=', 'clientes.provincia_id')
+                            ->where('provincias.departamento_id', $departamento_id);
+                }
+            }
+
+            if (!is_null($fecha_inicio) && !is_null($fecha_fin)) {
+                $fecha_ini = $fecha_inicio;
+                $fecha_fin = $fecha_fin;
+                $query->whereBetween('facturas.fecha', [$fecha_ini . " 00:00:00", $fecha_fin . " 23:59:59"]);
+            }
+
+            if (!is_null($cliente_id)) {
+                $query->where('facturas.cliente_id', $cliente_id);
+            }
+
+            if (
+                !is_null($departamento_id) &&
+                !is_null($provincia_id) &&
+                !is_null($fecha_inicio) &&
+                !is_null($fecha_fin) &&
+                !is_null($cliente_id)
+            ) {
+                $facturas = $query->limit(500)->get();
+            } else {
+                $facturas = $query->orderBy('facturas.id', 'desc')->limit(100)->get();
+            }
 
             $valores = [
                 'listado' => view('pago.ajaxListadoDeuda')->with(compact('facturas'))->render()
@@ -201,5 +250,25 @@ class PagoController extends Controller
             $data = Respuesta::error(null, "Error en registro de datos.");
         }
         return $data;
+    }
+
+    public function identificarProvincias(Request $request){
+
+        if($request->ajax()){
+
+            $departamento_id = $request->input('depa');
+            $provincias = Provincia::where('departamento_id', $departamento_id)->get();
+
+            $valores = [
+                'provincias' => $provincias
+            ];
+
+            $data = Respuesta::success($valores, "Datos obtenidos correctamente");
+
+        }else{
+            $data = Respuesta::error(null, "Error en registro de datos.");
+        }
+        return $data;
+
     }
 }

@@ -152,6 +152,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/ajaxListadoDeuda', [PagoController::class, 'ajaxListadoDeuda'])->name('pago.ajaxListadoDeuda');
         Route::post('/ajaxFormPagoDeuda', [PagoController::class, 'ajaxFormPagoDeuda'])->name('pago.ajaxFormPagoDeuda');
         Route::post('/guardarPagoDeuda', [PagoController::class, 'guardarPagoDeuda'])->name('pago.guardarPagoDeuda');
+        Route::post('/identificarProvincias', [PagoController::class, 'identificarProvincias'])->name('pago.identificarProvincias');
     });
 
 });

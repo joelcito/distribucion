@@ -65,6 +65,64 @@
                     </div>
 
                     <div class="card-body py-4">
+                        <form id="formularioBusqueda">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="fv-row mb-7">
+                                        <label class="required fw-semibold fs-6 mb-2">Departamento</label>
+                                        <select name="departamento_id" id="departamento_id" class="form-select form-select-sm" onchange="identificarProvincias()">
+                                            <option value="">Seleccione</option>
+                                            @foreach ($departamentos as $departamento)
+                                                <option value="{{$departamento->id}}">{{$departamento->nombre}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="fv-row mb-7">
+                                        <label class="required fw-semibold fs-6 mb-2">Provincia</label>
+                                        <select name="provincia_id" id="provincia_id" class="form-select form-select-sm" onchange="identificarProvincias()">
+                                            <option value="">Seleccione</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="fv-row mb-7">
+                                        <label class="required fw-semibold fs-6 mb-2">Fecha Inicio</label>
+                                        <input class="form-control form-control-sm" type="date" id="fecha_inicio" name="fecha_inicio">
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="fv-row mb-7">
+                                        <label class="required fw-semibold fs-6 mb-2">Fecha Fin</label>
+                                        <input class="form-control form-control-sm" type="date" id="fecha_fin" name="fecha_fin">
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="required fw-semibold fs-6 mb-2">Clientes</label>
+                                    <select name="cliente_id" id="cliente_id" class="form-select form-select-sm" onchange="identificarProvincias()">
+                                        <option value="">Seleccione</option>
+                                        @foreach ($clientes as $cliente)
+                                            <option value="{{$cliente->id}}">{{$cliente->nombres." ".$cliente->ap_paterno." ".$cliente->ap_materno}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <button type="button" class="btn btn-success btn-block w-100 btn-sm mt-8" onclick="ajaxListado()"><i class="fa fa-search"></i></button>
+
+                                        </div>
+                                        <div class="col-md-4">
+
+                                        </div>
+                                        <div class="col-md-4">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                         <div id="table_listado">
 
                         </div>
@@ -97,7 +155,7 @@
         });
 
         function ajaxListado(){
-            let datos = {};
+            let datos = $('#formularioBusqueda').serializeArray();
             $.ajax({
                 url: "{{ route('pago.ajaxListadoDeuda') }}",
                 method: "POST",
@@ -223,6 +281,40 @@
             }else{
                 $('#formularioAperturaCaja')[0].reportValidity()
             }
+        }
+
+        function identificarProvincias(){
+            $.ajax({
+                url: "{{ url('pago/identificarProvincias') }}",
+                method: "POST",
+                data: {depa:$('#departamento_id').val()},
+                success: function(resultado) {
+                    if (resultado.estado) {
+
+                        let provincias = resultado.data.provincias;
+                        let select = $('#provincia_id');
+                        select.empty();
+                        select.append('<option value="">Seleccione</option>');
+                        $.each(provincias, function(index, e) {
+                            console.log(e);
+                            select.append(`<option value="${e.id}">${e.nombre}</option>`);
+                        });
+                    } else {
+                        Swal.fire({
+                             icon: 'error',
+                            title: 'Error',
+                            text: 'Ocurrió un error inesperado.',
+                        });
+                    }
+                },
+                error: function(xhr) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Ocurrió un error inesperado.'+xhr,
+                    });
+                }
+            });
         }
 
    </script>

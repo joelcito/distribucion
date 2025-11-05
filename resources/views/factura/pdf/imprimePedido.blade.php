@@ -259,7 +259,7 @@
         </tr>
         <tr>
             <td><b>FECHA</b></td>
-            <td width="100px">{{ $pedido->fecha }}</td>
+            <td width="100px">{{ \Carbon\Carbon::parse($pedido->fecha)->format('d/m/Y') }}</td>
         </tr>
         <tr>
             <td><b>NOMBRE VENDEDOR</b></td>
