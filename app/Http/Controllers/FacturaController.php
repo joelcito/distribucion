@@ -98,11 +98,14 @@ class FacturaController extends Controller
     {
 
         // $servicios      = Producto::all();
-        $servicios = Producto::select('productos.id', 'productos.nombre', 'productos.precio_venta')
-            ->join('movimientos', 'movimientos.producto_id', '=', 'productos.id')
-            ->selectRaw('SUM(movimientos.ingreso) - SUM(movimientos.salida) as stock')
-            ->groupBy('productos.id', 'productos.nombre')
-            ->get();
+        $servicios = Producto::select('productos.id', 'productos.nombre', 'productos.precio_venta', 'categorias.nombre')
+                            ->join('movimientos', 'movimientos.producto_id', '=', 'productos.id')
+                            ->join('categorias', 'categorias.id', '=', 'productos.categoria_id')
+                            ->selectRaw('SUM(movimientos.ingreso) - SUM(movimientos.salida) as stock')
+                            ->groupBy('productos.id', 'movimientos.fecha_vencimiento', 'productos.nombre', 'categorias.nombre')
+                            ->get();
+            // ->toSql();
+            // dd($servicios);
 
         $promociones = Promocion::all();
 

@@ -89,12 +89,12 @@ class ProductoController extends Controller
             }
 
             $producto->usuario_modificador_id = $usuario->id;
-            $producto->codigo = 123;
-            $producto->nombre = $request->input('nombre');
-            $producto->proveedor_id = $request->input('proveedores_idproveedores');
-            $producto->categoria_id = $request->input('categoria_id');
-            $producto->precio_compra = $request->input('precio_compra');
-            $producto->precio_venta = $request->input('precio_venta');
+            $producto->codigo                 = $this->generaCodigoProducto();
+            $producto->nombre                 = $request->input('nombre');
+            $producto->proveedor_id           = $request->input('proveedores_idproveedores');
+            $producto->categoria_id           = $request->input('categoria_id');
+            $producto->precio_compra          = $request->input('precio_compra');
+            $producto->precio_venta           = $request->input('precio_venta');
 
             // Guardar imágenes (array de objetos)
             if ($request->hasFile('imagenes')) {
@@ -118,7 +118,6 @@ class ProductoController extends Controller
 
         return Respuesta::error(null, "Error al guardar el producto");
     }
-
 
     public function eliminarProducto(Request $request)
     {
@@ -268,4 +267,12 @@ class ProductoController extends Controller
     }
 
 
+    private function generaCodigoProducto() {
+        $ultimoProducto = Producto::latest()->first();
+        if ($ultimoProducto)
+            $codigo = str_pad($ultimoProducto->codigo + 1, 6, '0', STR_PAD_LEFT);
+        else
+            $codigo = '000001';
+        return $codigo;
+    }
 }
