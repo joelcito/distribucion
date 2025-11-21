@@ -52,7 +52,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            {{-- <div class="col-md-4">
                                 <div class="mb-3">
                                     <label class="required fw-semibold fs-6 mb-2">Precio de Venta</label>
                                     <input type="number" min="0" step="0.01" class="form-control form-control-sm"
@@ -65,7 +65,7 @@
                                     <input type="number" min="0" step="0.01" class="form-control form-control-sm"
                                         id="precio_compra" name="precio_compra">
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="col-md-12">
                                 <div class="mb-3">
                                     <label class="fw-semibold fs-6 mb-2">Imágenes del producto</label>
@@ -148,16 +148,27 @@
                                 <textarea class="form-control form-control-sm" name="descripcion" id="descripcion" cols="30"
                                     rows="3"></textarea>
                             </div>
-                            <div class="col-md-6">
-                                <label for="lotes" class="form-label">Lote</label>
-                                <input type="text" class="form-control" id="lotes" name="lotes">
-                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-3">
+                                    <label for="lotes" class="form-label">Lote</label>
+                                    <input type="text" class="form-control" id="lotes" name="lotes">
+                                </div>
 
-                            <div class="col-md-6">
-                                <label for="fecha_vencimiento" class="form-label">Fecha de Vencimiento</label>
-                                <input type="date" class="form-control" id="fecha_vencimiento" name="fecha_vencimiento">
-                            </div>
+                                <div class="col-md-3">
+                                    <label for="fecha_vencimiento" class="form-label">Fecha de Vencimiento</label>
+                                    <input type="date" step="0.01" class="form-control" id="fecha_vencimiento" name="fecha_vencimiento">
+                                </div>
 
+                                <div class="col-md-3">
+                                    <label for="fecha_vencimiento" class="form-label">Precio Compra</label>
+                                    <input type="number"  step="0.01" class="form-control" id="precio_compra" name="precio_compra">
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label for="fecha_vencimiento" class="form-label">Precio Venta</label>
+                                    <input type="number" class="form-control" id="precio_venta" name="precio_venta">
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -562,13 +573,15 @@
 
         function guardarIngreso() {
             // Tomar los valores del modal
-            var producto_id = $('#producto_id').val();
-            var sucursal_id = $('#sucursal_id').val();
-            var ingreso = $('#cantidad_ingreso').val();
-            var descripcion = $('#descripcion').val();
-            var lotes = $('#lotes').val();
+            var producto_id       = $('#producto_id').val();
+            var sucursal_id       = $('#sucursal_id').val();
+            var ingreso           = $('#cantidad_ingreso').val();
+            var descripcion       = $('#descripcion').val();
+            var lotes             = $('#lotes').val();
             var fecha_vencimiento = $('#fecha_vencimiento').val();
-            var fecha = $('#fecha').val(); // fecha de registro
+            var fecha             = $('#fecha').val();
+            var precio_compra     = $('#precio_compra').val();
+            var precio_venta      = $('#precio_venta').val();
 
             // Validaciones básicas
             if (!producto_id || !sucursal_id || !ingreso) {
@@ -581,13 +594,15 @@
                 url: '{{ route("movimientos.guardarIngreso") }}', // Ajusta tu ruta
                 type: 'POST',
                 data: {
-                    producto_id: producto_id,
-                    sucursal_id: sucursal_id,
-                    ingreso: ingreso,
-                    descripcion: descripcion,
-                    lotes: lotes,
+                    producto_id      : producto_id,
+                    sucursal_id      : sucursal_id,
+                    ingreso          : ingreso,
+                    descripcion      : descripcion,
+                    lotes            : lotes,
                     fecha_vencimiento: fecha_vencimiento,
-                    fecha: fecha
+                    fecha            : fecha,
+                    precio_compra    : precio_compra,
+                    precio_venta     : precio_venta
                 },
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -846,7 +861,7 @@
                     preview.append(`
                         <div class="position-relative" style="display:inline-block;">
                             <img src="${e.target.result}" class="rounded border" style="width:80px;height:80px;object-fit:cover;">
-                            <button type="button" 
+                            <button type="button"
                                     class="btn btn-sm btn-danger position-absolute top-0 end-0 p-0 px-1"
                                     onclick="eliminarImagen(${index})">x</button>
                         </div>

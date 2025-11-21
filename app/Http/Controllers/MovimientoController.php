@@ -25,17 +25,17 @@ class MovimientoController extends Controller
                 $movimiento = Movimiento::find($movimiento_id);
                 $movimiento->usuario_modificador_id = $usuario->id;
             }
-            $movimiento->producto_id = $request->input('producto_id');
-            $movimiento->detalle_id  = $request->input('detalle_id');
-            $movimiento->sucursal_id = $request->input('sucursal_id');
-            $movimiento->ingreso     = $request->input('ingreso');
-            $movimiento->salida      = 0;
-              //$movimiento->salida = $request->input('salida');
+            $movimiento->producto_id       = $request->input('producto_id');
+            $movimiento->detalle_id        = $request->input('detalle_id');
+            $movimiento->sucursal_id       = $request->input('sucursal_id');
+            $movimiento->ingreso           = $request->input('ingreso');
+            $movimiento->salida            = 0;
             $movimiento->descripcion       = $request->input('descripcion');
-            // $movimiento->estado            = 1;
             $movimiento->lotes             = $request->input('lotes');
             $movimiento->fecha_vencimiento = $request->input('fecha_vencimiento');
             $movimiento->fecha             = date('Y-m-d H:i:s');
+            $movimiento->precio_compra     = $request->input('precio_compra');
+            $movimiento->precio_venta      = $request->input('precio_venta');
             $movimiento->save();
 
             $data = Respuesta::success(null, "movimiento guardado correctamente");

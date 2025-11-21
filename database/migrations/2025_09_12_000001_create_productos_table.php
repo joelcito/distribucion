@@ -25,8 +25,8 @@ return new class extends Migration {
             $table->foreign('categoria_id')->references('id')->on('categorias');
 
             $table->string('nombre', 45)->nullable();
-            $table->decimal('precio_compra', 12, 2)->nullable();
-            $table->decimal('precio_venta', 12, 2)->nullable();
+            // $table->decimal('precio_compra', 12, 2)->nullable();
+            // $table->decimal('precio_venta', 12, 2)->nullable();
             $table->string('codigo', 45)->nullable();
 
             $table->string('estado')->nullable();

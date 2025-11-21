@@ -38,33 +38,35 @@ class Movimiento extends Model
     {
 
         $ingresos = Movimiento::where('sucursal_id', $sucursal_id)
-            ->where('producto_id', $servicio_id)
-            ->where('ingreso', '>', 0)
-            ->where('fecha', '<=', $fecha_ini)
-            ->sum('ingreso');
+                            ->where('producto_id', $servicio_id)
+                            ->where('ingreso', '>', 0)
+                            ->where('fecha', '<=', $fecha_ini)
+                            ->sum('ingreso');
 
         $salidas = Movimiento::where('sucursal_id', $sucursal_id)
-            ->where('producto_id', $servicio_id)
-            ->where('salida', '>', 0)
-            ->where('fecha', '<=', $fecha_fin)
-            ->sum('salida');
+                            ->where('producto_id', $servicio_id)
+                            ->where('salida', '>', 0)
+                            ->where('fecha', '<=', $fecha_fin)
+                            ->sum('salida');
 
         return $ingresos - $salidas;
 
     }
 
-    public function cantidaDisponile($sucursal_id, $servicio_id)
+    public function cantidaDisponile($sucursal_id, $servicio_id, $movimiento_id)
     {
 
         $ingresos = Movimiento::where('sucursal_id', $sucursal_id)
-            ->where('producto_id', $servicio_id)
-            ->where('ingreso', '>', 0)
-            ->sum('ingreso');
+                                ->where('producto_id', $servicio_id)
+                                ->where('id', $movimiento_id)
+                                ->where('ingreso', '>', 0)
+                                ->sum('ingreso');
 
         $salidas = Movimiento::where('sucursal_id', $sucursal_id)
-            ->where('producto_id', $servicio_id)
-            ->where('salida', '>', 0)
-            ->sum('salida');
+                                ->where('producto_id', $servicio_id)
+                                ->where('movimiento_id', $movimiento_id)
+                                ->where('salida', '>', 0)
+                                ->sum('salida');
 
         return $ingresos - $salidas;
 

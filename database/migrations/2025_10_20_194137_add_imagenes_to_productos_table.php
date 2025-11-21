@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up()
     {
         Schema::table('productos', function (Blueprint $table) {
-            $table->json('imagenes')->nullable()->after('precio_venta');
+            $table->json('imagenes')->nullable()->after('codigo');
         });
     }
 

@@ -233,7 +233,7 @@
                                                     required>
                                                     <option value="">SELECCIONE</option>
                                                     @foreach ($servicios as $s)
-                                                        <option value="{{ $s }}">{{ $s->nombre }}</option>
+                                                        <option value="{{ $s }}">{{ $s->nombre_producto." - ".$s->precio_venta." - ".$s->nombre_categoria." - ".$s->fecha_vencimiento }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -868,7 +868,8 @@
 
                 console.log(servicioDatos);
 
-                let id                    = servicioDatos.id;
+                let id                    = servicioDatos.producto_id;
+                let movimiento_id         = servicioDatos.movimiento_id;
                 var filaExistente         = table.row("#producto-" + id);
                 var precio                = parseFloat($('#precio_venta').val()).toFixed(2);
                 var cantidad              = parseFloat($('#cantidad_venta').val());
@@ -881,18 +882,18 @@
                 var promocion_id          = $("#promocion_id").val();
 
                 let servicio = {
-                    servicio_id          : servicioDatos.id,
-                    descripcion          : servicioDatos.nombre,
+                    servicio_id          : servicioDatos.producto_id,
+                    descripcion          : servicioDatos.nombre_producto,
                     precio               : parseFloat(precio).toFixed(2),
                     numero_serie         : numero_serie,
                     numero_imei          : codigo_imei,
-                    empresa_id           : servicioDatos.empresa_id,
                     cantidad             : parseFloat(cantidad),
                     total                : parseFloat(total).toFixed(2),
                     descuento            : parseFloat(0).toFixed(2),
                     subTotal             : parseFloat(subTotal.toFixed(2)),
                     descripcion_adicional: descripcion_adicional,
                     promocion_id         : promocion_id,
+                    movimiento_id        : movimiento_id,
                 }
 
                 if (filaExistente.node()) {
@@ -940,28 +941,6 @@
                 } else {
                     var subTotal = (precio * cantidad).toFixed(2);
 
-                    // let cant_piezaz_vender = '';
-                    // let cant_piezaz_sobrantes = '';
-
-                    // if(servicioDatos.unidad_medida_id == "{{ config('siat.metro_cuadrado') }}"){
-                    //     // PARA EL CALCULO DE LAS CAJAS Y PIEZAS
-                    //     let cantidadSolicitada = parseFloat(cantidad);
-                    //     let equivalenteUnidadM2 = parseFloat(servicioDatos.equivalente_unidad);
-                    //     let cantidadCaja = parseFloat(servicioDatos.cantidad_por_caja);
-
-                    //     let cantidadTotalPiezas = cantidadSolicitada / equivalenteUnidadM2;
-                    //     let cantidadTotalCajas = cantidadTotalPiezas / cantidadCaja;
-                    //     let cantidadTotalPiezasSueltas = cantidadTotalPiezas % cantidadCaja;
-
-                    //     if (Math.round(cantidadTotalPiezasSueltas) == cantidadCaja) {
-                    //         cant_piezaz_vender = Math.floor((cantidadTotalCajas)) + 1;
-                    //         cant_piezaz_sobrantes = 0;
-                    //     } else {
-                    //         cant_piezaz_vender = Math.floor((cantidadTotalCajas));
-                    //         cant_piezaz_sobrantes = Math.round(cantidadTotalPiezasSueltas);
-                    //     }
-                    // }
-
                     let btnEliminar = `<button class='eliminar btn btn-icon btn-danger btn-circle btn-sm'
                                             title='Eliminar del carro'
                                             onclick='eliminarItem(${id})'>
@@ -976,7 +955,7 @@
                     }
 
                     table.row.add([
-                        servicioDatos.nombre + " " + descripcion_adicional + span,
+                        servicioDatos.nombre_producto + " " + descripcion_adicional + span,
                         precio,
                         "<span class='cantidad'>" + cantidad + "</span>",
                         "<span class='total'>" + total + "</span>",
