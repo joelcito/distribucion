@@ -80,30 +80,53 @@ class MovimientoController extends Controller
     public function guardarTransferencia(Request $request)
     {
         if ($request->ajax()) {
-            $usuario = Auth::user();
 
-            $salida = new Movimiento();
-            $salida->usuario_creador_id = $usuario->id;
+            // dd($request->all());
+
+            // VERIFICAMOS SI EL STOKC YA EXISTE EN LA SUCRUSAL
+            $movimiento_id    = $request->input('movimiento');
+            $sucursal_origen  = $request->input('sucursal_origen');
+            $sucursal_destino = $request->input('sucursal_destino');
+            $usuario          = Auth::user();
+
+            $movimiento = Movimiento::find($movimiento_id);
+
+            $movimientoExiste = Movimiento::where('fecha_vencimiento', $movimiento->fecha_vencimiento)
+                                            ->where('lotes', $movimiento->lotes)
+                                            ->where('sucursal_id', $sucursal_destino)
+                                            ->first();
+
+            if($movimientoExiste){
+                $cantidadExistente          = $movimientoExiste->cantidad;
+                $movimientoExiste->ingreso = $cantidadExistente + $request->input('cantidad');
+                $movimientoExiste->save();
+            }else{
+                $ingreso                         = new Movimiento();
+                $ingreso->usuario_creador_id     = $usuario->id;
+                $ingreso->usuario_modificador_id = $usuario->id;
+                $ingreso->producto_id            = $request->input('producto_id');
+                $ingreso->sucursal_id            = $request->input('sucursal_destino');
+                $ingreso->ingreso                = $request->input('cantidad');
+                $ingreso->fecha                  = $request->input('fecha');
+                $ingreso->descripcion            = "INGRESO POR TRANSFERENCIA";
+                $ingreso->fecha_vencimiento      = $movimiento->fecha_vencimiento;
+                $ingreso->lotes                  = $movimiento->lotes;
+                $ingreso->precio_venta           = $movimiento->precio_venta;
+                $ingreso->salida                 = 0;
+                $ingreso->save();
+            }
+
+            $salida                         = new Movimiento();
+            $salida->usuario_creador_id     = $usuario->id;
             $salida->usuario_modificador_id = $usuario->id;
-            $salida->producto_id = $request->input('producto_id');
-            $salida->sucursal_id = $request->input('sucursal_origen');
-            $salida->salida = $request->input('cantidad');
-            //  $salida->descripcion = $request->input('descripcion');
-            $salida->fecha = $request->input('fecha');
-            $salida->estado = 1;
+            $salida->producto_id            = $request->input('producto_id');
+            $salida->sucursal_id            = $request->input('sucursal_origen');
+            $salida->salida                 = $request->input('cantidad');
+            $salida->descripcion            = "SALIDA POR TRANSFERENCIA";
+            $salida->fecha                  = $request->input('fecha');
+            $salida->ingreso                = 0;
+            $salida->movimiento_id          = $movimiento_id;
             $salida->save();
-
-
-            $ingreso = new Movimiento();
-            $ingreso->usuario_creador_id = $usuario->id;
-            $ingreso->usuario_modificador_id = $usuario->id;
-            $ingreso->producto_id = $request->input('producto_id');
-            $ingreso->sucursal_id = $request->input('sucursal_destino');
-            $ingreso->ingreso = $request->input('cantidad');
-            //  $ingreso->descripcion = $request->input('descripcion');
-            $ingreso->fecha = $request->input('fecha');
-            $ingreso->estado = 1;
-            $ingreso->save();
 
             return response()->json([
                 'estado' => true,

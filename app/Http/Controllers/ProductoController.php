@@ -40,6 +40,54 @@ class ProductoController extends Controller
         return $data;
     }
 
+    public function ajaxListadoTransferencia(Request $request)
+    {
+
+        // dd($request->all());
+
+        if (!$request->ajax()) {
+            return response()->json([
+                'estado' => false,
+                'data' => null,
+                'message' => 'No es petición Ajax'
+            ]);
+        }
+
+        $producto_id = $request->input('producto_id');
+
+        try {
+            $sucursales = Sucursal::all()->map(function($sucursal){
+                return [
+                    'id' => $sucursal->id,
+                    'codigo_sucursal' => $sucursal->codigo_sucursal,
+                    'nombre' => $sucursal->nombre,
+                    'direccion' => $sucursal->direccion,
+                ];
+            });
+
+            // PARA LOS PRODUCTOS
+            $producto = new Producto();
+            $productoDisponibles = $producto->productosDsoponibles($producto_id, null);
+
+            $valores = [
+                'sucursales' => $sucursales,
+                'disponibleProducto' => $productoDisponibles
+            ];
+
+            return response()->json([
+                'estado' => true,
+                'data' => $valores,
+                'message' => 'Datos obtenidos correctamente'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'estado' => false,
+                'data' => null,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
     // public function guardarProducto(Request $request)
     // {
     //     if ($request->ajax()) {

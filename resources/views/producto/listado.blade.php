@@ -257,13 +257,19 @@
                     <form id="formularioTransferencia">
                         <input type="hidden" name="producto_id" id="producto_id_transferencia">
                         <div class="row mb-3">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
+                                <label class="fw-semibold">Stock Activo</label>
+                                <select id="movimiento_id" name="movimiento_id" class="form-control form-control-sm">
+                                    <option value="">Seleccione una sucursal</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
                                 <label class="fw-semibold">Sucursal Origen</label>
                                 <select id="select_origen" class="form-control form-control-sm">
                                     <option value="">Seleccione una sucursal</option>
                                 </select>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label class="fw-semibold">Sucursal Destino</label>
                                 <select id="select_destino" class="form-control form-control-sm">
                                     <option value="">Seleccione una sucursal</option>
@@ -761,23 +767,33 @@
             $('#cantidad_transferencia').val('');
             $('#descripcion_transferencia').val('');
 
-
             $('#select_origen').html('<option value="">Seleccione una sucursal</option>');
             $('#select_destino').html('<option value="">Seleccione una sucursal</option>');
-
+            $('#movimiento_id').html('<option value="">Seleccione un producto</option>');
 
             $.ajax({
-                url: '{{ route("sucursal.ajaxListado") }}',
+                url: '{{ route("producto.ajaxListadoTransferencia") }}',
                 type: 'POST', // POST
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
+                data:{producto_id:producto.id},
                 success: function (res) {
+
+                    console.log(res);
+
+
                     if (res.estado) {
-                        res.data.forEach(sucursal => {
+                        res.data.sucursales.forEach(sucursal => {
                             $('#select_origen').append(`<option value="${sucursal.id}">${sucursal.nombre}</option>`);
                             $('#select_destino').append(`<option value="${sucursal.id}">${sucursal.nombre}</option>`);
                         });
+
+                        // PARA LO DISPONIBLE EN STOKC
+                        res.data.disponibleProducto.forEach(disponible => {
+                            $('#movimiento_id').append(`<option value="${disponible.movimiento_id}">${disponible.nombre_producto} - ${disponible.fecha_vencimiento} - ${disponible.stock}</option>`);
+                        });
+
                         $('#modalTransferenciaSucursal').modal('show');
                     } else {
                         Swal.fire('Error', 'No se pudieron obtener las sucursales', 'error');
@@ -801,6 +817,7 @@
             var sucursal_origen = $('#select_origen').val();
             var sucursal_destino = $('#select_destino').val();
             var cantidad = $('#cantidad_transferencia').val();
+            var movimiento = $('#movimiento_id').val();
             //var descripcion = $('#descripcion_transferencia').val();
             var fecha = new Date().toISOString().split('T')[0];
 
@@ -813,12 +830,12 @@
                 url: '{{ route("movimientos.transferencia") }}',
                 type: 'POST',
                 data: {
-                    producto_id: producto_id,
-                    sucursal_origen: sucursal_origen,
+                    producto_id     : producto_id,
+                    sucursal_origen : sucursal_origen,
                     sucursal_destino: sucursal_destino,
-                    cantidad: cantidad,
-                    //   descripcion: descripcion,
-                    fecha: fecha
+                    cantidad        : cantidad,
+                    fecha           : fecha,
+                    movimiento      : movimiento
                 },
                 headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                 success: function (response) {

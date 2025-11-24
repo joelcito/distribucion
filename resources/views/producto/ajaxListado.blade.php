@@ -5,8 +5,8 @@
                 <th>Código</th>
                 <th>Nombre</th>
                 <th>Proveedor</th>
-                <th>Precio Compra</th>
-                <th>Precio Venta</th>
+                {{-- <th>Precio Compra</th>
+                <th>Precio Venta</th> --}}
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -16,14 +16,9 @@
                     <td>{{ $producto->codigo }}</td>
                     <td>{{ $producto->nombre }}</td>
                     <td>{{ $producto->proveedor->nombre ?? '' }}</td>
-                    <td>{{ $producto->precio_compra }}</td>
-                    <td>{{ $producto->precio_venta }}</td>
+                    {{-- <td>{{ $producto->precio_compra }}</td>
+                    <td>{{ $producto->precio_venta }}</td> --}}
                     <td>
-                        {{-- <button class="btn btn-icon btn-sm btn-warning btn-circle" title="Editar producto"
-                            onclick="editarProducto({{ json_encode($producto) }})"><i class="fa fa-edit"></i></button>
-                        <button class="btn btn-icon btn-sm btn-danger btn-circle" title="Eliminar producto"
-                            onclick="eliminarProducto('{{ $producto->idproductos }}')"><i class="fa fa-trash"></i></button>
-                        --}}
                         <div class="btn-group">
                             <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-bs-toggle="dropdown"
                                 data-bs-display="static" aria-expanded="false">

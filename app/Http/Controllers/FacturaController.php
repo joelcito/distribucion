@@ -106,42 +106,47 @@ class FacturaController extends Controller
         //                     // ->get();
 
 
-        $servicios = Producto::select(
-                                        'productos.id as producto_id',
-                                        'productos.nombre as nombre_producto',
-                                        'categorias.nombre as nombre_categoria',
-                                        'm.id as movimiento_id',
-                                        'm.precio_venta',
-                                        'm.fecha_vencimiento',
-                                        'm.lotes',
-                                        'm.ingreso as total_ingreso',
-                                        DB::raw('(SELECT IFNULL(SUM(s.salida), 0)
-                                                FROM movimientos s
-                                                WHERE s.movimiento_id = m.id) AS total_salida'),
-                                        DB::raw('(m.ingreso -
-                                                (SELECT IFNULL(SUM(s.salida), 0)
-                                                FROM movimientos s
-                                                WHERE s.movimiento_id = m.id)
-                                                ) AS stock')
-                                    )
-                                    ->join('movimientos as m', 'm.producto_id', '=', 'productos.id')
-                                    ->join('categorias', 'categorias.id', '=', 'productos.categoria_id')
-                                    ->whereNull('m.movimiento_id')
-                                    ->whereNull('productos.deleted_at')
-                                    ->whereNull('categorias.deleted_at')
-                                    ->whereRaw('
-                                        (m.ingreso - (
-                                            SELECT IFNULL(SUM(s.salida),0)
-                                            FROM movimientos s
-                                            WHERE s.movimiento_id = m.id
-                                        )) > 0
-                                    ')
-                                    ->orderBy('productos.id')
-                                    ->orderBy('m.fecha_vencimiento')
-                                    ->get();
-
+        // $servicios = Producto::select(
+        //                                 'productos.id as producto_id',
+        //                                 'productos.nombre as nombre_producto',
+        //                                 'categorias.nombre as nombre_categoria',
+        //                                 'm.id as movimiento_id',
+        //                                 'm.precio_venta',
+        //                                 'm.fecha_vencimiento',
+        //                                 'm.lotes',
+        //                                 'm.ingreso as total_ingreso',
+        //                                 DB::raw('(SELECT IFNULL(SUM(s.salida), 0)
+        //                                         FROM movimientos s
+        //                                         WHERE s.movimiento_id = m.id) AS total_salida'),
+        //                                 DB::raw('(m.ingreso -
+        //                                         (SELECT IFNULL(SUM(s.salida), 0)
+        //                                         FROM movimientos s
+        //                                         WHERE s.movimiento_id = m.id)
+        //                                         ) AS stock')
+        //                             )
+        //                             ->join('movimientos as m', 'm.producto_id', '=', 'productos.id')
+        //                             ->join('categorias', 'categorias.id', '=', 'productos.categoria_id')
+        //                             ->whereNull('m.movimiento_id')
+        //                             ->whereNull('productos.deleted_at')
+        //                             ->whereNull('categorias.deleted_at')
+        //                             ->whereRaw('
+        //                                 (m.ingreso - (
+        //                                     SELECT IFNULL(SUM(s.salida),0)
+        //                                     FROM movimientos s
+        //                                     WHERE s.movimiento_id = m.id
+        //                                 )) > 0
+        //                             ')
+        //                             ->orderBy('productos.id')
+        //                             ->orderBy('m.fecha_vencimiento')
+        //                             ->get();
                             // ->toSql();
                             // dd($servicios);
+
+        $usuario = Auth::user();
+
+        $producto = new Producto();
+        $servicios = $producto->productosDsoponibles(null, $usuario->sucursal_id);
+
 
         $promociones = Promocion::all();
 
@@ -205,10 +210,11 @@ class FacturaController extends Controller
                     //VERIFICAMOS QUE EXISTA EN ALMACEN ANTES DE CONTINUAR
                     $cantidad_almacen = $this->cantidadStockEmpresa($sucursal_id, $item['servicio_id'], $item['movimiento_id']);
 
+
                     if ($cantidad_almacen->estado) {
                         if ($item['cantidad'] > $cantidad_almacen->data['cantidad']) {
                             DB::rollBack();
-                            $data = Respuesta::error(null, 'Cantidad Solicitada ' . $item['cantidad'] . ', cantidad en almacen ' . $cantidad_almacen['cantidad'] . ' del producto ' . $servicio->descripcion);
+                            $data = Respuesta::error(null, 'Cantidad Solicitada ' . $item['cantidad'] . ', cantidad en almacen ' . $cantidad_almacen->data['cantidad'] . ' del producto ' . $servicio->descripcion);
                             return $data;
                         }
                     } else {

@@ -63,6 +63,7 @@ class SucursalController extends Controller
     }
 
 
+
     public function guardarSucursal(Request $request)
     {
         if ($request->ajax()) {

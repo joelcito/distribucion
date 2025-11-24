@@ -33,7 +33,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/ajaxStockSucursal', [App\Http\Controllers\ProductoController::class, 'ajaxStockSucursal'])->name('producto.ajaxStockSucursal');
         Route::post('/ajaxPorCategoria', [App\Http\Controllers\ProductoController::class, 'ajaxPorCategoria'])->name('producto.ajaxPorCategoria');
         Route::post('/obtenerProducto', [App\Http\Controllers\ProductoController::class, 'obtenerProducto'])->name('producto.obtenerProducto');
-
+        Route::post('/ajaxListadoTransferencia', [App\Http\Controllers\ProductoController::class, 'ajaxListadoTransferencia'])->name('producto.ajaxListadoTransferencia');
     });
     // PROVEEDOR
     Route::prefix('/proveedor')->group(function () {
