@@ -50,27 +50,49 @@ class MovimientoController extends Controller
         // dd($request->all());
         if ($request->ajax()) {
             $movimiento_id = $request->integer('movimiento_id');
+            $salida_movimiento_id = $request->integer('salida_movimiento_id');
             $usuario = Auth::user();
 
-            if ($movimiento_id === 0) {
-                $movimiento = new Movimiento();
-                $movimiento->usuario_creador_id = $usuario->id;
-                $movimiento->usuario_modificador_id = $usuario->id;
-            } else {
-                $movimiento = Movimiento::find($movimiento_id);
-                $movimiento->usuario_modificador_id = $usuario->id;
-            }
-            $movimiento->producto_id = $request->input('producto_id');
-            $movimiento->detalle_id = $request->input('detalle_id');
-            $movimiento->sucursal_id = $request->input('sucursal_id');
-            //$movimiento->ingreso = $request->input('ingreso');
-            $movimiento->salida = $request->input('salida');
-            $movimiento->descripcion = $request->input('descripcion');
-            $movimiento->estado = 1;
-            $movimiento->fecha = $request->input('fecha_salida');
-            $movimiento->save();
+            // BUSCAMOS EL MOVIMIENTO
+            $movimiento = Movimiento::find($salida_movimiento_id);
 
-            $data = Respuesta::success(null, "movimiento guardado correctamente");
+            if($movimiento){
+
+                $movimientoSalida                     = new Movimiento();
+                $movimientoSalida->usuario_creador_id = $usuario->id;
+                $movimientoSalida->producto_id        = $request->input('producto_id');
+                $movimientoSalida->movimiento_id      = $salida_movimiento_id;
+                $movimientoSalida->salida             = $request->input('salida');
+                $movimientoSalida->ingreso            = 0;
+                $movimientoSalida->fecha              = date('Y-m-d H:i:s');
+                $movimientoSalida->sucursal_id        = $request->input('sucursal_id');
+                $movimientoSalida->descripcion        = $request->input('descripcion');
+                $movimientoSalida->save();
+
+                $data = Respuesta::success(null, "movimiento guardado correctamente");
+
+            }else{
+                $data = Respuesta::success(null, "movimiento NO encotrado");
+            }
+
+            // if ($movimiento_id === 0) {
+            //     $movimiento = new Movimiento();
+            //     $movimiento->usuario_creador_id = $usuario->id;
+            //     $movimiento->usuario_modificador_id = $usuario->id;
+            // } else {
+            //     $movimiento = Movimiento::find($movimiento_id);
+            //     $movimiento->usuario_modificador_id = $usuario->id;
+            // }
+            // $movimiento->producto_id = $request->input('producto_id');
+            // $movimiento->detalle_id = $request->input('detalle_id');
+            // $movimiento->sucursal_id = $request->input('sucursal_id');
+            //$movimiento->ingreso = $request->input('ingreso');
+            // $movimiento->salida = $request->input('salida');
+            // $movimiento->descripcion = $request->input('descripcion');
+            // $movimiento->estado = 1;
+            // $movimiento->fecha = $request->input('fecha_salida');
+            // $movimiento->save();
+            // $data = Respuesta::success(null, "movimiento guardado correctamente");
         } else {
             $data = Respuesta::error(null, "Error al guardar el movimiento");
         }
@@ -95,9 +117,17 @@ class MovimientoController extends Controller
                                             ->where('lotes', $movimiento->lotes)
                                             ->where('sucursal_id', $sucursal_destino)
                                             ->first();
+                                            // ->toSql();
+                                            // dd(
+                                            //     $movimientoExiste,
+                                            //     $movimiento->fecha_vencimiento,
+                                            //     $movimiento->lotes,
+                                            //     $sucursal_destino,
+                                            //     $request->all()
+                                            // );
 
             if($movimientoExiste){
-                $cantidadExistente          = $movimientoExiste->cantidad;
+                $cantidadExistente          = $movimientoExiste->ingreso;
                 $movimientoExiste->ingreso = $cantidadExistente + $request->input('cantidad');
                 $movimientoExiste->save();
             }else{

@@ -200,21 +200,29 @@
                         <input type="hidden" name="producto_id" id="producto_id_salida">
                         <input type="hidden" name="sucursal_id" id="sucursal_id_salida">
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="fv-row mb-7">
                                     <label class="fs-6 fw-semibold form-label mb-2 required">Sucursal</label>
                                     <input type="text" class="form-control form-control-sm" id="nombre_sucursal_salida"
                                         name="nombre_sucursal" @readonly(true)>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
+                                <div class="fv-row mb-7">
+                                    <label class="required fw-semibold fs-6 mb-2">Ingreso Disponible</label>
+                                    <select class="form-select form-select-sm" name="salida_movimiento_id" id="salida_movimiento_id">
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
                                 <div class="fv-row mb-7">
                                     <label class="required fw-semibold fs-6 mb-2">Ingreso la cantidad</label>
                                     <input type="number" min="1" step="any" class="form-control form-control-sm"
                                         id="cantidad_salida" name="cantidad_salida">
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="fv-row mb-7">
                                     <label class="required fw-semibold fs-6 mb-2">Fecha de Registro</label>
                                     <input type="date" class="form-control form-control-sm" id="fecha_salida" name="fecha"
@@ -686,6 +694,15 @@
             $('#nombre_producto_stock').html('')
             limpiarErorres();
 
+            let prods = @json($productoDisponibles)
+
+            $('#salida_movimiento_id').html('<option value="">Seleccione un producto</option>');
+
+            prods.forEach(pro => {
+                if(pro.sucursal_id == sucursal.id && pro.producto_id == producto.id)
+                    $('#salida_movimiento_id').append(`<option value="${pro.movimiento_id}">${pro.stock} - ${pro.fecha_vencimiento}</option>`);
+            });
+
             $('#nombre_producto_stock').html(producto.nombre)
             $('#nombre_sucursal_salida').val(sucursal.nombre)
             $('#producto_id').val(producto.id)
@@ -701,16 +718,16 @@
 
         function guardarSalida() {
 
-            var producto_id = $('#producto_id').val();
-            var sucursal_id = $('#sucursal_id').val();
-            var salida = $('#cantidad_salida').val();
-            var descripcion = $('#descripcion').val();
-            var lotes = $('#lotes').val();
-            var fecha_vencimiento = $('#fecha_vencimiento').val();
-            var fecha = $('#fecha_salida').val();
+            var producto_id          = $('#producto_id').val();
+            var sucursal_id          = $('#sucursal_id').val();
+            var salida               = $('#cantidad_salida').val();
+            var descripcion          = $('#descripcion_salida').val();
+            var lotes                = $('#lotes').val();
+            var fecha_vencimiento    = $('#fecha_vencimiento').val();
+            var fecha                = $('#fecha_salida').val();
+            var salida_movimiento_id = $('#salida_movimiento_id').val();
 
-
-            if (!producto_id || !sucursal_id || !salida) {
+            if (!producto_id || !sucursal_id || !salida || !salida_movimiento_id) {
                 Swal.fire('Error', 'Debe completar los campos obligatorios', 'error');
                 return;
             }
@@ -720,13 +737,14 @@
                 url: '{{ route("movimientos.guardarSalida") }}',
                 type: 'POST',
                 data: {
-                    producto_id: producto_id,
-                    sucursal_id: sucursal_id,
-                    salida: salida,
-                    descripcion: descripcion,
-                    lotes: lotes,
-                    fecha_vencimiento: fecha_vencimiento,
-                    fecha: fecha
+                    producto_id         : producto_id,
+                    sucursal_id         : sucursal_id,
+                    salida              : salida,
+                    descripcion         : descripcion,
+                    lotes               : lotes,
+                    fecha_vencimiento   : fecha_vencimiento,
+                    fecha               : fecha,
+                    salida_movimiento_id: salida_movimiento_id
                 },
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

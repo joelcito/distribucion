@@ -26,9 +26,9 @@
                                 <li><button class="dropdown-item" type="button"
                                         onclick="adicionarSalidaSucursalProducto({{ json_encode($sucursal) }}, {{ $producto }})"><i
                                             class="fa fa-calendar-minus"></i> Salida de Stock</button></li>
-                                <li><button class="dropdown-item" type="button"
+                                {{-- <li><button class="dropdown-item" type="button"
                                         onclick="adicionarSalidaTrabajoSucursalProducto({{ json_encode($sucursal) }}, {{ $producto }})"><i
-                                            class="fa fa-calendar-minus"></i> Salidas por Trabajo</button></li>
+                                            class="fa fa-calendar-minus"></i> Salidas por Trabajo</button></li> --}}
                             </ul>
                         </div>
                     </td>

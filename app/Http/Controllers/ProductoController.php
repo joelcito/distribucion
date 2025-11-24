@@ -15,7 +15,11 @@ class ProductoController extends Controller
     public function listado()
     {
         $categotias = Categoria::all();
-        return view('producto.listado')->with(compact('categotias'));
+
+        // PARA LOS PRODUCTOS
+        $producto = new Producto();
+        $productoDisponibles = $producto->productosDsoponibles(null, null);
+        return view('producto.listado')->with(compact('categotias','productoDisponibles'));
     }
 
     public function listadoCatalogo()

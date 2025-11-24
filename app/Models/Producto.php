@@ -49,6 +49,7 @@ class Producto extends Model
                                 'm.precio_venta',
                                 'm.fecha_vencimiento',
                                 'm.lotes',
+                                'm.sucursal_id',
                                 'm.ingreso as total_ingreso',
                                 DB::raw('(SELECT IFNULL(SUM(s.salida), 0)
                                         FROM movimientos s
