@@ -11,6 +11,7 @@ use App\Http\Controllers\ProvinciaController;
 use App\Http\Controllers\RolController;
 use App\Http\Controllers\SucursalController;
 use App\Http\Controllers\PedidosController;
+use App\Http\Controllers\ReportesController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -144,7 +145,7 @@ Route::middleware('auth')->group(function () {
     });
 
     //PAGO
-    Route::prefix('/pago')->group(function(){
+    Route::prefix('/pago')->group(function () {
         Route::post('/guardarTipoIngresoSalida', [PagoController::class, 'guardarTipoIngresoSalida']);
         Route::get('/listado', [PagoController::class, 'listado'])->name('pago.listado');
         Route::post('/ajaxListado', [PagoController::class, 'ajaxListado'])->name('pago.ajaxListado');
@@ -156,5 +157,18 @@ Route::middleware('auth')->group(function () {
     });
 
 });
+
+
+Route::prefix('/reporte')->group(function () {
+    Route::get('/reporteStock', [PagoController::class, 'reporteStock'])->name('reporte.reporteStock');
+    Route::get('/reporteMovimiento', [PagoController::class, 'reporteMovimiento'])->name('reporte.reporteMovimiento');
+
+    Route::get('/ventas', [ReportesController::class, 'vistaVentas'])->name('reporte.reporteVenta');
+    Route::post('/ventas/listado', [ReportesController::class, 'buscarVentas'])->name('reporte.ventas.listado');
+    Route::get('/reportes/listar-ventas', [ReportesController::class, 'listarVentas'])->name('reportes.listarVentas');
+
+});
+
+
 
 require __DIR__ . '/auth.php';

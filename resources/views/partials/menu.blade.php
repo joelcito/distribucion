@@ -289,6 +289,57 @@
                         </a>
                     </div> --}}
                 </div>
+                <div data-kt-menu-trigger="click"
+                    class="menu-item menu-accordion {{ Request::is('reporteStock/*', 'reporteMovimientos/*', 'reporteVentas/*') ? 'show' : '' }}">
+
+                    <span class="menu-link">
+                        <span class="menu-icon">
+                            <i class="fa fa-university"></i>
+                        </span>
+                        <span class="menu-title text-white">REPORTES</span>
+                        <span class="menu-arrow"></span>
+                    </span>
+
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a class="menu-link" href="{{ route('reporte.reporteStock') }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title text-white">Reporte de stock</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a class="menu-link" href="{{ route('reporte.reporteMovimiento') }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title text-white">Reporte de movimientos</span>
+                            </a>
+                        </div>
+                    </div>
+
+
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a class="menu-link" href="{{ route('reporte.reporteVenta') }}
+">
+
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title text-white">Reporte de ventas</span>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+
+
+
 
                 {{-- <div data-kt-menu-trigger="click"
                     class="menu-item menu-accordion {{ Request::is('sincronizacion/*', 'eventoSignificativo/*') ? 'show' : '' }}">
