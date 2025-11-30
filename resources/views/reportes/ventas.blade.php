@@ -16,7 +16,9 @@
         <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modalFiltrarVentas">
             Filtrar por Fecha
         </button>
-
+        <button id="btnImprimirPDF" class="btn btn-danger mb-3">
+            Imprimir Reporte PDF
+        </button>
         <!-- Modal -->
         <div class="modal fade" id="modalFiltrarVentas" tabindex="-1" aria-labelledby="modalFiltrarVentasLabel"
             aria-hidden="true">
@@ -25,6 +27,8 @@
                     <div class="modal-header">
                         <h5 class="modal-title">Filtrar Ventas</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+
+
                     </div>
                     <div class="modal-body">
                         <form id="formFiltrarVentas">
@@ -92,15 +96,15 @@
 
                             response.data.forEach((venta, index) => {
                                 tbody.append(`
-                                    <tr>
-                                        <td>${index + 1}</td>
-                                        <td>${venta.sucursal?.nombre ?? ''}</td>
-                                        <td>${venta.cliente?.nombre ?? ''}</td>
-                                        <td>${venta.fecha}</td>
-                                        <td>${parseFloat(venta.total).toFixed(2)}</td>
-                                        <td>${venta.usuario_creador?.name ?? ''}</td>
-                                    </tr>
-                                `);
+                                                <tr>
+                                                    <td>${index + 1}</td>
+                                                    <td>${venta.sucursal?.nombre ?? ''}</td>
+                                                    <td>${venta.cliente?.nombre ?? ''}</td>
+                                                    <td>${venta.fecha}</td>
+                                                    <td>${parseFloat(venta.total).toFixed(2)}</td>
+                                                    <td>${venta.usuario_creador?.name ?? ''}</td>
+                                                </tr>
+                                            `);
                             });
 
                             // Cerrar modal
@@ -120,5 +124,14 @@
             });
 
         });
+
+        $('#btnImprimirPDF').click(function () {
+            let inicio = $(this).data('inicio');
+            let fin = $(this).data('fin');
+
+            // Abrir PDF igual que la factura
+            window.open(`/reporte/imprimeReporteVentas/${inicio}/${fin}`, "_blank", "width=900,height=650");
+        });
+
     </script>
 @endsection

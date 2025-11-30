@@ -38,16 +38,16 @@ class Movimiento extends Model
     {
 
         $ingresos = Movimiento::where('sucursal_id', $sucursal_id)
-                            ->where('producto_id', $servicio_id)
-                            ->where('ingreso', '>', 0)
-                            ->where('fecha', '<=', $fecha_ini)
-                            ->sum('ingreso');
+            ->where('producto_id', $servicio_id)
+            ->where('ingreso', '>', 0)
+            ->where('fecha', '<=', $fecha_ini)
+            ->sum('ingreso');
 
         $salidas = Movimiento::where('sucursal_id', $sucursal_id)
-                            ->where('producto_id', $servicio_id)
-                            ->where('salida', '>', 0)
-                            ->where('fecha', '<=', $fecha_fin)
-                            ->sum('salida');
+            ->where('producto_id', $servicio_id)
+            ->where('salida', '>', 0)
+            ->where('fecha', '<=', $fecha_fin)
+            ->sum('salida');
 
         return $ingresos - $salidas;
 
@@ -57,19 +57,36 @@ class Movimiento extends Model
     {
 
         $ingresos = Movimiento::where('sucursal_id', $sucursal_id)
-                                ->where('producto_id', $servicio_id)
-                                ->where('id', $movimiento_id)
-                                ->where('ingreso', '>', 0)
-                                ->sum('ingreso');
+            ->where('producto_id', $servicio_id)
+            ->where('id', $movimiento_id)
+            ->where('ingreso', '>', 0)
+            ->sum('ingreso');
 
         $salidas = Movimiento::where('sucursal_id', $sucursal_id)
-                                ->where('producto_id', $servicio_id)
-                                ->where('movimiento_id', $movimiento_id)
-                                ->where('salida', '>', 0)
-                                ->sum('salida');
+            ->where('producto_id', $servicio_id)
+            ->where('movimiento_id', $movimiento_id)
+            ->where('salida', '>', 0)
+            ->sum('salida');
 
         return $ingresos - $salidas;
 
+    }
+
+    public function producto()
+    {
+        return $this->belongsTo(Producto::class, 'producto_id'); // FK producto_id
+    }
+
+    // Relación con Sucursal
+    public function sucursal()
+    {
+        return $this->belongsTo(Sucursal::class, 'sucursal_id'); // FK sucursal_id
+    }
+
+    // Relación con Usuario creador
+    public function usuarioCreador()
+    {
+        return $this->belongsTo(User::class, 'usuario_creador_id');
     }
 
 }

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DETALLE DEL PEDIDO</title>
+    <title>REPORTE VENTA</title>
     <style type="text/css">
         @page {
             margin: 15px;
@@ -130,8 +130,8 @@
         #table_nit_num_fac {
                 {
                     {
-                    -- background-color: pink;
-                    --
+                    background-color: pink;
+
                 }
             }
 
@@ -213,19 +213,19 @@
     <table id="table_casa_matriz">
         @php
             // Obtener el cliente directamente desde el modelo usando cliente_id del pedido
-            $cliente = \App\Models\Cliente::find($pedido->cliente_id);
+            //   $cliente = \App\Models\Pago::find($pedido->cliente_id);
         @endphp
         <tr>
             <td><b>NOMBRE FARMACIA:</b></td>
-            <td width="120px">{{ $cliente->nombre_farmcia ?? 'Sin nombre' }}</td>
+            <!-- <td width="120px">{{ $cliente->nombre_farmcia ?? 'Sin nombre' }}</td>-->
         </tr>
         <tr>
             <td><b>DIRECCIÓN CLIENTE:</b></td>
-            <td width="120px">{{ $cliente->ubicacion ?? 'Sin dirección' }}</td>
+            <!-- <td width="120px">{{ $cliente->ubicacion ?? 'Sin dirección' }}</td>-->
         </tr>
         <tr>
             <td><b>TELEFONO CLIENTE:</b></td>
-            <td width="120px">{{ $cliente->numero_celular ?? 'Sin teléfono' }}</td>
+            <!--  <td width="120px">{{ $cliente->numero_celular ?? 'Sin teléfono' }}</td>-->
         </tr>
     </table>
 
@@ -233,7 +233,7 @@
         <tr>
             <td><b>DEPARTAMENTO:</b></td>
             <td width="120px">
-                {{ optional(optional(optional($pedido->cliente)->provincia)->departamento)->nombre ?? 'SIN DEPARTAMENTO' }}
+                <!--  {{ optional(optional(optional($pedido->cliente)->provincia)->departamento)->nombre ?? 'SIN DEPARTAMENTO' }}-->
             </td>
         </tr>
     </table>
@@ -242,7 +242,7 @@
         <tr>
             <td><b>PROVINCIA:</b></td>
             <td width="120px">
-                {{ optional(optional($pedido->cliente)->provincia)->nombre ?? 'SIN PROVINCIA' }}
+                <!--  {{ optional(optional($pedido->cliente)->provincia)->nombre ?? 'SIN PROVINCIA' }}-->
             </td>
         </tr>
 
@@ -251,7 +251,7 @@
     <table id="table_nuew_num_fac">
         @php
             // Obtener el cliente directamente desde el modelo usando cliente_id del pedido
-            $users = \App\Models\User::find($pedido->usuario_creador_id);
+            //  $users = \App\Models\User::find($pedido->usuario_creador_id);
         @endphp
         <tr>
             <td><b>N° DE NOTA</b></td>
@@ -259,15 +259,15 @@
         </tr>
         <tr>
             <td><b>FECHA</b></td>
-            <td width="100px">{{ \Carbon\Carbon::parse($pedido->fecha)->format('d/m/Y') }}</td>
+            <!--  <td width="100px">{{ \Carbon\Carbon::parse($pedido->fecha)->format('d/m/Y') }}</td>-->
         </tr>
         <tr>
             <td><b>NOMBRE VENDEDOR</b></td>
-            <td width="100px">{{ $pedido->name }}</td>
+            <!-- <td width="100px">{{ $pedido->name }}</td>-->
         </tr>
         <tr>
             <td><b>TIPO</b></td>
-            <td width="100px">{{ $pedido->tipo }}</td>
+            <!-- <td width="100px">{{ $pedido->tipo }}</td>-->
         </tr>
 
     </table>
@@ -303,12 +303,11 @@
         </thead>
         <tbody>
             @php
-                $total = 0;
-                // Si por alguna razón sigue siendo string, conviértelo en array
-                $detalles = is_array($pedido->pedidos_productos) ? $pedido->pedidos_productos : json_decode($pedido->pedidos_productos, true);
+                //   $total = 0;             
+                //   $detalles = is_array($pedido->pedidos_productos) ? $pedido->pedidos_productos : json_decode($pedido->pedidos_productos, true);
             @endphp
 
-            @foreach ($detalles as $detalle)
+            <!-- @foreach ($detalles as $detalle)
                 @php
                     $cantidad = $detalle['cantidad'] ?? 0;
 
@@ -324,28 +323,12 @@
                     <td>{{ number_format($precio, 2) }}</td>
                     <td>{{ number_format($cantidad * $precio, 2) }}</td>
                 </tr>
-            @endforeach
+            @endforeach -->
             <tr>
                 <td colspan="4" style="text-align:right;">TOTAL Bs</td>
-                <td>{{ number_format($total, 2) }}</td>
+                <!-- <td>{{ number_format($total, 2) }}</td>-->
             </tr>
-            <tr>
-                <td style="border:none; background:white">
-                    @php
-                        $to = $total;
-                        $entero = floor($to);
-                        $decimal = round(($to - $entero) * 100);
-                        $formatter = new NumberFormatter('es', NumberFormatter::SPELLOUT);
-                        $literal = ucfirst($formatter->format($entero));
-                        $centavos = str_pad($decimal, 2, '0', STR_PAD_LEFT);
-                    @endphp
-                    <b>Son: {{ $literal }} {{ $centavos }}/100 Bolivianos</b>
-                </td>
-                <td style="border:none; background:white"></td>
-                <td style="border:none; background:white"></td>
-                <td style="border:none; background:white"></td>
-                <td style="border:none; background:white"></td>
-            </tr>
+
         </tbody>
     </table>
 </body>
