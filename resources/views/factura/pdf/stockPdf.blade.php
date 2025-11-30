@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>REPORTE VENTA</title>
+    <title>REPORTE STOCK</title>
     <style type="text/css">
         @page {
             margin: 15px;
@@ -216,11 +216,13 @@
             //   $cliente = \App\Models\Pago::find($pedido->cliente_id);
         @endphp
         <tr>
-            <td><b>NOMBRE USUARIO:</b></td>
+            <td><b>NOMBRE USUARIO:{{ $users->name ?? 'Usuario desconocido' }}</b></td>
+
+
 
         </tr>
         <tr>
-            <td><b>FECHA:</b></td>
+            <td><b>FECHA:{{ $fecha }}</b></td>
 
         </tr>
 
@@ -233,7 +235,7 @@
         <thead>
             <tr>
                 <th style="font-size: 12;">
-                    REPORTE DE VENTA
+                    REPORTE STOCK
                     <br>
                     <img src="{{ public_path('assets/img/image.png') }}" alt="" width="25%">
                 </th>
@@ -248,30 +250,43 @@
         </tbody> --}}
     </table>
 
-    <p>Desde: {{ $fecha_inicio }} | Hasta: {{ $fecha_fin }}</p>
-    <table>
+    <table class="datos">
         <thead>
             <tr>
-                <th>#</th>
-                <th>Sucursal</th>
-                <th>Cliente</th>
-                <th>Fecha</th>
-                <th>Monto</th>
-                <th>Usuario</th>
+                <th>Producto</th>
+                @foreach($sucursales as $sucursal)
+                    <th>{{ $sucursal->nombre }}</th>
+                @endforeach
             </tr>
         </thead>
         <tbody>
-            @foreach($ventas as $index => $v)
+            @php
+                $totales = [];
+                foreach ($sucursales as $sucursal)
+                    $totales[$sucursal->id] = 0;
+            @endphp
+
+            @foreach($data as $row)
                 <tr>
-                    <td>{{ $index + 1 }}</td>
-                    <td>{{ $v->sucursal->nombre ?? '' }}</td>
-                    <td>{{ $v->cliente->nombre ?? '' }}</td>
-                    <td>{{ $v->fecha }}</td>
-                    <td>{{ number_format($v->monto_total, 2) }}</td>
-                    <td>{{ $v->usuarioCreador->name ?? '' }}</td>
+                    <td>{{ $row['producto'] }}</td>
+                    @foreach($sucursales as $sucursal)
+                        @php
+                            $cantidad = $row['sucursales'][$sucursal->id] ?? 0;
+                            $totales[$sucursal->id] += $cantidad;
+                        @endphp
+                        <td>{{ $cantidad }}</td>
+                    @endforeach
                 </tr>
             @endforeach
         </tbody>
+        <tfoot>
+            <tr>
+                <th>Total</th>
+                @foreach($sucursales as $sucursal)
+                    <th>{{ $totales[$sucursal->id] }}</th>
+                @endforeach
+            </tr>
+        </tfoot>
     </table>
 </body>
 

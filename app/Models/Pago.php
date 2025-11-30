@@ -28,15 +28,27 @@ class Pago extends Model
         'deleted_at'
     ];
 
-    public function factura(){
+    public function factura()
+    {
         return $this->belongsTo('App\Models\Factura', 'factura_id');
     }
 
-    public function puntoVenta(){
+    public function puntoVenta()
+    {
         return $this->belongsTo('App\Models\PuntoVenta', 'punto_venta_id');
     }
 
-    public function usuario(){
+    public function usuario()
+    {
         return $this->belongsTo('App\Models\User', 'usuario_creador_id');
+    }
+    public function sucursal()
+    {
+        return $this->belongsTo('App\Models\Sucursal', 'sucursal_id');
+    }
+
+    public function cliente()
+    {
+        return $this->factura ? $this->factura->cliente() : null;
     }
 }

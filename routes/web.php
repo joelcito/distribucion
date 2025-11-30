@@ -160,7 +160,7 @@ Route::middleware('auth')->group(function () {
 
 //REPORTE
 Route::prefix('/reporte')->group(function () {
-    Route::get('/reporteStock', [PagoController::class, 'reporteStock'])->name('reporte.reporteStock');
+    //Route::get('/reporteStock', [PagoController::class, 'reporteStock'])->name('reporte.reporteStock');
     //Route::get('/reporteMovimiento', [PagoController::class, 'reporteMovimiento'])->name('reporte.reporteMovimiento');
 
     Route::get('/ventas', [ReportesController::class, 'vistaVentas'])->name('reporte.reporteVenta');
@@ -180,11 +180,13 @@ Route::prefix('/reporte')->group(function () {
     Route::get('reporte/movimientos/pdf/{fecha}/{producto}', [ReportesController::class, 'pdfMovimientos'])->name('reporte.movimientos.pdf');
 
     Route::post('/movimientos/listado', [ReportesController::class, 'buscarMovimientos'])->name('reporte.movimientos.listado');
-    Route::get(
-        '/imprimeMovimientosPorFechaYProducto/{fecha}/{producto_id}',
-        [ReportesController::class, 'imprimeMovimientosPorFechaYProducto']
-    )
+    Route::get('/imprimeMovimientosPorFechaYProducto/{fecha}/{producto_id}', [ReportesController::class, 'imprimeMovimientosPorFechaYProducto'])
         ->name('reporte.imprimeMovimientos');
+
+    Route::get('/stock', [ReportesController::class, 'vistaStock'])->name('reporte.reporteStock');
+    Route::post('/stock/listar', [ReportesController::class, 'listarStock'])->name('reporte.stock.listar');
+    Route::get('/stock/pdf/{fecha}', [ReportesController::class, 'pdfStock'])->name('reporte.stock.pdf');
+
 
 });
 

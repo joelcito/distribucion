@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Detalle;
+use App\Models\Pago;
 use App\Models\Producto;
 use App\Models\Movimiento;
 use App\Models\Factura;
+use App\Models\Sucursal;
 use Illuminate\Http\Request;
 use Auth;
 use DB;
@@ -48,8 +50,8 @@ class ReportesController extends Controller
         $fecha_inicio = $request->input('fecha_inicio');
         $fecha_fin = $request->input('fecha_fin');
 
-        $ventas = Detalle::with(['sucursal', 'cliente', 'usuario'])
-            ->whereBetween('fecha', [$fecha_inicio . ' 00:00:00', $fecha_fin . ' 23:59:59'])
+        $ventas = Pago::with(['factura.cliente', 'sucursal', 'usuario'])
+            ->whereBetween('fecha', [$fecha_inicio, $fecha_fin])
             ->get();
 
         $resultado = $ventas->map(function ($v, $index) {
@@ -57,36 +59,28 @@ class ReportesController extends Controller
                 'sucursal' => $v->sucursal->nombre ?? '',
                 'cliente' => $v->cliente->nombre ?? '',
                 'fecha' => $v->fecha,
-                'monto' => $v->total,
+                'monto' => $v->monto_total ?? 0,
                 'correlativo' => $index + 1,
-                'usuario' => $v->usuario_creador_id ? $v->usuario->name : '',
+                'usuario' => $v->usuarioCreador->name ?? '',
             ];
         });
 
-        return response()->json($resultado);
+        return response()->json([
+            'estado' => 'success',
+            'data' => $resultado
+        ]);
     }
-    //imprimir 
 
     public function imprimeReporteVentas($fecha_inicio, $fecha_fin)
     {
-        // Traer ventas por rango
-        $ventas = Detalle::with(['sucursal', 'cliente', 'usuario'])
-            ->whereBetween('fecha', [$fecha_inicio . ' 00:00:00', $fecha_fin . ' 23:59:59'])
+        $ventas = Pago::with(['factura.cliente', 'sucursal', 'usuario'])
+            ->whereBetween('fecha', [$fecha_inicio, $fecha_fin])
             ->get();
 
-        // if ($ventas->isEmpty()) {
-        //     return "No existen registros en ese rango de fechas.";
-        // }
+        $pdf = PDF::loadView('reportes.pdf.pagosPdf', compact('pagos', 'fecha_inicio', 'fecha_fin'))
+            ->setPaper('letter');
 
-        $pdf = PDF::loadView('factura.pdf.imprimeReporteVenta', [
-            'ventas' => $ventas,
-            // 'fecha_inicio' => $fecha_inicio,
-            //'fecha_fin' => $fecha_fin
-            'fecha_inicio' => '24/11/2025',
-            'fecha_fin' => '24/11/2025'
-        ])->setPaper('letter');
-
-        return $pdf->stream("reporte_ventas.pdf");
+        return $pdf->stream("reporte_pagos_{$fecha_inicio}_{$fecha_fin}.pdf");
     }
 
 
@@ -167,6 +161,70 @@ class ReportesController extends Controller
             ->setPaper('letter');
 
         return $pdf->stream("movimientos_{$fecha}_producto_{$producto_id}.pdf");
+    }
+
+    //stock
+    public function vistaStock()
+    {
+        $productos = Producto::all();
+        $sucursales = Sucursal::all();
+        return view('reportes.stock', compact('productos', 'sucursales'));
+    }
+
+    public function listarStock(Request $request)
+    {
+        $fecha = $request->input('fecha');
+
+        $productos = Producto::all();
+        $sucursales = Sucursal::all();
+
+        $data = [];
+
+        foreach ($productos as $producto) {
+            $row = ['producto' => $producto->nombre];
+
+            foreach ($sucursales as $sucursal) {
+                $cantidad = Movimiento::where('producto_id', $producto->id)
+                    ->where('sucursal_id', $sucursal->id)
+                    ->whereDate('fecha', '<=', $fecha)
+                    ->sum(DB::raw('ingreso - salida'));
+
+                $row['sucursales'][$sucursal->id] = $cantidad;
+            }
+
+            $data[] = $row;
+        }
+
+        return response()->json(['productos' => $data, 'sucursales' => $sucursales]);
+    }
+
+    // PDF
+    public function pdfStock($fecha)
+    {
+        $usuario = Auth::user();
+        $productos = Producto::all();
+        $sucursales = Sucursal::all();
+
+        $data = [];
+        foreach ($productos as $producto) {
+            $row = ['producto' => $producto->nombre];
+
+            foreach ($sucursales as $sucursal) {
+                $cantidad = Movimiento::where('producto_id', $producto->id)
+                    ->where('sucursal_id', $sucursal->id)
+                    ->whereDate('fecha', '<=', $fecha)
+                    ->sum(DB::raw('ingreso - salida'));
+
+                $row['sucursales'][$sucursal->id] = $cantidad;
+            }
+
+            $data[] = $row;
+        }
+
+        $pdf = PDF::loadView('factura.pdf.stockPdf', compact('data', 'sucursales', 'fecha'))
+            ->setPaper('letter');
+
+        return $pdf->stream("stock_{$fecha}.pdf");
     }
 
 
