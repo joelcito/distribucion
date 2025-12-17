@@ -18,6 +18,7 @@ class PedidosController extends Controller
 
 
 
+
     // Mostrar formulario de pedido
     public function create(Request $request)
     {
@@ -27,8 +28,9 @@ class PedidosController extends Controller
             $clienteSeleccionado = Cliente::find($request->cliente_id);
         }
 
-        $productos = Producto::all();
+        //$productos = Producto::all();
 
+        $productos = Producto::with('categoria')->get();
 
         return view('factura.formulario', compact('clienteSeleccionado', 'productos'));
     }
@@ -229,6 +231,30 @@ class PedidosController extends Controller
         } else {
             abort(404);
         }
+    }
+
+
+    public function obtenerProducto(Request $request)
+    {
+        $producto = Producto::find($request->id);
+
+        if (!$producto) {
+            return response()->json(['estado' => false]);
+        }
+
+        $stock = Movimiento::where('producto_id', $producto->id)
+            ->sum('ingreso') - Movimiento::where('producto_id', $producto->id)->sum('salida');
+
+
+        return response()->json([
+            'estado' => true,
+            'data' => [
+                'id' => $producto->id,
+                'nombre' => $producto->nombre,
+                'precio_venta' => $producto->precio_venta,
+                'stock' => $stock
+            ]
+        ]);
     }
 
 

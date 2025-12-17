@@ -53,30 +53,28 @@
                                 <input type="text" class="form-control form-control-sm" id="nombre" name="nombre">
                             </div>
 
-
-                            <div class="col-md-3 mb-3">
-                                <label class="fw-semibold">Precio Compra</label>
-                                <input type="number" class="form-control form-control-sm" id="precio_compra"
-                                    name="precio_compra" step="0.01">
-                            </div>
                             <div class="col-md-3 mb-3">
                                 <label class="fw-semibold">Precio Venta</label>
                                 <input type="number" class="form-control form-control-sm" id="precio_venta"
                                     name="precio_venta" step="0.01">
                             </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="fw-semibold">Stock</label>
+                                <input type="number" class="form-control form-control-sm" id="stock" readonly>
+                            </div>
 
                             <div class="col-12 mb-3">
                                 <label class="fw-semibold">Imágenes del producto</label>
                                 <!-- <input type="file" id="imagenes" name="imagenes[]" multiple accept="image/*"
-                                                                                        class="form-control form-control-sm"> -->
+                                                                                                    class="form-control form-control-sm"> -->
                                 <div id="contenedorImagenes" class="d-flex flex-wrap mt-2"></div>
                             </div>
                         </div>
                     </form>
                 </div>
                 <!-- <div class="modal-footer">
-                                                                                            <button class="btn btn-success w-100" onclick="guardarProducto()">Guardar</button>
-                                                                                        </div> -->
+                                                                                                        <button class="btn btn-success w-100" onclick="guardarProducto()">Guardar</button>
+                                                                                                    </div> -->
             </div>
         </div>
     </div>
@@ -144,14 +142,16 @@
                                 }
 
                                 html += `
-                                                                                                            <div class="card m-2" style="width: 150px; cursor:pointer;" 
-                                                                                                                onclick="abrirModalProducto(${producto.id})">
-                                                                                                                <img src="${img}" class="card-img-top" alt="${producto.nombre}">
-                                                                                                                <div class="card-body p-2">
-                                                                                                                    <p class="card-text text-center">${producto.nombre}</p>
-                                                                                                                </div>
-                                                                                                            </div>
-                                                                                                        `;
+                                                                                                                        <div class="card m-2" style="width: 150px; cursor:pointer;" 
+                                                                                                                            onclick="abrirModalProducto(${producto.id})">
+                                                                                                                            <img src="${img}" class="card-img-top" alt="${producto.nombre}">
+                                                                                                                            <div class="card-body p-2 text-center">
+            <p class="mb-1 fw-bold">${producto.nombre}</p>
+            <small class="text-success">Bs ${producto.precio_venta}</small><br>
+            <small class="text-muted">Stock: ${producto.stock}</small>
+        </div>
+                                                                                                                        </div>
+                                                                                                                    `;
                             });
 
                             $('#galeriaProductos').html(`<div class="d-flex flex-wrap">${html}</div>`);
@@ -180,20 +180,20 @@
 
                             $('#id').val(p.id);
                             $('#nombre').val(p.nombre);
-                            $('#precio_compra').val(p.precio_compra);
                             $('#precio_venta').val(p.precio_venta);
+                            $('#stock').val(p.stock);
 
                             let htmlImagenes = '';
                             if (p.imagenes && p.imagenes.length) {
                                 p.imagenes.forEach((img, index) => {
                                     let ruta = typeof img === 'string' ? "{{ url('/') }}/" + img : "{{ url('/') }}/" + img.ruta;
                                     htmlImagenes += `
-                <div class="m-2 text-center">
-                    <img src="${ruta}" 
-                         style="width: 100px; height: 100px; object-fit: cover;" 
-                         class="rounded shadow-sm border" 
-                         onclick="abrirLightbox(${JSON.stringify(p.imagenes)}, '${p.nombre}')">
-                </div>`;
+                            <div class="m-2 text-center">
+                                <img src="${ruta}" 
+                                     style="width: 100px; height: 100px; object-fit: cover;" 
+                                     class="rounded shadow-sm border" 
+                                     onclick="abrirLightbox(${JSON.stringify(p.imagenes)}, '${p.nombre}')">
+                            </div>`;
                                 });
                             } else {
                                 htmlImagenes = `<div class="text-muted">Sin imágenes</div>`;

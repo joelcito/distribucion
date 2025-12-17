@@ -95,4 +95,17 @@ class Producto extends Model
         return $this->hasMany(Movimiento::class, 'producto_id');
     }
 
+
+    public function ultimoMovimiento()
+    {
+        return $this->hasOne(Movimiento::class, 'producto_id')->latest('created_at');
+    }
+
+    public function stock()
+    {
+        // Suma de ingresos menos salidas
+        return $this->movimientos()->sum('ingreso') - $this->movimientos()->sum('salida');
+    }
+
+
 }

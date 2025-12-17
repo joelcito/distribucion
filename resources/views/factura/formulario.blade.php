@@ -33,10 +33,18 @@
                                             <select name="serivicio_id_venta" id="serivicio_id_venta"
                                                 class="form-control form-control-sm" onchange="identificaSericio(this)"
                                                 required>
+
                                                 <option value="">SELECCIONE</option>
+
                                                 @foreach ($servicios as $s)
-                                                    <option value="{{ $s }}">{{ $s->nombre }}</option>
+                                                    <option value="{{ $s->id }}">
+                                                        {{ $s->nombre }} - {{ $s->precio_venta }} -
+                                                        {{ $s->categoria->nombre ?? '' }} - {{ $s->fecha_vencimiento }}
+
+
+                                                    </option>
                                                 @endforeach
+
                                             </select>
                                         </div>
                                         <div class="col-md-3 visualizacion_m2">
@@ -44,6 +52,12 @@
                                             <input type="text" class="form-control form-control-sm" id="cantidad_venta"
                                                 name="cantidad_venta" required onchange="calcularPrecioTotal()">
                                         </div>
+                                        <div class="col-md-2 visualizacion_m2">
+                                            <label class="required fw-semibold fs-6 mb-2">Stock en Sucursal</label>
+                                            <input type="text" class="form-control form-control-sm" id="stock_sucursal"
+                                                name="stock_sucursal" readonly>
+                                        </div>
+
                                         <div class="col-md-3 visualizacion_m2">
                                             <label class="required fw-semibold fs-6 mb-2">Precio</label>
                                             <input type="text" class="form-control form-control-sm" id="precio_venta"
@@ -426,105 +440,45 @@
             })
         }
 
+
+
         function identificaSericio(selected) {
 
-            if (selected.value != '') {
-                var json = JSON.parse(selected.value);
+            let productoId = selected.value;
 
-                console.log(json);
+            if (!productoId) return;
 
-                let cantidad_venta = 1;
-                let precio_venta = json.precio_venta;
+            $.ajax({
+                url: "{{ route('pedido.obtenerProducto') }}",
+                type: "POST",
+                data: { id: productoId },
+                success: function (res) {
 
-                $('#cantidad_venta').val(cantidad_venta);
-                $('#precio_venta').val((cantidad_venta * precio_venta));
-                $('#total_venta').val(precio_venta * cantidad_venta);
+                    if (!res.estado) return;
 
-                //     $('#precio_venta').val(json.precio_venta)
-                //     $('#cantidad_venta').val(1)
-                //     $('#total_venta').val((1 * json.precio_venta))
-                //     $('#numero_serie').val(json.numero_serie)
-                //     $('#codigo_imei').val(json.codigo_imei)
-                //     // $('#stock_producto').val(json.stock === null ? 0 : json.stock)
-                //     let stockGeneral ;
+                    let p = res.data;
 
-                //     $('#equivalente_unidad').val(json.equivalente_unidad)
-                //     $('#cantidad_por_caja').val(json.cantidad_por_caja)
+                    let cantidad_venta = 1;
+                    let precio_venta = p.precio_venta;
+                    let stock = p.stock ?? 0;
 
-                //     if(json.unidad_medida_id == "{{ config('siat.metro_cuadrado') }}"){
-                //         $('.visualizacion_m2').show('toogle')
-                //         $('#medida_producto').attr("required", true);
-                //         $('#metro2xcaja').attr("required", true);
-                //         $('#nro_cajas').attr("required", true);
-                //         $('#nro_piezas').attr("required", true);
-                //         stockGeneral = json.stockM2;
-                //         $('#stock_producto').val(stockGeneral === null ? 0 : stockGeneral)
-                //     }else{
-                //         $('.visualizacion_m2').hide('toogle')
-                //         $('#medida_producto').attr("required", false);
-                //         $('#metro2xcaja').attr("required", false);
-                //         $('#nro_cajas').attr("required", false);
-                //         $('#nro_piezas').attr("required", false);
-                //         stockGeneral = json.stock;
-                //         $('#stock_producto').val(stockGeneral === null ? 0 : stockGeneral)
-                //     }
+                    $('#cantidad_venta').val(cantidad_venta);
+                    $('#precio_venta').val(precio_venta);
+                    $('#total_venta').val(precio_venta * cantidad_venta);
+                    $('#stock_sucursal').val(stock);
 
-                //     if (stockGeneral > 0 || stockGeneral !== null) {
-                //         $('#boton-agrega-producto').attr('disabled', false);
-                //         $('#stock-bajo').text('');
-                //         $('#stock_producto').removeClass('is-invalid');
-                //     } else {
-                //         $('#boton-agrega-producto').attr('disabled', true);
-                //         $('#stock-bajo').text('Stock insuficiente!!');
-                //         $('#stock_producto').addClass('is-invalid');
-                //     }
-                // } else {
-                //     $('#precio_venta').val(0)
-                //     $('#cantidad_venta').val(0)
-                //     $('#total_venta').val(0)
-                //     $('#numero_serie').val(null)
-                //     $('#codigo_imei').val(null)
-                //     $('#descripcion_adicional').val(null)
-                //     $('#stock_producto').val(0)
-                //     $('#medida_producto').val(null)
-                //     $('#metro2xcaja').val(null)
-                //     $('#equivalente_unidad').val(0)
-                //     $('#cantidad_por_caja').val(0)
-                //     $('#nro_cajas').val(0)
-                //     $('#nro_piezas').val(0)
-
-                //     $('#cantidad_venta').removeAttr('max');
-
-            }
+                    if (parseInt(stock) > 0) {
+                        $('#stock_sucursal').addClass('is-valid').removeClass('is-invalid');
+                        $('#boton-agrega-producto').prop('disabled', false);
+                    } else {
+                        $('#stock_sucursal').addClass('is-invalid').removeClass('is-valid');
+                        $('#boton-agrega-producto').prop('disabled', true);
+                    }
+                }
+            });
         }
 
-        function agregarProducto() {
-            // Validar antes de agregar
-            let servicioSeleccionado = $('#serivicio_id_venta').val();
-            let cantidad = parseFloat($('#cantidad_venta').val());
-            let precio = parseFloat($('#precio_venta').val());
 
-            if (!servicioSeleccionado) {
-                Swal.fire('Error', 'Seleccione un producto', 'warning');
-                return;
-            }
-
-            if (!cantidad || cantidad <= 0) {
-                Swal.fire('Error', 'Ingrese una cantidad válida', 'warning');
-                return;
-            }
-
-            if (!precio || precio <= 0) {
-                Swal.fire('Error', 'Ingrese un precio válido', 'warning');
-                return;
-            }
-
-            // Aquí continúa tu lógica original de agregar al carrito
-            prepararJSONProducto(); // o tu lógica para armar el objeto del carrito
-
-
-            // ...
-        }
 
 
         function agregarProducto() {
@@ -1785,16 +1739,16 @@
 
                             tbody.append(
                                 `
-                                                                                            <tr>
-                                                                                                <td>
-                                                                                                    <select name="productos[][id]" class="form-control">
-                                                                                                        ${opciones}
-                                                                                                    </select>
-                                                                                                </td>
-                                                                                                <td><input type="number" name="productos[][cantidad]" class="form-control" value="${prod.cantidad}"></td>
-                                                                                                <td><button class="btn btn-sm btn-danger" onclick="$(this).closest('tr').remove()">X</button></td>
-                                                                                            </tr>
-                                                                                        `
+                                                                                                                                                <tr>
+                                                                                                                                                    <td>
+                                                                                                                                                        <select name="productos[][id]" class="form-control">
+                                                                                                                                                            ${opciones}
+                                                                                                                                                        </select>
+                                                                                                                                                    </td>
+                                                                                                                                                    <td><input type="number" name="productos[][cantidad]" class="form-control" value="${prod.cantidad}"></td>
+                                                                                                                                                    <td><button class="btn btn-sm btn-danger" onclick="$(this).closest('tr').remove()">X</button></td>
+                                                                                                                                                </tr>
+                                                                                                                                            `
                             );
                         });
 
@@ -1810,18 +1764,18 @@
         $('#agregarProductoEditar').click(function () {
             $('#tablaProductosEditar tbody').append(
                 `
-                                                                <tr>
-                                                                    <td>
-                                                                        <select name="productos[][id]" class="form-control">
-                                                                            @foreach ($productos as $producto)
-                                                                                <option value="{{ $producto->id }}">{{ $producto->nombre }}</option>
-                                                                            @endforeach
-                                                                        </select>
-                                                                    </td>
-                                                                    <td><input type="number" name="productos[][cantidad]" class="form-control" min="1" value="1"></td>
-                                                                    <td><button class="btn btn-sm btn-danger" onclick="$(this).closest('tr').remove()">X</button></td>
-                                                                </tr>
-                                                            `
+                                                                                                                    <tr>
+                                                                                                                        <td>
+                                                                                                                            <select name="productos[][id]" class="form-control">
+                                                                                                                                @foreach ($productos as $producto)
+                                                                                                                                    <option value="{{ $producto->id }}">{{ $producto->nombre }}</option>
+                                                                                                                                @endforeach
+                                                                                                                            </select>
+                                                                                                                        </td>
+                                                                                                                        <td><input type="number" name="productos[][cantidad]" class="form-control" min="1" value="1"></td>
+                                                                                                                        <td><button class="btn btn-sm btn-danger" onclick="$(this).closest('tr').remove()">X</button></td>
+                                                                                                                    </tr>
+                                                                                                                `
             );
         });
 
@@ -1886,11 +1840,11 @@
 
                         pedido.productos.forEach(prod => {
                             tbody.append(`
-                                                                                        <tr>
-                                                                                            <td>${prod.nombre ?? prod.producto_id}</td>
-                                                                                            <td>${prod.cantidad}</td>
-                                                                                        </tr>
-                                                                                    `);
+                                                                                                                                            <tr>
+                                                                                                                                                <td>${prod.nombre ?? prod.producto_id}</td>
+                                                                                                                                                <td>${prod.cantidad}</td>
+                                                                                                                                            </tr>
+                                                                                                                                        `);
                         });
 
                         $('#modalDetallePedido').modal('show');
@@ -1902,8 +1856,18 @@
                     Swal.fire('Error', 'No se pudo obtener el detalle del pedido', 'error');
                 }
             });
+
+
+
+
         }
 
+
+        function calcularTotal() {
+            let cantidad = parseFloat($('#cantidad_venta').val()) || 0;
+            let precio = parseFloat($('#precio_venta').val()) || 0;
+            $('#total_venta').val(cantidad * precio);
+        }
 
     </script>
 @endsection

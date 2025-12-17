@@ -89,4 +89,6 @@ class Movimiento extends Model
         return $this->belongsTo(User::class, 'usuario_creador_id');
     }
 
+
+
 }

@@ -19,7 +19,7 @@ class ProductoController extends Controller
         // PARA LOS PRODUCTOS
         $producto = new Producto();
         $productoDisponibles = $producto->productosDsoponibles(null, null);
-        return view('producto.listado')->with(compact('categotias','productoDisponibles'));
+        return view('producto.listado')->with(compact('categotias', 'productoDisponibles'));
     }
 
     public function listadoCatalogo()
@@ -60,7 +60,7 @@ class ProductoController extends Controller
         $producto_id = $request->input('producto_id');
 
         try {
-            $sucursales = Sucursal::all()->map(function($sucursal){
+            $sucursales = Sucursal::all()->map(function ($sucursal) {
                 return [
                     'id' => $sucursal->id,
                     'codigo_sucursal' => $sucursal->codigo_sucursal,
@@ -141,12 +141,12 @@ class ProductoController extends Controller
             }
 
             $producto->usuario_modificador_id = $usuario->id;
-            $producto->codigo                 = $this->generaCodigoProducto();
-            $producto->nombre                 = $request->input('nombre');
-            $producto->proveedor_id           = $request->input('proveedores_idproveedores');
-            $producto->categoria_id           = $request->input('categoria_id');
-            $producto->precio_compra          = $request->input('precio_compra');
-            $producto->precio_venta           = $request->input('precio_venta');
+            $producto->codigo = $this->generaCodigoProducto();
+            $producto->nombre = $request->input('nombre');
+            $producto->proveedor_id = $request->input('proveedores_idproveedores');
+            $producto->categoria_id = $request->input('categoria_id');
+            $producto->precio_compra = $request->input('precio_compra');
+            $producto->precio_venta = $request->input('precio_venta');
 
             // Guardar imágenes (array de objetos)
             if ($request->hasFile('imagenes')) {
@@ -237,17 +237,27 @@ class ProductoController extends Controller
     {
         $categoriaId = $request->categoria_id;
 
-        $productos = Producto::where('categoria_id', $categoriaId)->get();
+        $productos = Producto::with('ultimoMovimiento', 'movimientos')
+            ->where('categoria_id', $categoriaId)
+            ->get();
 
         $data = $productos->map(function ($p) {
+            // Manejo de imágenes
+            $imagenes = is_string($p->imagenes) ? json_decode($p->imagenes, true) ?? [] : ($p->imagenes ?? []);
+
             return [
                 'id' => $p->id,
                 'nombre' => $p->nombre,
-                'proveedores_idproveedores' => $p->proveedor_id,
+                'proveedor_id' => $p->proveedor_id,
                 'categoria_id' => $p->categoria_id,
-                'precio_compra' => $p->precio_compra,
-                'precio_venta' => $p->precio_venta,
-                'imagenes' => is_array($p->imagenes) ? $p->imagenes : json_decode($p->imagenes, true) ?? []
+
+                'precio_compra' => $p->ultimoMovimiento?->precio_compra ?? 0,
+                'precio_venta' => $p->ultimoMovimiento?->precio_venta ?? 0,
+
+
+                'stock' => $p->movimientos()->sum('ingreso') - $p->movimientos()->sum('salida'),
+
+                'imagenes' => $imagenes
             ];
         });
 
@@ -256,6 +266,7 @@ class ProductoController extends Controller
             'data' => $data
         ]);
     }
+
 
     // public function obtenerProducto(Request $request)
     // {
@@ -281,20 +292,14 @@ class ProductoController extends Controller
     public function obtenerProducto(Request $request)
     {
         try {
-            $producto = Producto::find($request->id);
+            $producto = Producto::with('ultimoMovimiento', 'movimientos')->find($request->id);
 
             if (!$producto) {
                 return response()->json(['estado' => false, 'message' => 'Producto no encontrado']);
             }
 
-            // Verificar si es string antes de json_decode
-            if (is_string($producto->imagenes)) {
-                $imagenes = json_decode($producto->imagenes, true) ?? [];
-            } elseif (is_array($producto->imagenes)) {
-                $imagenes = $producto->imagenes;
-            } else {
-                $imagenes = [];
-            }
+            // Manejo de imágenes
+            $imagenes = is_string($producto->imagenes) ? json_decode($producto->imagenes, true) ?? [] : ($producto->imagenes ?? []);
 
             return response()->json([
                 'estado' => true,
@@ -304,22 +309,25 @@ class ProductoController extends Controller
                     'codigo' => $producto->codigo,
                     'proveedor_id' => $producto->proveedor_id,
                     'categoria_id' => $producto->categoria_id,
-                    'precio_compra' => $producto->precio_compra,
-                    'precio_venta' => $producto->precio_venta,
+
+                    'precio_venta' => $producto->ultimoMovimiento?->precio_venta ?? 0,
+                    'precio_compra' => $producto->ultimoMovimiento?->precio_compra ?? 0,
+
+
+                    'stock' => $producto->movimientos()->sum('ingreso') - $producto->movimientos()->sum('salida'),
+
                     'imagenes' => $imagenes,
                 ]
             ]);
 
         } catch (\Exception $e) {
-            return response()->json([
-                'estado' => false,
-                'message' => 'Error al obtener el producto: ' . $e->getMessage()
-            ]);
+            return response()->json(['estado' => false, 'message' => 'Error al obtener el producto: ' . $e->getMessage()]);
         }
     }
 
 
-    private function generaCodigoProducto() {
+    private function generaCodigoProducto()
+    {
         $ultimoProducto = Producto::latest()->first();
         if ($ultimoProducto)
             $codigo = str_pad($ultimoProducto->codigo + 1, 6, '0', STR_PAD_LEFT);

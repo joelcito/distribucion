@@ -136,6 +136,9 @@ Route::middleware('auth')->group(function () {
         Route::put('/{id}/actualizar', [App\Http\Controllers\PedidosController::class, 'actualizar'])->name('pedidos.actualizar');
         Route::get('/imprimePedido/{id}', [App\Http\Controllers\PedidosController::class, 'imprimePedido'])->name('pedidos.imprimePedido');
 
+        Route::post('/pedido/obtener-producto', [App\Http\Controllers\PedidosController::class, 'obtenerProducto'])
+            ->name('pedido.obtenerProducto');
+
     });
 
     //CATALOGO
