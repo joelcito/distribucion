@@ -144,7 +144,11 @@ Route::middleware('auth')->group(function () {
     //CATALOGO
     Route::prefix('catalogo')->group(function () {
         Route::get('/listadoCatalogo', [App\Http\Controllers\ProductoController::class, 'listadoCatalogo'])->name('catalogo.listadoCatalogo');
+    });
 
+    //MIGRACION
+    Route::prefix('migracion')->group(function () {
+        Route::get('/migrarTodo', [App\Http\Controllers\MigrationController::class, 'migrarTodo'])->name('migracion.migrarTodo');
     });
 
     //PAGO
