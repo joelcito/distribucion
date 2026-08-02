@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreign('usuario_eliminador_id')->references('id')->on('users');
 
             $table->unsignedBigInteger('departamento_id')->nullable();
-            $table->foreign('departamento_id')->references('id')->on('users');
+            $table->foreign('departamento_id')->references('id')->on('departamentos');
             $table->string('nombre',45)->nullable();
 
             $table->string('estado')->nullable();

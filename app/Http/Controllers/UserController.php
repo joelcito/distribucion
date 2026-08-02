@@ -15,8 +15,9 @@ class UserController extends Controller
     {
 
         $sucursales = Sucursal::all();
+        $roles = Rol::all();
 
-        return view('usuario.listado')->with(compact('sucursales'));
+        return view('usuario.listado')->with(compact('sucursales', 'roles'));
     }
 
     public function ajaxListado(Request $request)
@@ -36,12 +37,16 @@ class UserController extends Controller
     public function guardarUsuario(Request $request)
     {
         if ($request->ajax()) {
+
+            // dd($request->all());
+
             $usuario_id  = $request->input('id');
             $name        = $request->input('name');
             $email       = $request->input('email');
             $password    = $request->input('password');
             $celular     = $request->input('celular');
             $sucursal_id = $request->input('sucursal_id');
+            $rol_id = $request->input('rol_id');
 
             if ($usuario_id == "0") {
                 $user = new User();
@@ -55,6 +60,8 @@ class UserController extends Controller
             $user->name        = $name;
             $user->email       = $email;
             $user->sucursal_id = $sucursal_id;
+            $user->celular = $celular;
+            $user->rol_id = $rol_id;
             $user->save();
             $data = Respuesta::success(null, "Usuario guardado correctamente");
         } else {

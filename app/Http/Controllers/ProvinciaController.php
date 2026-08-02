@@ -37,6 +37,8 @@ class ProvinciaController extends Controller
 
         if($request->ajax()){
 
+            // dd($request->all());
+
             $departamento_id = $request->input('new_procincia_departameto');
             $provincia_id    = $request->input('provincia_id');
             $nombre          = $request->input('nombre_provincia');

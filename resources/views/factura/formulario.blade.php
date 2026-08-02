@@ -40,11 +40,8 @@
                                                     <option value="{{ $s->id }}">
                                                         {{ $s->nombre }} - {{ $s->precio_venta }} -
                                                         {{ $s->categoria->nombre ?? '' }} - {{ $s->fecha_vencimiento }}
-
-
                                                     </option>
                                                 @endforeach
-
                                             </select>
                                         </div>
                                         <div class="col-md-3 visualizacion_m2">
@@ -104,7 +101,7 @@
                         </form>
                         <hr>
                         <div id="tabla_detalles" style="display: none;">
-                            <h2 class="text-center">CARRITO DE COMPRAS</h2>
+                            <h2 class="text-center">CARRITO DE COMPRAS 123</h2>
                             <div class="table-responsive" style="max-width: 100%; overflow-x: auto;">
                                 <table id="carrito" class="table align-middle table-row-dashed fs-6 gy-5">
                                     <thead>
@@ -487,7 +484,12 @@
 
                 var servicioDatos = JSON.parse($("#serivicio_id_venta").val());
 
-                console.log(servicioDatos);
+                let servicios = @json($servicios);
+                var servicioSeleccionado = servicios.find(e => e.id == servicioDatos);
+
+                servicioDatos = servicioSeleccionado;
+
+                // console.log(servicioDatos, servicios, servicioSeleccionado);
 
                 let id = servicioDatos.id;
                 var filaExistente = table.row("#producto-" + id);
@@ -502,6 +504,7 @@
                 let servicio = {
                     servicio_id: servicioDatos.id,
                     nombre: servicioDatos.nombre,          // <- agregamos nombre
+                    // nombre: servicioSeleccionado.nombre,          // <- agregamos nombre
                     categoria_id: servicioDatos.categoria_id || null, // <- agregamos categoria_id si existe
                     descripcion: servicioDatos.nombre,
                     precio: parseFloat(precio).toFixed(2),

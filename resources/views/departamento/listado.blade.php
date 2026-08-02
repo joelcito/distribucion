@@ -58,8 +58,8 @@
                 </div>
                 <div class="modal-body scroll-y">
                     <form id="formularioProvincia">
-                        <input type="text" name="new_procincia_departameto" id="new_procincia_departameto" value="0">
-                        <input type="text" name="provincia_id" id="provincia_id" value="0">
+                        <input type="hidden" name="new_procincia_departameto" id="new_procincia_departameto" value="0">
+                        <input type="hidden" name="provincia_id" id="provincia_id" value="0">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="fv-row mb-7">

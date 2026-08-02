@@ -31,24 +31,34 @@
                                         name="email">
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="mb-3">
                                     <label class="fw-semibold fs-6 mb-2">Contraseña</label>
                                     <input type="password" class="form-control form-control-sm" id="password"
                                         name="password">
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="mb-3">
                                     <label class="fw-semibold fs-6 mb-2">Celular</label>
                                     <input type="number" class="form-control form-control-sm" id="celular"
                                         name="celular">
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="mb-3">
-                                    <label class="fw-semibold fs-6 mb-2">Sucursales</label>
-                                    <select class="form-select form-select-sm" name="sucursal_id" id="sucursal_id">
+                                    <label class="fw-semibold fs-6 mb-2 required">Rol</label>
+                                    <select class="form-select form-select-sm" name="rol_id" id="rol_id" required>
+                                        @foreach ($roles as $rol)
+                                            <option value="{{ $rol->id }}">{{ $rol->nombre }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label class="fw-semibold fs-6 mb-2 required">Sucursales</label>
+                                    <select class="form-select form-select-sm" name="sucursal_id" id="sucursal_id" required>
                                         @foreach ($sucursales as $sucursal)
                                             <option value="{{ $sucursal->id }}">{{ $sucursal->nombre }}</option>
                                         @endforeach

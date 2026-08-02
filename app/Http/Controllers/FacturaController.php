@@ -325,14 +325,7 @@ class FacturaController extends Controller
             $usuario = Auth::user();
             $usuario_id = Auth::user()->id;
 
-            // if(!Auth::user()->isAdmin()){
-            //     // DE AQUI ESE EL ANTIGUO
-            //     $punto_venta_id = Auth::user()->punto_venta_id;
-            //     $punto_venta    = PuntoVenta::find($punto_venta_id);
-            //     $sucursal_id    = $punto_venta->sucursal->id;
-            // }
-
-            // DE AQUI ESE EL ANTIGUO
+            // dd($usuario);
 
             // $query = Factura::select('*')
             $query = Factura::select(
@@ -350,16 +343,10 @@ class FacturaController extends Controller
                 'clientes.ap_materno',
             )
                 ->join('clientes', 'clientes.id', '=', 'facturas.cliente_id')
-                // ->where('facturas.sucursal_id', $sucursal_id)
-                // ->where('facturas.punto_venta_id', $punto_venta_id)
-                // ->whereNull('facturas.codigo_descripcion')
-                // ->whereNotNull('facturas.numero_factura')
-                // ->whereNull('facturas.numero_recibo')
             ;
 
             if (Auth::user()->rol_id != 1) {
                 $query->where('facturas.sucursal_id', Auth::user()->sucursal->id);
-                // ->where('facturas.punto_venta_id', Auth::user()->punto_venta->id);
             }
 
             if (!is_null($request->input('buscar_nro_factura'))) {
