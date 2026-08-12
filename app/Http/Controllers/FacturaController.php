@@ -97,56 +97,10 @@ class FacturaController extends Controller
     public function formularioVenta(Request $request)
     {
 
-        // $servicios      = Producto::all();
-        // $servicios = Producto::select('productos.id as producto_id', 'productos.nombre as nombre_producto', 'categorias.nombre as nombre_categoria', 'movimientos.id as movimiento_id', 'movimientos.precio_venta', 'movimientos.fecha_vencimiento')
-        //                     ->join('movimientos', 'movimientos.producto_id', '=', 'productos.id')
-        //                     ->join('categorias', 'categorias.id', '=', 'productos.categoria_id')
-        //                     ->selectRaw('SUM(movimientos.ingreso) - SUM(movimientos.salida) as stock')
-        //                     ->groupBy('productos.id', 'movimientos.fecha_vencimiento', 'productos.nombre', 'categorias.nombre', 'movimientos.id', 'movimientos.precio_venta')
-        //                     // ->get();
-
-
-        // $servicios = Producto::select(
-        //                                 'productos.id as producto_id',
-        //                                 'productos.nombre as nombre_producto',
-        //                                 'categorias.nombre as nombre_categoria',
-        //                                 'm.id as movimiento_id',
-        //                                 'm.precio_venta',
-        //                                 'm.fecha_vencimiento',
-        //                                 'm.lotes',
-        //                                 'm.ingreso as total_ingreso',
-        //                                 DB::raw('(SELECT IFNULL(SUM(s.salida), 0)
-        //                                         FROM movimientos s
-        //                                         WHERE s.movimiento_id = m.id) AS total_salida'),
-        //                                 DB::raw('(m.ingreso -
-        //                                         (SELECT IFNULL(SUM(s.salida), 0)
-        //                                         FROM movimientos s
-        //                                         WHERE s.movimiento_id = m.id)
-        //                                         ) AS stock')
-        //                             )
-        //                             ->join('movimientos as m', 'm.producto_id', '=', 'productos.id')
-        //                             ->join('categorias', 'categorias.id', '=', 'productos.categoria_id')
-        //                             ->whereNull('m.movimiento_id')
-        //                             ->whereNull('productos.deleted_at')
-        //                             ->whereNull('categorias.deleted_at')
-        //                             ->whereRaw('
-        //                                 (m.ingreso - (
-        //                                     SELECT IFNULL(SUM(s.salida),0)
-        //                                     FROM movimientos s
-        //                                     WHERE s.movimiento_id = m.id
-        //                                 )) > 0
-        //                             ')
-        //                             ->orderBy('productos.id')
-        //                             ->orderBy('m.fecha_vencimiento')
-        //                             ->get();
-                            // ->toSql();
-                            // dd($servicios);
-
         $usuario = Auth::user();
 
         $producto = new Producto();
         $servicios = $producto->productosDsoponibles(null, $usuario->sucursal_id);
-
 
         $promociones = Promocion::all();
 
@@ -187,6 +141,11 @@ class FacturaController extends Controller
                 // ----------------- AGREGAMOS EN L ATABLA DETALLES -----------------
                 foreach ($carroVentas as $key => $item) {
 
+                    // dd(
+                    //     $carroVentas,
+                    //     $item
+                    // );
+
                     $servicio = Producto::find($item['servicio_id']);
 
                     $detalle                     = new Detalle();
@@ -203,7 +162,7 @@ class FacturaController extends Controller
                     $detalle->total        = $item['total'];
                     $detalle->importe      = $item['subTotal'];
                     $detalle->fecha        = date('Y-m-d H:i:s');
-                    $detalle->promocion_id = $item['promocion_id'];
+                    // $detalle->promocion_id = $item['promocion_id'];
                     $detalle->estado       = 'Parapagar';
                     $detalle->save();
 
@@ -429,13 +388,20 @@ class FacturaController extends Controller
 
         // dd($pedido_id);
 
-        $servicios = Producto::select('productos.id', 'productos.nombre', 'productos.precio_venta')
-                                ->join('movimientos', 'movimientos.producto_id', '=', 'productos.id')
-                                ->selectRaw('SUM(movimientos.ingreso) - SUM(movimientos.salida) as stock')
-                                ->groupBy('productos.id', 'productos.nombre')
-                                ->get();
-
+        // // $servicios = Producto::select('productos.id', 'productos.nombre', 'productos.precio_venta')
+        // $servicios = Producto::select('productos.id', 'productos.nombre', 'movimientos.precio_venta')
+        //                         ->join('movimientos', 'movimientos.producto_id', '=', 'productos.id')
+        //                         ->selectRaw('SUM(movimientos.ingreso) - SUM(movimientos.salida) as stock')
+        //                         // ->groupBy('productos.id', 'productos.nombre')
+        //                         ->groupBy('productos.id', 'productos.nombre', 'movimientos.precio_venta')
+        //                         ->get();
         $pedido = Pedido::find($pedido_id);
+
+        $usuario = $pedido->usuario;
+
+        $producto = new Producto();
+        $servicios = $producto->productosDsoponibles(null, $usuario->sucursal_id);
+
         $pedidos = json_decode($pedido->pedidos_productos, true);
 
         $cliente = $pedido->cliente;

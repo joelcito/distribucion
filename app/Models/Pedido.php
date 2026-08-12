@@ -41,4 +41,9 @@ class Pedido extends Model
     {
         return $this->hasMany(Movimiento::class);
     }
+
+    public function usuario()
+    {
+        return $this->belongsTo(User::class, 'usuario_id');
+    }
 }

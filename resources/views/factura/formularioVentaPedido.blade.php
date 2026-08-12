@@ -7,165 +7,6 @@
 @endsection
 @section('content')
 
-    <!--end::Modal - New Card-->
-    {{-- <div class="modal fade" id="modal_new_servicio" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered mw-1000px">
-            <div class="modal-content">
-                @include('empresa.components.modalAgregaServicioProducto')
-            </div>
-            <!--end::Modal content-->
-        </div>
-        <!--end::Modal dialog-->
-    </div> --}}
-    <!--end::Modal - New Card-->
-
-    <!--end::Modal - New Card-->
-    {{-- <div class="modal fade" id="modal_new_cliente" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered mw-900px">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 class="fw-bold">Formulario de Cliente</h2>
-                    <div class="btn btn-icon btn-sm btn-active-icon-primary" data-bs-dismiss="modal">
-                        <i class="ki-duotone ki-cross fs-1">
-                            <span class="path1"></span>
-                            <span class="path2"></span>
-                        </i>
-                    </div>
-                </div>
-                <div class="modal-body scroll-y">
-                    <form id="formulario_new_cliente_empresa">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <label class="fs-6 fw-semibold form-label mb-2 required">Nombres</label>
-                                <input type="text" class="form-control fw-bold form-control-solid"
-                                    name="nombres_cliente_new_usuaio_empresa" id="nombres_cliente_new_usuaio_empresa"
-                                    required>
-                            </div>
-                            <div class="col-md-3">
-                                <label class="fs-6 fw-semibold form-label mb-2 required">Ap Paterno</label>
-                                <input type="text" class="form-control fw-bold form-control-solid"
-                                    name="ap_paterno_cliente_new_usuaio_empresa" id="ap_paterno_cliente_new_usuaio_empresa"
-                                    required>
-                            </div>
-                            <div class="col-md-3">
-                                <label class="fs-6 fw-semibold form-label mb-2">Ap Materno</label>
-                                <input type="text" class="form-control fw-bold form-control-solid"
-                                    name="ap_materno_cliente_new_usuaio_empresa" id="ap_materno_cliente_new_usuaio_empresa">
-                            </div>
-                            <div class="col-md-3">
-                                <label class="fs-6 fw-semibold form-label mb-2">Numero de Celular</label>
-                                <input type="number" class="form-control fw-bold form-control-solid"
-                                    name="num_ceular_cliente_new_usuaio_empresa" id="num_ceular_cliente_new_usuaio_empresa">
-                            </div>
-                        </div>
-                        <div class="row mt-5">
-                            <div class="col-md-2">
-                                <label class="fs-6 fw-semibold form-label mb-2 required">Cedula</label>
-                                <input type="number" class="form-control fw-bold form-control-solid"
-                                    name="cedula_cliente_new_usuaio_empresa" id="cedula_cliente_new_usuaio_empresa"
-                                    required>
-                            </div>
-                            <div class="col-md-2">
-                                <label class="fs-6 fw-semibold form-label mb-2">Complemento</label>
-                                <input type="number" class="form-control fw-bold form-control-solid"
-                                    name="complemento_cliente_new_usuaio_empresa"
-                                    id="complemento_cliente_new_usuaio_empresa">
-                            </div>
-                            <div class="col-md-2">
-                                <label class="fs-6 fw-semibold form-label mb-2">Nit</label>
-                                <input type="number" class="form-control fw-bold form-control-solid"
-                                    name="nit_cliente_new_usuaio_empresa" id="nit_cliente_new_usuaio_empresa">
-                            </div>
-                            <div class="col-md-3">
-                                <label class="fs-6 fw-semibold form-label mb-2">Razon Social</label>
-                                <input type="text" class="form-control fw-bold form-control-solid"
-                                    name="razon_social_cliente_new_usuaio_empresa"
-                                    id="razon_social_cliente_new_usuaio_empresa">
-                            </div>
-                            <div class="col-md-3">
-                                <label class="fs-6 fw-semibold form-label mb-2">Correo</label>
-                                <input type="text" class="form-control fw-bold form-control-solid"
-                                    name="correo_cliente_new_usuaio_empresa" id="correo_cliente_new_usuaio_empresa">
-                            </div>
-                        </div>
-                        <div class="row mt-5">
-                            <div class="col-md-12">
-                                <button type="button" class="btn btn-success w-100 btn-sm"
-                                    onclick="guardarClienteEmpresa()">Agregar Usuario</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <!--end::Modal content-->
-        </div>
-        <!--end::Modal dialog-->
-    </div> --}}
-    <!--end::Modal - New Card-->
-
-    <!--begin::Modal - Add task-->
-    {{-- <div class="modal fade" id="modalAperturaCaja" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            @include('caja.components.formularioAperturaCaja')
-        </div>
-        <!--end::Modal dialog-->
-    </div> --}}
-    <!--end::Modal - Add task-->
-
-
-    <!--begin::Modal - Add task-->
-    {{-- <div class="modal fade" id="modalCerrarCaja" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            @include('caja.components.formularioCerrarCaja', ['cajaAbierta' => $cajaAbierta])
-        </div>
-        <!--end::Modal dialog-->
-    </div> --}}
-    <!--end::Modal - Add task-->
-
-
-    <!--end::Modal - New Card-->
-    <div class="modal fade" id="modal_lista_accesorios" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered mw-600px">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 class="fw-bold">AGREGAR ACCESORIOS</h2>
-                    <div class="btn btn-icon btn-sm btn-active-icon-primary" data-bs-dismiss="modal">
-                        <i class="ki-duotone ki-cross fs-1">
-                            <span class="path1"></span>
-                            <span class="path2"></span>
-                        </i>
-                    </div>
-                </div>
-                <div class="modal-body scroll-y">
-                    <form id="formulario_new_cliente_empresa">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label class="fs-6 fw-semibold form-label mb-2 required">PRODUCTO</label>
-                                <input type="text" class="form-control fw-bold form-control-solid"
-                                    name="nombre_producto_agregar" id="nombre_producto_agregar" readonly>
-                            </div>
-                        </div>
-                        <div class="row mt-5">
-                            <div class="col-md-12">
-                                <div id="tabla_accesorios"></div>
-                            </div>
-                        </div>
-                        <div class="row mt-5">
-                            <div class="col-md-12">
-                                <button type="button" class="btn btn-success w-100 btn-sm"
-                                    onclick="guardarClienteEmpresa()">Agregar Usuario</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <!--end::Modal content-->
-        </div>
-        <!--end::Modal dialog-->
-    </div>
-    <!--end::Modal - New Card-->
-
-
 
     <div class="d-flex flex-column flex-column-fluid">
         <!--begin::Content-->
@@ -198,7 +39,7 @@
                                                     required>
                                                     <option value="">SELECCIONE</option>
                                                     @foreach ($servicios as $s)
-                                                        <option value="{{ $s }}">{{ $s->nombre }}</option>
+                                                        <option value="{{ $s }}">{{ $s->nombre_producto." - ".$s->precio_venta." - ".$s->nombre_categoria." - ".$s->fecha_vencimiento }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -587,14 +428,20 @@
             let servicios = @json($servicios);
             let cliente   = @json($cliente);
 
+            console.log(
+                productos,
+                servicios,
+                cliente
+            );
+
             $.each(productos, function(index, d) {
-                let prod        = servicios.find(p => p.id == d.producto_id);
+                let prod        = servicios.find(p => p.producto_id == d.producto_id);
                 var monto_total = $('#monto_total').val();
                 // ARMAMOS EL CUERPO DE SERVICIOS
 
-                let id                    = prod.id;
-                let servicio_id           = prod.id;
-                let descripcion           = prod.nombre;
+                let id                    = prod.producto_id;
+                let servicio_id           = prod.producto_id;
+                let descripcion           = prod.nombre_producto;
                 let precio                = parseFloat(d.precio).toFixed(2);
                 let numero_serie          = null;
                 let numero_imei           = null;
@@ -604,6 +451,7 @@
                 let descuento             = parseFloat(d.cantidad);
                 let subTotal              = total;
                 let descripcion_adicional = null;
+                let movimiento_id         = prod.movimiento_id;
 
                 let servicio = {
                     servicio_id          : servicio_id,
@@ -616,7 +464,8 @@
                     total                : total,
                     descuento            : descuento,
                     subTotal             : subTotal,
-                    descripcion_adicional: descripcion_adicional
+                    descripcion_adicional: descripcion_adicional,
+                    movimiento_id        : movimiento_id
                 }
 
                 let btnEliminar = `<button class='eliminar btn btn-icon btn-danger btn-circle btn-sm'
@@ -626,7 +475,7 @@
                                         </button>`;
 
                 table.row.add([
-                    descripcion + " " + descripcion_adicional,
+                    descripcion,
                     precio,
                     "<span class='cantidad'>" + cantidad + "</span>",
                     "<span class='total'>" + total + "</span>",
@@ -671,29 +520,32 @@
 
                 console.log(servicioDatos);
 
-                let id = servicioDatos.id;
-                var filaExistente = table.row("#producto-" + id);
-                var precio = parseFloat($('#precio_venta').val()).toFixed(2);
-                var cantidad = parseFloat($('#cantidad_venta').val());
-                var total = parseFloat(precio * cantidad).toFixed(2);
-                var subTotal = (precio * cantidad) - 0;
+                let id                    = servicioDatos.producto_id;
+                let movimiento_id         = servicioDatos.movimiento_id;
+                var filaExistente         = table.row("#producto-" + id);
+                var precio                = parseFloat($('#precio_venta').val()).toFixed(2);
+                var cantidad              = parseFloat($('#cantidad_venta').val());
+                var total                 = parseFloat(precio * cantidad).toFixed(2);
+                var subTotal              = (precio * cantidad) - 0;
                 var descripcion_adicional = $('#descripcion_adicional').val();
-                var monto_total = $('#monto_total').val();
-                var numero_serie = $("#numero_serie").val();
-                var codigo_imei = $("#codigo_imei").val();
+                var monto_total           = $('#monto_total').val();
+                var numero_serie          = $("#numero_serie").val();
+                var codigo_imei           = $("#codigo_imei").val();
+                var promocion_id          = $("#promocion_id").val();
 
                 let servicio = {
-                    servicio_id          : servicioDatos.id,
-                    descripcion          : servicioDatos.nombre,
+                    servicio_id : servicioDatos.producto_id,
+                    descripcion : servicioDatos.nombre_producto,
                     precio               : parseFloat(precio).toFixed(2),
                     numero_serie         : numero_serie,
                     numero_imei          : codigo_imei,
-                    empresa_id           : servicioDatos.empresa_id,
                     cantidad             : parseFloat(cantidad),
                     total                : parseFloat(total).toFixed(2),
                     descuento            : parseFloat(0).toFixed(2),
                     subTotal             : parseFloat(subTotal.toFixed(2)),
-                    descripcion_adicional: descripcion_adicional
+                    descripcion_adicional: descripcion_adicional,
+                    promocion_id         : promocion_id,
+                    movimiento_id        : movimiento_id
                 }
 
                 // if (filaExistente.node()) {
@@ -748,7 +600,7 @@
                                         </button>`;
 
                     table.row.add([
-                        servicioDatos.nombre + " " + descripcion_adicional,
+                        servicioDatos.nombre_producto + " " + descripcion_adicional,
                         precio,
                         "<span class='cantidad'>" + cantidad + "</span>",
                         "<span class='total'>" + total + "</span>",
