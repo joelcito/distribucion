@@ -145,8 +145,8 @@ class ProductoController extends Controller
             $producto->nombre = $request->input('nombre');
             $producto->proveedor_id = $request->input('proveedores_idproveedores');
             $producto->categoria_id = $request->input('categoria_id');
-            $producto->precio_compra = $request->input('precio_compra');
-            $producto->precio_venta = $request->input('precio_venta');
+            // $producto->precio_compra = $request->input('precio_compra');
+            // $producto->precio_venta = $request->input('precio_venta');
 
             // Guardar imágenes (array de objetos)
             if ($request->hasFile('imagenes')) {
@@ -218,21 +218,6 @@ class ProductoController extends Controller
         return $data;
     }
 
-
-    // public function ajaxPorCategoria(Request $request)
-    // {
-    //     $categoria_id = $request->categoria_id;
-    //     $productos = Producto::where('categoria_id', $categoria_id)->get();
-
-    //     $listadoHtml = view('producto.listado', compact('productos'))->render();
-
-    //     return response()->json([
-    //         'estado' => true,
-    //         'data' => ['listado' => $listadoHtml]
-    //     ]);
-    // }
-
-
     public function ajaxPorCategoria(Request $request)
     {
         $categoriaId = $request->categoria_id;
@@ -266,28 +251,6 @@ class ProductoController extends Controller
             'data' => $data
         ]);
     }
-
-
-    // public function obtenerProducto(Request $request)
-    // {
-    //     $producto = Producto::find($request->id);
-
-    //     if (!$producto) {
-    //         return response()->json(['estado' => false, 'message' => 'Producto no encontrado']);
-    //     }
-
-    //     return response()->json([
-    //         'estado' => true,
-    //         'data' => [
-    //             'id' => $producto->id,
-    //             'nombre' => $producto->nombre,
-    //             'categoria_id' => $producto->categoria_id,
-    //             'precio_venta' => $producto->precio_venta,
-    //             'imagenes' => json_decode($producto->imagenes) ?? []
-    //         ]
-    //     ]);
-    // }
-
 
     public function obtenerProducto(Request $request)
     {
@@ -325,14 +288,21 @@ class ProductoController extends Controller
         }
     }
 
-
     private function generaCodigoProducto()
     {
-        $ultimoProducto = Producto::latest()->first();
-        if ($ultimoProducto)
-            $codigo = str_pad($ultimoProducto->codigo + 1, 6, '0', STR_PAD_LEFT);
-        else
-            $codigo = '000001';
-        return $codigo;
+        $ultimoProducto = Producto::orderBy('id', 'desc')->first();
+        if ($ultimoProducto && $ultimoProducto->codigo) {
+            $codigoAnterior = $ultimoProducto->codigo;
+            $prefijo = preg_replace('/[0-9]+$/', '', $codigoAnterior);
+            preg_match('/[0-9]+$/', $codigoAnterior, $coincidencias);
+            if (!empty($coincidencias)) {
+                $numeroString = $coincidencias[0]; // Ej: "016" o "005"
+                $longitud = strlen($numeroString); // Mantiene la cantidad de ceros (ej: 3 dígitos)
+                $siguienteNumero = (int) $numeroString + 1; // 16 + 1 = 17
+                $nuevoNumero = str_pad($siguienteNumero, $longitud, '0', STR_PAD_LEFT);
+                return $prefijo . $nuevoNumero;
+            }
+        }
+        return '000001';
     }
 }
