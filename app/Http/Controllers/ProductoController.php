@@ -173,6 +173,7 @@ class ProductoController extends Controller
 
     public function eliminarProducto(Request $request)
     {
+        // dd($request->all());
         if ($request->ajax()) {
             $id = $request->input('id');
             $producto = Producto::find($id);
