@@ -34,17 +34,13 @@
                                             class="fa fa-arrow-right"></i> Transferencia</button></li>
                                 {{-- @endif --}}
                                 <li>
-                                    <!-- <button class="dropdown-item" type="button"
-                                                        onclick="editarProducto({{ json_encode($producto) }})"><i
-                                                            class="fa fa-edit"></i>
-                                                        Editar</button> -->
                                     <button class="dropdown-item" type="button"
                                         onclick="abrirModalProducto({{ $producto->id }})">
                                         Editar
                                     </button>
                                 </li>
                                 <li><button class="dropdown-item" type="button"
-                                        onclick="eliminarProducto('{{ $producto->idproductos }}')"><i
+                                        onclick="eliminarProducto('{{ $producto->id }}')"><i
                                             class="fa fa-trash"></i>
                                         Eliminar</button></li>
                             </ul>

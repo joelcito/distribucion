@@ -1608,14 +1608,14 @@
 
 
         function mostrarFormularioPedido(tipo) {
-            const bloque = document.getElementById('bloque_formulario_pedido');
-            bloque.style.display = 'block';
+            // const bloque = document.getElementById('bloque_formulario_pedido');
+            // bloque.style.display = 'block';
 
-            // Limpiar campos
-            document.getElementById('tipo').value = tipo;
-            document.getElementById('cliente_id_pedido').value = '';
-            document.getElementById('cliente_nombre_pedido').value = '';
-            document.getElementById('productos').value = '';
+            // // Limpiar campos
+            // document.getElementById('tipo').value = tipo;
+            // document.getElementById('cliente_id_pedido').value = '';
+            // document.getElementById('cliente_nombre_pedido').value = '';
+            // document.getElementById('productos').value = '';
         }
 
 
@@ -1647,7 +1647,7 @@
                     if (res.estado) {
                         Swal.fire('Éxito', 'Pedido guardado correctamente', 'success');
                         $('#bloque_formulario_pedido').hide();
-                        //  location.reload(); // Opcional: recarga para mostrar el pedido
+                        location.reload(); // Opcional: recarga para mostrar el pedido
                     } else {
                         Swal.fire('Error', res.message, 'error');
                     }
