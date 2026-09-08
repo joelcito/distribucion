@@ -223,14 +223,14 @@
 
     <table id="table_casa_matriz2">
         <tr>
-            <td><b>DEPARTAMENTO:</b></td>
+            <td><b>LUGAR:</b></td>
             <td width="120px">
                 {{ optional(optional(optional($factura->cliente)->provincia)->departamento)->nombre ?? '' }}
             </td>
         </tr>
     </table>
 
-    <table id="table_nuew_num_fac2">
+    {{-- <table id="table_nuew_num_fac2">
         <tr>
             <td><b>PROVINCIA:</b></td>
             <td width="120px">
@@ -238,7 +238,7 @@
             </td>
         </tr>
         </tr>
-    </table>
+    </table> --}}
 
     <table id="TableFactura">
         <thead>
@@ -265,11 +265,6 @@
         <tbody>
             @php
                 $total = 0;
-                // $json = json_encode($archivoXML);
-                // $array = json_decode($json, true);
-                // $listado_detalles = $array['detalle'];
-                // $subTotales = 0;
-
                 $detalles = $factura->detalles;
             @endphp
             @foreach ($detalles as $detalle)
@@ -315,6 +310,11 @@
                 <td style="border:none; background:white"></td>
                 <td style="border:none; background:white"></td>
                 <td style="border:none; background:white"></td>
+            </tr>
+            <tr style="align: right;">
+                <td style="background: white; border: none; text-align: center;" colspan="5">
+                    <b>Dirección: Calle Electo Díaz N° 1726 Contactos: 67692748-73493715 Nit: 7167162017</b>
+                </td>
             </tr>
         </tbody>
     </table>

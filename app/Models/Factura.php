@@ -47,4 +47,9 @@ class Factura extends Model
     public function detalles(){
         return $this->hasMany(Detalle::class);
     }
+
+    public function pagos()
+    {
+        return $this->hasMany(Pago::class);
+    }
 }

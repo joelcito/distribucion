@@ -51,20 +51,21 @@ class ClienteController extends Controller
 
             $id = $request->input('id');
 
-            $nombres        = $request->input('nombres');
-            $ap_paterno     = $request->input('ap_paterno');
-            $ap_materno     = $request->input('ap_materno');
-            $cedula         = $request->input('cedula');
-            $complemento    = $request->input('complemento');
-            $nit            = $request->input('nit');
-            $razon_social   = $request->input('razon_social');
-            $correo         = $request->input('correo');
-            $numero_celular = $request->input('numero_celular');
-            $usuario        = Auth::user();
-            $codigo_cliente = $request->input('codigo_cliente');
-            $nombre_farmcia = $request->input('nombre_farmacia');
-            $provincia_id   = $request->input('provincia_id');
-            $ubicacion      = $request->input('direccion');
+            $nombres         = $request->input('nombres');
+            $ap_paterno      = $request->input('ap_paterno');
+            $ap_materno      = $request->input('ap_materno');
+            $cedula          = $request->input('cedula');
+            $complemento     = $request->input('complemento');
+            $nit             = $request->input('nit');
+            $razon_social    = $request->input('razon_social');
+            $correo          = $request->input('correo');
+            $numero_celular  = $request->input('numero_celular');
+            $usuario         = Auth::user();
+            $codigo_cliente  = $request->input('codigo_cliente');
+            $nombre_farmcia  = $request->input('nombre_farmacia');
+            $provincia_id    = $request->input('provincia_id');
+            $ubicacion       = $request->input('direccion');
+            $departamento_id = $request->input('departamento_id');
 
             if( $id == 0 ){
                 // $request->validate([
@@ -83,19 +84,20 @@ class ClienteController extends Controller
                 $cliente->usuario_modificador_id = $usuario->id;
             }
 
-            $cliente->nombres        = $nombres;
-            $cliente->ap_paterno     = $ap_paterno;
-            $cliente->ap_materno     = $ap_materno;
-            $cliente->cedula         = $cedula;
-            $cliente->complemento    = $complemento;
-            $cliente->nit            = $nit;
-            $cliente->razon_social   = $razon_social;
-            $cliente->correo         = $correo;
-            $cliente->numero_celular = $numero_celular;
-            $cliente->codigo_cliente = $codigo_cliente;
-            $cliente->nombre_farmcia = $nombre_farmcia;
-            $cliente->provincia_id   = $provincia_id;
-            $cliente->ubicacion      = $ubicacion;
+            $cliente->nombres         = $nombres;
+            $cliente->ap_paterno      = $ap_paterno;
+            $cliente->ap_materno      = $ap_materno;
+            $cliente->cedula          = $cedula;
+            $cliente->complemento     = $complemento;
+            $cliente->nit             = $nit;
+            $cliente->razon_social    = $razon_social;
+            $cliente->correo          = $correo;
+            $cliente->numero_celular  = $numero_celular;
+            $cliente->codigo_cliente  = $codigo_cliente;
+            $cliente->nombre_farmcia  = $nombre_farmcia;
+            $cliente->provincia_id    = $provincia_id;
+            $cliente->ubicacion       = $ubicacion;
+            $cliente->departamento_id = $departamento_id;
             $cliente->save();
 
             $data = Respuesta::success(null, "Datos obtenidos correctamente");

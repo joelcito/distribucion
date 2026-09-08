@@ -20,6 +20,8 @@ return new class extends Migration
             $table->unsignedBigInteger('usuario_eliminador_id')->nullable();
             $table->foreign('usuario_eliminador_id')->references('id')->on('users');
 
+            $table->unsignedBigInteger('departamento_id')->nullable();
+            $table->foreign('departamento_id')->references('id')->on('departamentos');
             $table->unsignedBigInteger('provincia_id')->nullable();
             $table->foreign('provincia_id')->references('id')->on('provincias');
 

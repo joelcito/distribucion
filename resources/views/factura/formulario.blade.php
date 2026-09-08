@@ -33,14 +33,9 @@
                                             <select name="serivicio_id_venta" id="serivicio_id_venta"
                                                 class="form-control form-control-sm" onchange="identificaSericio(this)"
                                                 required>
-
                                                 <option value="">SELECCIONE</option>
-
                                                 @foreach ($servicios as $s)
-                                                    <option value="{{ $s->id }}">
-                                                        {{ $s->nombre }} - {{ $s->precio_venta }} -
-                                                        {{ $s->categoria->nombre ?? '' }} - {{ $s->fecha_vencimiento }}
-                                                    </option>
+                                                    <option value="{{ $s }}">{{ $s->nombre_producto." - ".$s->precio_venta." - ".$s->nombre_categoria." - ".$s->fecha_vencimiento }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -55,15 +50,29 @@
                                                 name="stock_sucursal" readonly>
                                         </div>
 
-                                        <div class="col-md-3 visualizacion_m2">
+                                        <div class="col-md-2 visualizacion_m2">
                                             <label class="required fw-semibold fs-6 mb-2">Precio</label>
-                                            <input type="text" class="form-control form-control-sm" id="precio_venta"
+                                            <input type="number" class="form-control form-control-sm" id="precio_venta"
                                                 name="precio_venta" onchange="calcularPrecioTotal()" required>
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-2">
                                             <label class="required fw-semibold fs-6 mb-2">Total</label>
                                             <input type="number" class="form-control form-control-sm" id="total_venta"
                                                 name="total_venta" value="0" min="1" required readonly>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label class="fw-semibold fs-6 mb-2">Fecha Vencimiento</label>
+                                            <input type="date" class="form-control form-control-sm" id="fecha_vencimiento_d" readonly>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="fw-semibold fs-6 mb-2">Categoria</label>
+                                            <input type="text" class="form-control form-control-sm" id="categoria_d" readonly>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="fw-semibold fs-6 mb-2">Lote</label>
+                                            <input type="text" class="form-control form-control-sm" id="lote_d"  readonly>
                                         </div>
                                     </div>
                                 </div>
@@ -101,13 +110,12 @@
                         </form>
                         <hr>
                         <div id="tabla_detalles" style="display: none;">
-                            <h2 class="text-center">CARRITO DE COMPRAS 123</h2>
+                            <h2 class="text-center">CARRITO DE COMPRAS</h2>
                             <div class="table-responsive" style="max-width: 100%; overflow-x: auto;">
                                 <table id="carrito" class="table align-middle table-row-dashed fs-6 gy-5">
                                     <thead>
                                         <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                                             <th>Servicio / Producto</th>
-                                            <th>Medida</th>
                                             <th>Precio</th>
                                             <th>Cantidad </th>
                                             <th>Total</th>
@@ -120,7 +128,7 @@
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <th colspan="6">Descuento Adicional</th>
+                                            <th colspan="5">Descuento Adicional</th>
                                             <th colspan="2">Monto Total</th>
                                         </tr>
                                         <tr>
@@ -440,39 +448,45 @@
 
 
         function identificaSericio(selected) {
+            if (selected.value != '') {
+                var json = JSON.parse(selected.value);
 
-            let productoId = selected.value;
+                console.log(json);
 
-            if (!productoId) return;
+                let cantidad_venta = 1;
+                let precio_venta = json.precio_venta;
+                let numero_serie = json.numero_serie;
+                let stock = json.stock;
+                let fecha_vencimiento = json.fecha_vencimiento;
+                let categoria = json.nombre_categoria;
+                let lote = json.lotes;
 
-            $.ajax({
-                url: "{{ route('pedido.obtenerProducto') }}",
-                type: "POST",
-                data: { id: productoId },
-                success: function (res) {
+                $('#cantidad_venta').val(cantidad_venta);
+                $('#precio_venta').val((cantidad_venta * precio_venta));
+                $('#total_venta').val(precio_venta * cantidad_venta);
+                $('#numero_serie').val(numero_serie);
+                $('#stock_sucursal').val(stock);
+                $('#fecha_vencimiento_d').val(fecha_vencimiento);
+                $('#categoria_d').val(categoria);
+                $('#lote_d').val(lote);
 
-                    if (!res.estado) return;
-
-                    let p = res.data;
-
-                    let cantidad_venta = 1;
-                    let precio_venta = p.precio_venta;
-                    let stock = p.stock ?? 0;
-
-                    $('#cantidad_venta').val(cantidad_venta);
-                    $('#precio_venta').val(precio_venta);
-                    $('#total_venta').val(precio_venta * cantidad_venta);
-                    $('#stock_sucursal').val(stock);
-
-                    if (parseInt(stock) > 0) {
-                        $('#stock_sucursal').addClass('is-valid').removeClass('is-invalid');
-                        $('#boton-agrega-producto').prop('disabled', false);
-                    } else {
-                        $('#stock_sucursal').addClass('is-invalid').removeClass('is-valid');
-                        $('#boton-agrega-producto').prop('disabled', true);
-                    }
+                if (parseInt(stock) > 0) {
+                    $("#stock_sucursal").addClass("is-valid").removeClass("is-invalid");
+                    $('#boton-agrega-producto').attr('disabled', false)
+                } else {
+                    $("#stock_sucursal").addClass("is-invalid").removeClass("is-valid");
+                    $('#boton-agrega-producto').attr('disabled', true)
                 }
-            });
+            }else{
+                $('#cantidad_venta').val(0);
+                $('#precio_venta').val(0);
+                $('#total_venta').val(0);
+                $('#numero_serie').val('');
+                $('#stock_sucursal').val(0);
+                $('#fecha_vencimiento_d').val('');
+                $('#categoria_d').val('');
+                $('#lote_d').val('');
+            }
         }
 
 
@@ -484,14 +498,18 @@
 
                 var servicioDatos = JSON.parse($("#serivicio_id_venta").val());
 
-                let servicios = @json($servicios);
-                var servicioSeleccionado = servicios.find(e => e.id == servicioDatos);
+                // console.log(servicioDatos);
 
-                servicioDatos = servicioSeleccionado;
+                // let servicios = @json($servicios);
+                // var servicioSeleccionado = servicios.find(e => e.id == servicioDatos.producto_id);
+
+                // console.log(servicioSeleccionado);
+
+                // servicioDatos = servicioSeleccionado;
 
                 // console.log(servicioDatos, servicios, servicioSeleccionado);
 
-                let id = servicioDatos.id;
+                let id = servicioDatos.producto_id;
                 var filaExistente = table.row("#producto-" + id);
                 var precio = parseFloat($('#precio_venta').val()).toFixed(2);
                 var cantidad = parseFloat($('#cantidad_venta').val());
@@ -502,15 +520,13 @@
 
 
                 let servicio = {
-                    servicio_id: servicioDatos.id,
-                    nombre: servicioDatos.nombre,          // <- agregamos nombre
-                    // nombre: servicioSeleccionado.nombre,          // <- agregamos nombre
+                    servicio_id: servicioDatos.producto_id,
+                    nombre: servicioDatos.nombre_producto,          // <- agregamos nombre
                     categoria_id: servicioDatos.categoria_id || null, // <- agregamos categoria_id si existe
                     descripcion: servicioDatos.nombre,
                     precio: parseFloat(precio).toFixed(2),
                     numero_serie: $("#numero_serie").val(),
                     numero_imei: $("#codigo_imei").val(),
-                    empresa_id: servicioDatos.empresa_id,
                     cantidad: parseFloat(cantidad),
                     total: parseFloat(total).toFixed(2),
                     descuento: parseFloat(0).toFixed(2),
@@ -563,39 +579,19 @@
                 } else {
                     var subTotal = (precio * cantidad).toFixed(2);
 
-                    // let cant_piezaz_vender = '';
-                    // let cant_piezaz_sobrantes = '';
-
-                    // if(servicioDatos.unidad_medida_id == "{{ config('siat.metro_cuadrado') }}"){
-                    //     // PARA EL CALCULO DE LAS CAJAS Y PIEZAS
-                    //     let cantidadSolicitada = parseFloat(cantidad);
-                    //     let equivalenteUnidadM2 = parseFloat(servicioDatos.equivalente_unidad);
-                    //     let cantidadCaja = parseFloat(servicioDatos.cantidad_por_caja);
-
-                    //     let cantidadTotalPiezas = cantidadSolicitada / equivalenteUnidadM2;
-                    //     let cantidadTotalCajas = cantidadTotalPiezas / cantidadCaja;
-                    //     let cantidadTotalPiezasSueltas = cantidadTotalPiezas % cantidadCaja;
-
-                    //     if (Math.round(cantidadTotalPiezasSueltas) == cantidadCaja) {
-                    //         cant_piezaz_vender = Math.floor((cantidadTotalCajas)) + 1;
-                    //         cant_piezaz_sobrantes = 0;
-                    //     } else {
-                    //         cant_piezaz_vender = Math.floor((cantidadTotalCajas));
-                    //         cant_piezaz_sobrantes = Math.round(cantidadTotalPiezasSueltas);
-                    //     }
-                    // }
+                    let btnEliminar = `<button class='eliminar btn btn-icon btn-danger btn-circle btn-sm' title='Eliminar del carro'
+                                            onclick='eliminarItem(${id})'>
+                                            <i class='fa fa-trash'></i>
+                                        </button>`;
 
                     table.row.add([
-                        servicioDatos.nombre + " " + descripcion_adicional,
-                        "UNIDAD",
+                        servicioDatos.nombre_producto + " " + descripcion_adicional,
                         precio,
                         "<span class='cantidad'>" + cantidad + "</span>",
                         "<span class='total'>" + total + "</span>",
-                        '<input class="form-control form-control-sm" type="text" name="descuento_' + id +
-                        '" id="descuento_' + id + '" value="0" onchange="ejecutarDescuento(this)">',
+                        '<input class="form-control form-control-sm" type="text" name="descuento_' + id + '" id="descuento_' + id + '" value="0" onchange="ejecutarDescuento(this)">',
                         "<span class='subTotal'>" + subTotal + "</span>",
-                        "<button class='eliminar btn btn-icon btn-danger btn-circle btn-sm' onclick='eliminarItem(" +
-                        id + ")' ><i class='fa fa-trash'></button>"
+                        btnEliminar
                     ]).node().id = 'producto-' + id;
                     table.draw(false);
 
@@ -613,6 +609,8 @@
                     $('#cantidad_venta').val(0)
                     $('#precio_venta').val(0)
                     $('#total_venta').val(0)
+
+                    $("#stock_sucursal").removeClass("is-invalid is-valid");
 
                 }
 

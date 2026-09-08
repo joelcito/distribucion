@@ -12,7 +12,7 @@
                 <tr>
                     <td>{{ $departamento->nombre }}</td>
                     <td>
-                        <button class="btn btn-icon btn-sm btn-info btn-circle" title="Provicias" onclick="modalProvicias({{ $departamento->id }})"><i class="fa fa-check"></i></button>
+                        {{-- <button class="btn btn-icon btn-sm btn-info btn-circle" title="Provicias" onclick="modalProvicias({{ $departamento->id }})"><i class="fa fa-check"></i></button> --}}
                         <button class="btn btn-icon btn-sm btn-warning btn-circle" title="Editar rol" onclick="editarRol({{ json_encode($departamento) }})"><i class="fa fa-edit"></i></button>
                         <button class="btn btn-icon btn-sm btn-danger btn-circle" title="Eliminar rol" onclick="eliminarRol('{{ $departamento->id }}')"><i class="fa fa-trash"></i></button>
                     </td>

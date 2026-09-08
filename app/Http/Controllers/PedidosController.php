@@ -6,18 +6,13 @@ use App\Models\Movimiento;
 use App\Models\Cliente;
 use App\Models\Pedido;
 use App\Models\Producto;
-use App\Utils\Respuesta;
-use Auth;
-use DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use PDF;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PedidosController extends Controller
 {
-
-
-
 
     // Mostrar formulario de pedido
     public function create(Request $request)
@@ -28,14 +23,16 @@ class PedidosController extends Controller
             $clienteSeleccionado = Cliente::find($request->cliente_id);
         }
 
+        $usuario = Auth::user();
+
         //$productos = Producto::all();
 
         $productos = Producto::with('categoria')->get();
+        // $producto = new Producto();
+        // $productos = $producto->productosDsoponibles(null, $usuario->sucursal_id);
 
         return view('factura.formulario', compact('clienteSeleccionado', 'productos'));
     }
-
-
 
     public function listado()
     {
@@ -44,11 +41,6 @@ class PedidosController extends Controller
 
         return view('factura.formulario', compact('pedidos', 'productos'));
     }
-
-
-
-
-
 
     public function store(Request $request)
     {
@@ -108,11 +100,7 @@ class PedidosController extends Controller
         }
     }
 
-
-
-
     //cancelar pedido
-
     public function cancelar($id)
     {
         try {
@@ -149,9 +137,7 @@ class PedidosController extends Controller
         }
     }
 
-
     //editar
-
     public function obtener($id)
     {
         try {
@@ -177,7 +163,6 @@ class PedidosController extends Controller
             return response()->json(['estado' => false, 'mensaje' => $e->getMessage()]);
         }
     }
-
 
     public function actualizar(Request $request, $id)
     {
@@ -216,7 +201,6 @@ class PedidosController extends Controller
         }
     }
 
-
     public function imprimePedido(Request $request, $id)
     {
         $usuario = Auth::user();
@@ -226,13 +210,12 @@ class PedidosController extends Controller
         $pedido = Pedido::find($id);
 
         if ($pedido) {
-            $pdf = PDF::loadView('factura.pdf.imprimePedido', compact('pedido'))->setPaper('letter');
+            $pdf = Pdf::loadView('factura.pdf.imprimePedido', compact('pedido'))->setPaper('letter');
             return $pdf->stream('pedido.pdf');
         } else {
             abort(404);
         }
     }
-
 
     public function obtenerProducto(Request $request)
     {
@@ -256,7 +239,5 @@ class PedidosController extends Controller
             ]
         ]);
     }
-
-
 
 }

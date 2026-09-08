@@ -213,6 +213,14 @@
                         });
                         ajaxListado();
                         $('#modalDeuda').modal('hide')
+                    }else{
+                        Swal.fire({
+                            title: "OBSERVADO",
+                            text: JSON.stringify(resultado),
+                            icon: "error",
+                            timer: 9000, // Se cierra en 2 segundos
+                            showConfirmButton: false
+                        });
                     }
                 },
                 error: function (xhr) {

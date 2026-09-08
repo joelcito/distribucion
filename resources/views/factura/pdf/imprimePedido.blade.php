@@ -231,21 +231,12 @@
 
     <table id="table_casa_matriz2">
         <tr>
-            <td><b>DEPARTAMENTO:</b></td>
+            <td><b>LUGAR:</b></td>
             <td width="120px">
-                {{ optional(optional(optional($pedido->cliente)->provincia)->departamento)->nombre ?? 'SIN DEPARTAMENTO' }}
+                {{-- {{ $pedido->cliente->departamento }} --}}
+                {{ optional(optional($pedido->cliente)->departamento)->nombre ?? 'SIN DEPARTAMENTO' }}
             </td>
         </tr>
-    </table>
-
-    <table id="table_nuew_num_fac2">
-        <tr>
-            <td><b>PROVINCIA:</b></td>
-            <td width="120px">
-                {{ optional(optional($pedido->cliente)->provincia)->nombre ?? 'SIN PROVINCIA' }}
-            </td>
-        </tr>
-
     </table>
 
     <table id="table_nuew_num_fac">
@@ -345,6 +336,11 @@
                 <td style="border:none; background:white"></td>
                 <td style="border:none; background:white"></td>
                 <td style="border:none; background:white"></td>
+            </tr>
+            <tr>
+                <td style="border:none; background:white; text-align: center" colspan="5">
+                    <b>Dirección: Calle Electo Díaz N° 1726 Contactos: 67692748-73493715 Nit: 7167162017</b>
+                </td>
             </tr>
         </tbody>
     </table>

@@ -93,36 +93,25 @@
                             </div>
                         </div>
                         <div class="row mt-3">
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="fv-row mb-7">
                                     <label class="fw-semibold fs-6 mb-2">Codigo Cliente</label>
                                     <input type="text" class="form-control form-control-sm" id="codigo_cliente" name="codigo_cliente">
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="fv-row mb-7">
                                     <label class="fw-semibold fs-6 mb-2">Nombre de farmacia</label>
                                     <input type="text" class="form-control form-control-sm" id="nombre_farmacia" name="nombre_farmacia">
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="fv-row mb-7">
-                                    <label class="fw-semibold fs-6 mb-2">Departamento</label>
+                                    <label class="fw-semibold fs-6 mb-2">Lugar</label>
                                     <select name="departamento_id" id="departamento_id" class="form-control form-control-sm">
                                         <option value="">SELECCIONE</option>
                                         @foreach ($departamentos as $d)
                                             <option value="{{ $d->id }}">{{ $d->nombre }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="fv-row mb-7">
-                                    <label class="fw-semibold fs-6 mb-2">Provincia</label>
-                                    <select name="provincia_id" id="provincia_id" class="form-control form-control-sm">
-                                        <option value="">SELECCIONE</option>
-                                        @foreach ($previncias as $p)
-                                            <option value="{{ $p->id }}">{{ $p->nombre }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -293,61 +282,64 @@
                     input.val(cliente[key]);
                 }
             });
+            $('#nombre_farmacia').val(cliente.nombre_farmcia)
+            $('#direccion').val(cliente.ubicacion)
+
             $('#modalCliente').modal('show')
         }
 
         function eliminarCliente(cliente) {
-    Swal.fire({
-        title: "¿Quieres eliminar " + cliente.nombres + "?",
-        text: "¡No podrás recuperarlo!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: "Sí, borrar",
-        cancelButtonText: "No, cancelar",
-        reverseButtons: true
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $.ajax({
-                url: "{{ route('cliente.eliminarCliente') }}",
-                method: "POST",
-                data: cliente,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(resultado) {
-                    if (resultado.estado) {
-                        ajaxListado(); // recarga el listado de clientes
-                        Swal.fire(
-                            'Eliminado!',
-                            'El cliente ha sido eliminado correctamente.',
-                            'success'
-                        );
-                    } else {
-                        Swal.fire(
-                            'Error',
-                            resultado.message || 'No se pudo eliminar el cliente.',
-                            'error'
-                        );
-                    }
-                },
-                error: function() {
+            Swal.fire({
+                title: "¿Quieres eliminar " + cliente.nombres + "?",
+                text: "¡No podrás recuperarlo!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: "Sí, borrar",
+                cancelButtonText: "No, cancelar",
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ route('cliente.eliminarCliente') }}",
+                        method: "POST",
+                        data: cliente,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(resultado) {
+                            if (resultado.estado) {
+                                ajaxListado(); // recarga el listado de clientes
+                                Swal.fire(
+                                    'Eliminado!',
+                                    'El cliente ha sido eliminado correctamente.',
+                                    'success'
+                                );
+                            } else {
+                                Swal.fire(
+                                    'Error',
+                                    resultado.message || 'No se pudo eliminar el cliente.',
+                                    'error'
+                                );
+                            }
+                        },
+                        error: function() {
+                            Swal.fire(
+                                'Error',
+                                'Ocurrió un error de conexión.',
+                                'error'
+                            );
+                        }
+                    });
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
                     Swal.fire(
-                        'Error',
-                        'Ocurrió un error de conexión.',
-                        'error'
+                        'Cancelado',
+                        'La operación fue cancelada',
+                        'info'
                     );
                 }
             });
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-            Swal.fire(
-                'Cancelado',
-                'La operación fue cancelada',
-                'info'
-            );
         }
-    });
-}
     </script>
 @endsection

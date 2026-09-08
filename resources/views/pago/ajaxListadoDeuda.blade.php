@@ -10,6 +10,8 @@
                 <th>Nit</th>
                 <th>N° Factura/Recibo</th>
                 <th>Fecha</th>
+                <th>Pagado</th>
+                <th>Saldo</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -29,6 +31,8 @@
                         @endif
                     </td>
                     <td>{{ $factura->fecha }}</td>
+                    <td>{{ number_format($factura->pagos->sum('monto')) }}</td>
+                    <td>{{ number_format($factura->total - $factura->pagos->sum('monto')) }}</td>
                     <td>
                         <button class="btn btn-icon btn-sm btn-info btn-circle" title="Registrar Pago" onclick="registrarPago({{ json_encode($factura) }})"><i class="fa fa-dollar"></i></button>
                     </td>

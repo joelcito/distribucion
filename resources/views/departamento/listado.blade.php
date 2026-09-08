@@ -122,7 +122,7 @@
                         <h3 class="card-title fw-bold">Listado de Departamentos</h3>
                         <div class="card-toolbar">
                             <button type="button" class="btn btn-primary btn-sm" onclick="modalNuevoRol()">
-                                <i class="fa fa-plus"></i> Nuevo Departamento
+                                <i class="fa fa-plus"></i> Nuevo Lugar
                             </button>
                         </div>
                     </div>

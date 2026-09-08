@@ -9,6 +9,7 @@
                 <th>Numero</th>
                 <th>Usuario</th>
                 <th>Estado</th>
+                <th>Estado Pago</th>
                 {{-- <th>Estado SIAT</th>
                 <th>Emision</th> --}}
                 <th>Actions</th>
@@ -35,10 +36,16 @@
                         @endif
                     </td>
                     <td>
+                        @if ($fac->estado_pago == "DEUDA")
+                        <span class="badge badge-danger">DEUDA</span>
+                        @elseif($fac->estado_pago == "PAGADO")
+                        <span class="badge badge-success">PAGADO</span>
+                        @else
+                        {{ $fac->estado_pago }}
+                        @endif
+                    </td>
+                    <td>
                         @if (is_null($fac->estado))
-                            {{-- <button class="btn btn-success btn-sm btn-icon tamanio_boton" title="Facturar venta" onclick="ajaxFacturaVenta('{{ $fac->id }}')"><i class="fa fa-university" aria-hidden="true"></i></button> --}}
-                            {{-- <button class="btn btn-primary btn-sm btn-icon tamanio_boton" title="Imprime Recibo"
-                                onclick="imprimeREcibo('{{ $fac->id }}')"><i class="fa fa-file-pdf"></i></button> --}}
                             <a href="{{ url('factura/imprimeRecibo', [$fac->id]) }}" target="_blank"
                                 class="btn btn-info btn-sm btn-icon tamanio_boton" title="Imprime Recibo"><i
                                     class="fa fa-file-pdf"></i></a>
@@ -46,6 +53,7 @@
                                 onclick="anularRecibo('{{ $fac->id }}')"><i class="fa fa-trash"></i></button>
                         @endif
                     </td>
+
                 </tr>
             @empty
                 <h4 class="text-danger">No hay datos</h4>

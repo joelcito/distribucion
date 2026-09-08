@@ -23,8 +23,11 @@ class FacturaController extends Controller
 {
     public function formulario(Request $request)
     {
+        $usuario = Auth::user();
 
-        $servicios = Producto::all();
+        // $servicios = Producto::all();
+        $producto = new Producto();
+        $servicios = $producto->productosDsoponibles(null, $usuario->sucursal_id);
 
         return view('factura.formulario')->with(compact('servicios'));
 
@@ -296,6 +299,7 @@ class FacturaController extends Controller
                 'facturas.usuario_creador_id',
                 'facturas.numero_recibo',
                 'facturas.sucursal_id',
+                'facturas.estado_pago',
                 'clientes.cedula',
                 'clientes.nombres',
                 'clientes.ap_paterno',

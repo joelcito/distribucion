@@ -127,8 +127,6 @@ class PagoController extends Controller
     public function ajaxListadoDeuda(Request $request){
         if($request->ajax()){
 
-            // dd($request->all());
-
             $departamento_id = $request->input('departamento_id');
             $provincia_id    = $request->input('provincia_id');
             $fecha_inicio    = $request->input('fecha_inicio');
@@ -136,7 +134,7 @@ class PagoController extends Controller
             $cliente_id      = $request->input('cliente_id');
 
             // $facturas = Factura::with(['cliente', 'sucursal'])->where('estado_pago', 'DEUDA')->get();
-            $query = Factura::select('*');
+            $query = Factura::select('*')->where('estado_pago', 'DEUDA');
 
             if (!is_null($departamento_id)) {
                 $query->join('clientes', 'clientes.id', '=', 'facturas.cliente_id');
@@ -207,11 +205,13 @@ class PagoController extends Controller
     public function guardarPagoDeuda(Request $request){
         if($request->ajax()){
 
+            // dd($request->all());
+
             $request->validate([
-                'factura_id' => 'required',
-                'tipo_pago' => 'required',
+                'factura_id'   => 'required',
+                'tipo_pago'    => 'required',
                 'importe_pago' => 'required',
-                'saldo' => 'required',
+                'saldo'        => 'required',
             ]);
 
             $factura_id   = $request->input('factura_id');
@@ -235,6 +235,12 @@ class PagoController extends Controller
                 $nuevo->estado             = 'INGRESO';
                 $nuevo->save();
 
+                // dd(
+                //     $saldo,
+                //     $importe_pago,
+                //     (($saldo - $importe_pago) == 0)
+                // );
+
                 if(($saldo - $importe_pago) == 0){
                     $factura = Factura::find($factura_id);
                     $factura->estado_pago = 'PAGADO';
@@ -243,7 +249,7 @@ class PagoController extends Controller
 
                 $data = Respuesta::success(null, "Datos obtenidos correctamente");
             }else{
-                $data = Respuesta::error(null, "Error en registro de datos.");
+                $data = Respuesta::error(null, "El monto ingresado sobrepasa el saldo pendiente de la factura, por favor verifique los datos ingresados.");
             }
 
         }else{

@@ -73,6 +73,20 @@
                                                     name="total_venta" value="0" min="1" required readonly>
                                             </div>
                                         </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <label class="fw-semibold fs-6 mb-2">Fecha Vencimiento</label>
+                                                <input type="date" class="form-control form-control-sm" id="fecha_vencimiento_d" readonly>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="fw-semibold fs-6 mb-2">Categoria</label>
+                                                <input type="text" class="form-control form-control-sm" id="categoria_d" readonly>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="fw-semibold fs-6 mb-2">Lote</label>
+                                                <input type="text" class="form-control form-control-sm" id="lote_d" readonly>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="col-md-1 d-flex align-items-end">
                                         <div class="d-flex justify-content-center gap-2 w-100">
@@ -592,12 +606,18 @@
                 let precio_venta = json.precio_venta;
                 let numero_serie = json.numero_serie;
                 let stock = json.stock;
+                let fecha_vencimiento = json.fecha_vencimiento;
+                let categoria = json.nombre_categoria;
+                let lote = json.lotes;
 
                 $('#cantidad_venta').val(cantidad_venta);
                 $('#precio_venta').val((cantidad_venta * precio_venta));
                 $('#total_venta').val(precio_venta * cantidad_venta);
                 $('#numero_serie').val(numero_serie);
                 $('#stock_sucursal').val(stock);
+                $('#fecha_vencimiento_d').val(fecha_vencimiento);
+                $('#categoria_d').val(categoria);
+                $('#lote_d').val(lote);
 
                 if (parseInt(stock) > 0) {
                     $("#stock_sucursal").addClass("is-valid").removeClass("is-invalid");
@@ -606,61 +626,6 @@
                     $("#stock_sucursal").addClass("is-invalid").removeClass("is-valid");
                     $('#boton-agrega-producto').attr('disabled', true)
                 }
-
-                //     $('#precio_venta').val(json.precio_venta)
-                //     $('#cantidad_venta').val(1)
-                //     $('#total_venta').val((1 * json.precio_venta))
-                //     $('#numero_serie').val(json.numero_serie)
-                //     $('#codigo_imei').val(json.codigo_imei)
-                //     // $('#stock_producto').val(json.stock === null ? 0 : json.stock)
-                //     let stockGeneral ;
-
-                //     $('#equivalente_unidad').val(json.equivalente_unidad)
-                //     $('#cantidad_por_caja').val(json.cantidad_por_caja)
-
-                //     if(json.unidad_medida_id == "{{ config('siat.metro_cuadrado') }}"){
-                //         $('.visualizacion_m2').show('toogle')
-                //         $('#medida_producto').attr("required", true);
-                //         $('#metro2xcaja').attr("required", true);
-                //         $('#nro_cajas').attr("required", true);
-                //         $('#nro_piezas').attr("required", true);
-                //         stockGeneral = json.stockM2;
-                //         $('#stock_producto').val(stockGeneral === null ? 0 : stockGeneral)
-                //     }else{
-                //         $('.visualizacion_m2').hide('toogle')
-                //         $('#medida_producto').attr("required", false);
-                //         $('#metro2xcaja').attr("required", false);
-                //         $('#nro_cajas').attr("required", false);
-                //         $('#nro_piezas').attr("required", false);
-                //         stockGeneral = json.stock;
-                //         $('#stock_producto').val(stockGeneral === null ? 0 : stockGeneral)
-                //     }
-
-                //     if (stockGeneral > 0 || stockGeneral !== null) {
-                //         $('#boton-agrega-producto').attr('disabled', false);
-                //         $('#stock-bajo').text('');
-                //         $('#stock_producto').removeClass('is-invalid');
-                //     } else {
-                //         $('#boton-agrega-producto').attr('disabled', true);
-                //         $('#stock-bajo').text('Stock insuficiente!!');
-                //         $('#stock_producto').addClass('is-invalid');
-                //     }
-                // } else {
-                //     $('#precio_venta').val(0)
-                //     $('#cantidad_venta').val(0)
-                //     $('#total_venta').val(0)
-                //     $('#numero_serie').val(null)
-                //     $('#codigo_imei').val(null)
-                //     $('#descripcion_adicional').val(null)
-                //     $('#stock_producto').val(0)
-                //     $('#medida_producto').val(null)
-                //     $('#metro2xcaja').val(null)
-                //     $('#equivalente_unidad').val(0)
-                //     $('#cantidad_por_caja').val(0)
-                //     $('#nro_cajas').val(0)
-                //     $('#nro_piezas').val(0)
-
-                //     $('#cantidad_venta').removeAttr('max');
 
             }
         }
@@ -764,8 +729,7 @@
                         precio,
                         "<span class='cantidad'>" + cantidad + "</span>",
                         "<span class='total'>" + total + "</span>",
-                        '<input class="form-control form-control-sm" type="text" name="descuento_' + id +
-                        '" id="descuento_' + id + '" value="0" onchange="ejecutarDescuento(this)">',
+                        '<input class="form-control form-control-sm" type="text" name="descuento_' + id + '" id="descuento_' + id + '" value="0" onchange="ejecutarDescuento(this)">',
                         "<span class='subTotal'>" + subTotal + "</span>",
                         btnEliminar
                     ]).node().id = 'producto-' + id;

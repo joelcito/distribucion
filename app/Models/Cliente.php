@@ -32,4 +32,9 @@ class Cliente extends Model
         return $this->belongsTo('App\Models\Provincia', 'provincia_id');
     }
 
+    public function departamento()
+    {
+        return $this->belongsTo('App\Models\Departamento', 'departamento_id');
+    }
+
 }
